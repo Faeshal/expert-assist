@@ -1,15 +1,5 @@
 const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  level: String,
   username: String,
   profilepicture: String,
   job: {
@@ -29,6 +19,10 @@ const UserSchema = new mongoose.Schema({
   status: {
     type: Boolean,
     default: true
+  },
+  auth: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Auth"
   }
 });
 
