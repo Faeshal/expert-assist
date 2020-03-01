@@ -1,0 +1,26 @@
+[
+  {
+    "id": { "$oid": "5e5b405efc13ae2883000000" },
+    "email": "faeshal111@gmail.com",
+    "password": "123456",
+    "level": "admin",
+    "username": "admin",
+    "phone": "6285693757554",
+    "blog": [
+      {
+        "title": "how to be a better mentor",
+        "image": "postimage.com/123",
+        "desc": "step to boost your performance",
+        "content": "lorem ipsum dolor ....",
+        "status": true
+      },
+      {
+        "title": "how to transfer paypal",
+        "image": "postimage.com/345",
+        "desc": "step for make a payment",
+        "content": "dolor ipsum lorem ....",
+        "status": false
+      }
+    ]
+  }
+]

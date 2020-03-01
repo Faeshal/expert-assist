@@ -1,0 +1,16 @@
+[
+  {
+    "id": { "$oid": "5e5b405ece13ae2883000000" },
+    "email": "zaid@gmail.com",
+    "password": "123456",
+    "level": "user",
+    "username": "zaid",
+    "profilePicture": "zaid.png",
+    "job": "Student",
+    "bio": "Lone Wolf",
+    "address": "Serang",
+    "phone": "6285375757554",
+    "twitter": "twitter.com/zaid",
+    "github": "github.com/zaid"
+  }
+]

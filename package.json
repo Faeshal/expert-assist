@@ -1,0 +1,36 @@
+{
+  "name": "expert-assist",
+  "version": "1.0.0",
+  "description": "expert / mentor finder app",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Faeshal/expert-assist.git"
+  },
+  "author": "faeshal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Faeshal/expert-assist/issues"
+  },
+  "homepage": "https://github.com/Faeshal/expert-assist#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-mongo-sanitize": "^1.3.2",
+    "express-validator": "^6.4.0",
+    "helmet": "^3.21.3",
+    "mongoose": "^5.9.2",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
