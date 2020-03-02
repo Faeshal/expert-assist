@@ -34,6 +34,10 @@ const AdminSchema = new mongoose.Schema({
     default: "admin"
   },
   phone: String,
-  blog: [BlogSchema]
+  blog: [BlogSchema],
+  auth: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Auth"
+  }
 });
 module.exports = mongoose.model("Admin", AdminSchema);

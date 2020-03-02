@@ -18,7 +18,7 @@ const AuthSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  auth: {
+  Auth: {
     type: mongoose.Schema.ObjectId,
     ref: "Auth"
   }

@@ -12,14 +12,6 @@ const UserSchema = new mongoose.Schema({
   twitter: String,
   github: String,
   linkedin: String,
-  register: {
-    type: Date,
-    default: Date.now
-  },
-  status: {
-    type: Boolean,
-    default: true
-  },
   auth: {
     type: mongoose.Schema.ObjectId,
     ref: "Auth"

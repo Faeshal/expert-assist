@@ -14,6 +14,8 @@ const cors = require("cors");
 const colors = require("colors");
 const morgan = require("morgan");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+const adminRotes = require("./routes/admin");
 const Auth = require("./models/Auth");
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
@@ -56,12 +58,18 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-// *Routing
+// * Routing
 app.get("/", (req, res, next) => {
-  res.render("index");
+  res.render("front/index");
+});
+
+app.get("/user/dashboard", (req, res, next) => {
+  res.render("back/user/dashboard");
 });
 
 app.use(authRoutes);
+app.use(userRoutes);
+app.use(adminRotes);
 
 // * Database Connection
 mongoose.connect(process.env.MONGO_URI, {
