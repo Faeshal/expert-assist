@@ -42,7 +42,6 @@ exports.getLogin = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  req.body.auth = req.auth.id;
   Auth.findOne({ email: email })
     .then(auth => {
       if (!auth) {
@@ -54,14 +53,13 @@ exports.postLogin = (req, res, next) => {
           if (doMatch) {
             req.session.isLoggedIn = true;
             req.session.auth = auth;
+            // req.body.auth = req.auth.id;
             return req.session.save(err => {
               console.log(err);
-              if (req.auth.level == "admin") {
+              if (auth.level == "admin") {
                 res.redirect("/admin/dashboard");
-              } else if (req.auth.level == "user") {
+              } else if (auth.level == "user") {
                 res.redirect("/user/dashboard");
-              } else {
-                res.redirect("/mentor/dashboard");
               }
             });
           }
@@ -112,4 +110,11 @@ exports.postRegisterAdmin = (req, res, next) => {
         console.log(err);
       });
   }
+};
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect("/");
+  });
 };

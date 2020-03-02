@@ -442,7 +442,7 @@
                     <img alt="Image placeholder" src="../../back/assets/img/theme/team-4.jpg">
                   </span>
                   <div class="media-body ml-2 d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+                    <span class="mb-0 text-sm  font-weight-bold"><%= auth.level %></span>
                   </div>
                 </div>
               </a>
@@ -467,9 +467,12 @@
                   <span>Support</span>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#!" class="dropdown-item">
+                <form action="/logout" method="POST">
+                <button type="submit" class="dropdown-item">
                   <i class="ni ni-user-run"></i>
                   <span>Logout</span>
+                </button>
+                </form>
                 </a>
               </div>
             </li>
@@ -528,8 +531,8 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
-                      <span class="h2 font-weight-bold mb-0">2,356</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total users</h5>
+                      <span class="h2 font-weight-bold mb-0"><%=totalUser%></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">

@@ -1,13 +1,7 @@
 const User = require("../models/User");
 
 exports.getDashboard = (req, res, next) => {
-  User.findById(req.user.id)
-    .then(user => {
-      res.render("back/user/dashboard", {
-        user: user
-      });
-    })
-    .catch(err => console.log(err));
+  res.render("back/user/dashboard");
 };
 
 exports.getProfile = (req, res, next) => {
