@@ -16,19 +16,6 @@ const BlogSchema = new mongoose.Schema({
 });
 
 const AdminSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  level: {
-    type: String,
-    default: "admin"
-  },
   username: {
     type: String,
     default: "admin"

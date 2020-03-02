@@ -20,3 +20,25 @@ exports.getDashboard = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getProfile = (req, res, next) => {
+  res.render("back/admin/profile");
+};
+
+exports.createProfile = (req, res, next) => {
+  const username = req.body.username;
+  const phone = req.body.phone;
+  const admin = new Admin({
+    username: username,
+    phone: phone
+  });
+  admin
+    .save()
+    .then(result => {
+      console.log("Created Profile");
+      res.redirect("/admin/profile");
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
