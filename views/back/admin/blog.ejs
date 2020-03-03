@@ -1,0 +1,66 @@
+<%-include('../../layouts/back/admin/header.ejs')%>
+  <!-- Sidenav -->
+  <%-include('../../layouts/back/admin/sideNav.ejs')%>
+  <!-- Main content -->
+  <div class="main-content" id="panel">
+    <!-- Topnav -->
+    <%-include('../../layouts/back/admin/topNav.ejs')%>
+    <!-- Header -->
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              <h6 class="h2 text-white d-inline-block mb-0">Blog</h6>
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+              <a href="https://www.pexels.com/" target="_blank" class="btn btn-sm btn-neutral">Pexel</a>
+              <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 card-wrapper">
+          <!-- Headings -->
+          <form action="/admin/blog" method="POST">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="mb-0 text-center">Create Blog</h3>
+              </div>
+              <div class="card-body">
+                <div class="row py-3 align-items-center">
+                  <div class="col-lg-12">
+                      <input type="text" class="form-control" name ="title" placeholder="title">
+                    </div>
+                </div>
+                 <div class="row py-3 align-items-center">
+                  <div class="col-lg-12">
+                      <input type="text" class="form-control" name ="image" placeholder="image">
+                    </div>
+                </div>
+                 <div class="row py-3 align-items-center">
+                  <div class="col-lg-12">
+                      <input type="text" class="form-control" name ="desc" placeholder="description">
+                    </div>
+                </div>
+                <div class="row py-3 align-items-center">
+                  <div class="col-lg-12">
+                     <textarea class="form-control" placeholder="write some content here" rows="7" name="content"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+     
+
+<%-include('../../layouts/back/admin/footer.ejs')%>

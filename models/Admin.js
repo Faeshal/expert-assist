@@ -16,15 +16,19 @@ const BlogSchema = new mongoose.Schema({
 });
 
 const AdminSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    default: "admin"
+  email: String,
+  password: String,
+  username: String,
+  level: String,
+  register: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: Boolean,
+    default: true
   },
   phone: String,
-  blog: [BlogSchema],
-  auth: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Auth"
-  }
+  blog: [BlogSchema]
 });
 module.exports = mongoose.model("Admin", AdminSchema);
