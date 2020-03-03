@@ -106,7 +106,7 @@ exports.postRegisterAdmin = (req, res, next) => {
             return admin.save();
           })
           .then(result => {
-            res.redirect("/login");
+            res.redirect("/loginAdmin");
           });
       })
       .catch(err => {
