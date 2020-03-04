@@ -1,7 +1,6 @@
 const Admin = require("../models/Admin");
 
 exports.getDashboard = (req, res, next) => {
-  console.log(req.session.admin.blog);
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/dashboard", {
@@ -74,25 +73,24 @@ exports.createBlog = (req, res, nexta) => {
 };
 
 exports.getAllBlog = (req, res, next) => {
-  Admin.find()
+  Admin.findOne()
     .then(admins => {
-      console.log("------------");
-      console.log(admins);
+      var blog = admins.blog;
       res.render("front/blog", {
-        admin: admins
+        admin: admins,
+        blog: blog
       });
     })
     .catch(err => console.log(err));
 };
 
-exports.getIndex = (req, res, next) => {
-  Hutang.find()
-    .then(hutangs => {
-      res.render("index", {
-        hut: hutangs,
-        pageTitle: "Index",
-        path: "/",
-        title: "index"
+exports.getDetailBlog = (req, res, next) => {
+  const id = req.params.id;
+  Admin.findOne({ _id: id })
+    .then(admins => {
+      var blog = admins.blog[0];
+      res.render("front/blogdetail", {
+        blog: blog
       });
     })
     .catch(err => console.log(err));

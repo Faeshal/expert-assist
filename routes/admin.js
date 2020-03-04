@@ -11,5 +11,6 @@ router.get("/admin/blog", adminContoller.getCreateBlog);
 router.post("/admin/blog", adminContoller.createBlog);
 
 router.get("/blog", adminContoller.getAllBlog);
+router.get("/blog/:id", adminContoller.getDetailBlog);
 
 module.exports = router;

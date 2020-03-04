@@ -1,5 +1,5 @@
-<%-include('./layouts/blog/header.ejs')%>
-<%-include('./layouts/navbar.ejs')%>
+<%-include('../layouts/blog/header.ejs')%>
+<%-include('../layouts/navbar.ejs')%>
     
     <!-- Start home -->
     <section class="bg-half page-next-level"> 
@@ -117,7 +117,7 @@
                         <div class="blog-details meta mt-3">
                             <ul class="list-inline mb-1">
                                 <li class="list-inline-item mr-4">
-                                    <p class="text-muted mb-0"><i class="mdi mdi-calendar-range mr-1"></i>01-January-2018</p>
+                                    <p class="text-muted mb-0"><i class="mdi mdi-calendar-range mr-1"></i><%=blog.date%></p>
                                 </li>
 
                                 <li class="list-inline-item mr-4">
@@ -131,17 +131,11 @@
                         </div>
 
                         <div class="blog-details-desc p-2">
-                            <h5 class="mb-3"><a href="#" class="text-dark">A small river named Duden flows by their place and supplies regelialia.</a></h5>
+                            <h5 class="mb-3"><a href="#" class="text-dark"><%=blog.title%></a></h5>
 
-                            <p class="text-muted mb-3 f-13">The Big Oxmox advised her not to do so because there were thousands of bad Commas as wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way But nothing the copy said could convince her and s didn’t take long until a few insidious Copy Writers ambushed made her drunk with Longe and Parole and dragged a into their agency where they abused her for their projects again and again. And if hasn’t been rewritten.</p>
+                            <p class="text-muted mb-3 f-13"><%=blog.desc%></p>
 
-                            <p class="text-muted f-13">The copy warned the Little Blind Text that where it came from would have rewritten thousand times and everything that was left from its origin would be the word and the Little Blind Text should turn around and return its own, safe country But nothing the copy said could convince.</p>
-
-                            <blockquote class="blockquote p-4 position-relative">
-                                <i class="fas fa-quote-left text-primary"></i>
-                                <p class="mb-2 font-italic f-14 text-dark">It is a paradisematic country in which roasted parts of sentences fly into your mouth Even the all-powerful Pointing has control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name as of Lorem Ipsum decided to leave.</p>
-                                <h6 class="mb-0"><a href="#" class="text-dark">By : Maude J. McDowell</a></h6>
-                            </blockquote>
+                            <p class="text-muted f-13"><%=blog.content%></p>
                             
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item mt-1">
@@ -154,7 +148,7 @@
                     </div>
 
                     <div class="rounded border mt-4 p-4">
-                        <h5 class="text-dark"><i class="mdi mdi-comment-multiple mr-2"></i>4 Comments</h5>
+                        <h5 class="text-rk"><i class="mdi mdi-comment-multiple mr-2"></i>4 Comments</h5>
                         <div class="media mt-4 pt-2">
                             <div class="blog-comment-img">
                                 <img class="d-block mx-auto rounded-pill" height="60" alt="" src="https://via.placeholder.com/400X400//88929f/5a6270C/O https://placeholder.com/">
@@ -256,4 +250,4 @@
     </section>
     <!-- BLOG LIST END -->
 
- <%-include('./layouts/blog/footer.ejs')%>
+<%-include('../layouts/blog/footer.ejs')%>
