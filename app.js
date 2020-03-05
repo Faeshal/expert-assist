@@ -61,6 +61,7 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 // * Routing
+
 app.get("/", (req, res, next) => {
   res.render("front/index");
 });
@@ -72,6 +73,10 @@ app.get("/user/dashboard", (req, res, next) => {
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(adminRotes);
+
+app.get("*", (req, res, next) => {
+  res.status(404).render("layouts/404");
+});
 
 // * Database Connection
 mongoose.connect(process.env.MONGO_URI, {

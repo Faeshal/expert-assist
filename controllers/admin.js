@@ -75,20 +75,25 @@ exports.createBlog = (req, res, nexta) => {
 exports.getAllBlog = (req, res, next) => {
   Admin.findOne()
     .then(admins => {
-      var blog = admins.blog;
-      res.render("front/blog", {
-        admin: admins,
-        blog: blog
-      });
+      if (!admins) {
+        console.log("No Admins Data");
+        res.redirect("/");
+      } else {
+        var blog = admins.blog;
+        res.render("front/blog", {
+          admin: admins,
+          blog: blog
+        });
+      }
     })
     .catch(err => console.log(err));
 };
 
 exports.getDetailBlog = (req, res, next) => {
-  const id = req.params.id;
-  Admin.findOne({ _id: id })
+  Admin.findOne({ _id: req.params.id })
     .then(admins => {
       var blog = admins.blog[0];
+      console.log(blog);
       res.render("front/blogdetail", {
         blog: blog
       });
