@@ -73,6 +73,8 @@ exports.createBlog = (req, res, nexta) => {
 };
 
 exports.getAllBlog = (req, res, next) => {
+  // *FindOne mengembalikan object
+  // *find mengembalikan array
   Admin.findOne()
     .then(admins => {
       if (!admins) {
@@ -90,10 +92,10 @@ exports.getAllBlog = (req, res, next) => {
 };
 
 exports.getDetailBlog = (req, res, next) => {
-  Admin.findOne({ _id: req.params.id })
+  id = req.params.id;
+  Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
     .then(admins => {
       var blog = admins.blog[0];
-      console.log(blog);
       res.render("front/blogdetail", {
         blog: blog
       });
