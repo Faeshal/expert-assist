@@ -42,17 +42,25 @@
                  <div class="row py-3 align-items-center">
                   <div class="col-lg-12">
                       <input type="text" class="form-control" value="<%=blog.image%>" name ="image" name="image">
-                    </div>
+                  </div>
                 </div>
-                 <div class="row py-3 align-items-center">
+                <div class="row py-3 align-items-center">
                   <div class="col-lg-12">
                       <input type="text" class="form-control" value="<%=blog.desc%>" name ="desc" name="description">
-                    </div>
+                  </div>
+                </div>
+                <div class="row py-3 align-items-center">
+                  <div class="col-lg-12">
+                     <select class="custom-select" value="<%=blog.status%>" name="status">
+                      <option value="true">Published</option>
+                      <option value="false">Postpone</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="row py-3 align-items-center">
                   <div class="col-lg-12">
                      <textarea class="form-control" placeholder="write some content here" rows="10" name="content"><%=blog.content%></textarea>
-                    </div>
+                  </div>
                 </div>
                 <div class="col-sm-12 text-center">
                 <button type="submit" class="btn btn-primary">Update</button>

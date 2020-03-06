@@ -100,26 +100,22 @@ exports.updateBlog = (req, res, next) => {
   const title = req.body.title;
   const image = req.body.image;
   const desc = req.body.desc;
+  const status = req.body.status;
   const content = req.body.content;
+
   const id = req.body.id;
-  Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
-    .then(admins => {
-      admins.blog.push({
-        title: title,
-        image: image,
-        desc: desc,
-        content: content
-      });
-
-      // var blog = admins.blog[0];
-      // console.log(blog);
-
-      // blog.title = title;
-      // blog.image = image;
-      // blog.desc = desc;
-      // blog.content = content;
-      return admins.save();
-    })
+  Admin.updateOne(
+    { "blog._id": id },
+    {
+      $set: {
+        "blog.$.title": title,
+        "blog.$.image": image,
+        "blog.$.desc": desc,
+        "blog.$.status": status,
+        "blog.$.content": content
+      }
+    }
+  )
     .then(result => {
       console.log(result);
       res.redirect("/admin/bloglist");
@@ -131,7 +127,7 @@ exports.deleteBlog = (req, res, next) => {
   const id = req.body.id;
   console.log(id);
   // * $pull =  Query Native MongoDB
-  Admin.update({}, { $pull: { blog: { _id: id } } })
+  Admin.updateOne({ $pull: { blog: { _id: id } } })
     .then(admins => {
       console.log(admins);
       console.log("Blog Deleted");
