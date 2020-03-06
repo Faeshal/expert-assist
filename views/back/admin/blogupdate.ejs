@@ -59,7 +59,7 @@
                 </div>
                 <div class="row py-3 align-items-center">
                   <div class="col-lg-12">
-                     <textarea class="form-control" placeholder="write some content here" rows="10" name="content"><%=blog.content%></textarea>
+                     <textarea row="8" class="form-control" id="summernote" name="content"><%=blog.content%></textarea>
                   </div>
                 </div>
                 <div class="col-sm-12 text-center">
@@ -70,6 +70,26 @@
           </form>
         </div>
       </div>
+
+
+      <script>
+      $('#summernote').summernote({
+        placeholder: 'Write Awesome content here...',
+        tabsize: 2,
+        height: 350,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['height', ['height']]
+        ]
+      });
+    </script>
      
 
 <%-include('../../layouts/back/admin/footer.ejs')%>

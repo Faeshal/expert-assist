@@ -61,7 +61,7 @@
                             <h4 class="widget-title">Recent Post</h4>
                             <div class="mt-4">
                                 <div class="clearfix post-recent">
-                                    <div class="post-recent-thumb float-left"> <a href="jvascript:void(0)"> <img alt="img" src="https://via.placeholder.com/800X800//88929f/5a6270C/O https://placeholder.com/" class="img-fluid rounded"></a></div>
+                                    <div class="post-recent-thumb float-left"> <a href="jvascript:void(0)"> <img alt="img" src="https://via.placeholder.com/800X800//88929f/5a6270C/O https://placeholder.com/" class="img-fluid rounded" ></a></div>
                                     <div class="post-recent-content float-left"><a href="jvascript:void(0)">Consultant Business</a><span class="text-muted mt-2">15th June, 2019</span></div>
                                 </div>
                                 <div class="clearfix post-recent">
@@ -112,7 +112,7 @@
                 <div class="col-lg-8 col-md-6 col-12 order-1 order-md-2">
                     <div class="shadow rounded p-4">
                         <div class="blog-details-img">
-                            <img src="https://via.placeholder.com/800X450//88929f/5a6270C/O https://placeholder.com/" alt="" class="img-fluid mx-auto rounded d-block">
+                            <img src="<%=blog.image%>" alt="Responsive image" class="img-fluid mx-auto rounded d-block">
                         </div>
                         <div class="blog-details meta mt-3">
                             <ul class="list-inline mb-1">
@@ -135,114 +135,22 @@
 
                             <p class="text-muted mb-3 f-13"><%=blog.desc%></p>
 
-                            <p class="text-muted f-13"><%=blog.content%></p>
+                            <p class="text-muted f-13"><%-blog.content%></p>
                             
-                            <ul class="list-inline mb-0">
-                                <li class="list-inline-item mt-1">
-                                    <a href="" class="text-dark">
-                                        <p class="mb-0 f-17"><i class="mdi mdi-heart-outline mr-1 text-danger"></i>Like</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
 
                     <div class="rounded border mt-4 p-4">
-                        <h5 class="text-rk"><i class="mdi mdi-comment-multiple mr-2"></i>4 Comments</h5>
-                        <div class="media mt-4 pt-2">
-                            <div class="blog-comment-img">
-                                <img class="d-block mx-auto rounded-pill" height="60" alt="" src="https://via.placeholder.com/400X400//88929f/5a6270C/O https://placeholder.com/">
-                            </div>
-                            <div class="media-body ml-3">
-                                <h6 class="mb-0"><a href="#" class="text-dark">Kathleen Manuel</a></h6>
-                                <p class="text-muted mb-0">08-Sep-2018 at 02:15 pm</p>
-                                <p class="text-muted f-14 mb-2">The Big Oxmox advised her not to do so, because there were thousands of bad a Commas wild Question Marks and devious Semikoli.</p>
-                                <p class="mb-0"><a href="" class="text-muted"><i class="mdi mdi-reply-all mr-2"></i>Reply</a></p>
-                                
-
-                                <div class="media mt-4">
-                                    <div class="blog-comment-img">
-                                        <img class="d-block mx-auto rounded-pill" height="60" alt="" src="https://via.placeholder.com/400X400//88929f/5a6270C/O https://placeholder.com/">
-                                    </div>
-                                    <div class="media-body ml-3">
-                                        <h6 class="mb-0"><a href="#" class="text-dark">John Newton</a></h6>
-                                        <p class="text-muted mb-0">03, Oct, 2018 At 06.05pm</p>
-                                        <p class="text-muted f-14 mb-2">Nam libero tempore, cum soluta nobis est at eligendi optio cumque nihil impedit quo minus id quod maxime placeat.</p>
-                                        <p class="mb-0"><a href="" class="text-muted"><i class="mdi mdi-reply-all mr-2"></i>Reply</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="media mt-4">
-                            <div class="blog-comment-img">
-                                <img class="d-block mx-auto rounded-pill" height="60" alt="" src="https://via.placeholder.com/400X400//88929f/5a6270C/O https://placeholder.com/">
-                            </div>
-                            <div class="media-body ml-3">
-                                <h6 class="mb-0"><a href="#" class="text-dark">Ruby Poe</a></h6>
-                                <p class="text-muted mb-0">04, Oct, 2018 At 09:35am</p>
-                                <p class="text-muted mb-2">Similique sunt in culpa qui officia deserunt mollitia animi id est laborum et dolorum fuga et harum quidem rerum.</p>
-                                <p class="mb-0"><a href="" class="text-muted"><i class="mdi mdi-reply-all mr-2"></i>Reply</a></p>
-                            </div>
-                        </div>
-
-                        
-                        <div class="media mt-4">
-                            <div class="blog-comment-img">
-                                <img class="d-block mx-auto rounded-pill" height="60" alt="" src="https://via.placeholder.com/400X400//88929f/5a6270C/O https://placeholder.com/">
-                            </div>
-                            <div class="media-body ml-3">
-                                <h6 class="mb-0"><a href="#" class="text-dark">Robert Booker</a></h6>
-                                <p class="text-muted mb-0">04, Oct, 2018 at 04:16 pm</p>
-                                <p class="text-muted mb-2">When she reached the first hills of the Italic Mountains, she had a last view on the skyline her hometown the headline.</p>
-                                <p class="mb-0"><a href="" class="text-muted"><i class="mdi mdi-reply-all mr-2"></i>Reply</a></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded border mt-4 p-4">
-                        <h5 class="text-dark"><i class="mdi mdi-pencil mr-2"></i>Leave Your Comments</h5>
-                        <div class="custom-form mt-4 pt-2">
-                            <form name="contact-form">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group blog-details-form">
-                                            <i class="mdi mdi-account text-muted f-17"></i>
-                                            <input name="name" id="name" type="text" class="form-control blog-details" placeholder="Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group blog-details-form">
-                                            <i class="mdi mdi-email text-muted f-17"></i>
-                                            <input name="email" id="email" type="email" class="form-control blog-details" placeholder="Email">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                    <div class="form-group blog-details-form">
-                                        <i class="mdi mdi-web text-muted f-17"></i>
-                                        <input name="url" id="url" type="url" class="form-control blog-details" placeholder="url">
-                                    </div>
-                                </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group blog-details-form">
-                                            <i class="mdi mdi-comment-processing text-muted f-17"></i>
-                                            <textarea name="comments" id="comments" rows="4" class="form-control blog-details" placeholder="Comment"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <input type="submit" id="submit" name="send" class="submitBnt btn btn-primary" value="Post comment">
-                                    </div>
-                                </div>
-                            </form>
-                            <!-- /form -->
-                        </div>
+                        <h5 class="text-rk mb-2"><i class="mdi mdi-comment-multiple mr-2"></i>Comments</h5>
+                        <div id="hyvor-talk-view"></div>
+                        <script type="text/javascript">
+                            var HYVOR_TALK_WEBSITE = 271; // DO NOT CHANGE THIS
+                            var HYVOR_TALK_CONFIG = {
+                                url: false,
+                                id: false
+                            };
+                        </script>
+                        <script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
                     </div>
                 </div>
             </div>
