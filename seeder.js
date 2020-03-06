@@ -4,7 +4,7 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 require("colors");
 const Admin = require("./models/Admin");
-const User = require("./models/User");
+// const User = require("./models/User");
 
 // Connect Mongodb
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,15 +19,15 @@ const admin = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/Admin.json`, "utf-8")
 );
 
-const user = JSON.parse(
-  fs.readFileSync(`${__dirname}/_data/User.json`, "utf-8")
-);
+// const user = JSON.parse(
+//   fs.readFileSync(`${__dirname}/_data/User.json`, "utf-8")
+// );
 
 // Import File To MongoDB
 const importData = async () => {
   try {
     await Admin.create(admin);
-    await User.create(user);
+    // await User.create(user);
     console.log("Sucessfully Import Data...".green.inverse);
     process.exit();
   } catch (err) {
@@ -39,7 +39,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Admin.deleteMany();
-    await User.deleteMany();
+    // await User.deleteMany();
     console.log("Succesfully Destroy Data ...".red.inverse);
     process.exit();
   } catch (err) {

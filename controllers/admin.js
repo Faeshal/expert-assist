@@ -20,6 +20,17 @@ exports.getProfile = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.getAllBlog = (req, res, next) => {
+  Admin.findOne()
+    .then(admins => {
+      var blog = admins.blog;
+      res.render("back/admin/bloglist", {
+        blog: blog
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.createProfile = (req, res, next) => {
   const username = req.body.username;
   const phone = req.body.phone;
@@ -67,38 +78,64 @@ exports.createBlog = (req, res, nexta) => {
     })
     .then(result => {
       console.log(result);
-      res.redirect("/admin/blog");
+      res.redirect("/admin/bloglist");
     })
     .catch(err => console.log(err));
 };
 
-exports.getAllBlog = (req, res, next) => {
-  // *FindOne mengembalikan object
-  // *find mengembalikan array
-  Admin.findOne()
-    .then(admins => {
-      if (!admins) {
-        console.log("No Admins Data");
-        res.redirect("/");
-      } else {
-        var blog = admins.blog;
-        res.render("front/blog", {
-          admin: admins,
-          blog: blog
-        });
-      }
-    })
-    .catch(err => console.log(err));
-};
-
-exports.getDetailBlog = (req, res, next) => {
-  id = req.params.id;
+exports.getUpdateBlog = (req, res, next) => {
+  const id = req.params.id;
   Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
     .then(admins => {
       var blog = admins.blog[0];
-      res.render("front/blogdetail", {
+      console.log(blog);
+      res.render("back/admin/blogupdate", {
         blog: blog
       });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.updateBlog = (req, res, next) => {
+  const title = req.body.title;
+  const image = req.body.image;
+  const desc = req.body.desc;
+  const content = req.body.content;
+  const id = req.body.id;
+  Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
+    .then(admins => {
+      admins.blog.push({
+        title: title,
+        image: image,
+        desc: desc,
+        content: content
+      });
+
+      // var blog = admins.blog[0];
+      // console.log(blog);
+
+      // blog.title = title;
+      // blog.image = image;
+      // blog.desc = desc;
+      // blog.content = content;
+      return admins.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/bloglist");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.deleteBlog = (req, res, next) => {
+  const id = req.body.id;
+  console.log(id);
+  // * $pull =  Query Native MongoDB
+  Admin.update({}, { $pull: { blog: { _id: id } } })
+    .then(admins => {
+      console.log(admins);
+      console.log("Blog Deleted");
+      res.redirect("/admin/bloglist");
     })
     .catch(err => console.log(err));
 };

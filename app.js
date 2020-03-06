@@ -13,6 +13,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const colors = require("colors");
 const morgan = require("morgan");
+const frontRoutes = require("./routes/front");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const adminRotes = require("./routes/admin");
@@ -62,17 +63,14 @@ app.set("views", "views");
 
 // * Routing
 
-app.get("/", (req, res, next) => {
-  res.render("front/index");
-});
-
 app.get("/user/dashboard", (req, res, next) => {
   res.render("back/user/dashboard");
 });
 
+app.use(frontRoutes);
 app.use(authRoutes);
-app.use(userRoutes);
 app.use(adminRotes);
+app.use(userRoutes);
 
 app.get("*", (req, res, next) => {
   res.status(404).render("layouts/404");
