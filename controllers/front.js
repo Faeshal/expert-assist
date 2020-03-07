@@ -7,13 +7,42 @@ exports.getIndex = (req, res, next) => {
 exports.getAllBlog = (req, res, next) => {
   // *FindOne mengembalikan object
   // *find mengembalikan array
-  Admin.findOne()
+  // *Aggreagte juga mengembalikan array , jadi harus diconvert jadi object dulu
+  Admin.aggregate([
+    {
+      $project: {
+        blog: {
+          $filter: {
+            input: "$blog",
+            as: "blog",
+            cond: {
+              $eq: ["$$blog.status", true]
+            }
+          }
+        }
+      }
+    }
+  ])
     .then(admins => {
       if (!admins) {
         console.log("No Admins Data");
         res.redirect("/");
       } else {
-        var blog = admins.blog;
+        console.log(admins);
+        console.log("===========Convert To Object Below=============");
+        var after = {};
+        admins.forEach(function(obj) {
+          // obj here is the element of the array, i.e. object
+          // Looping over all the keys of the object
+          Object.keys(obj).forEach(function(key) {
+            // key here is the key of the object
+            after[key] = obj[key];
+          });
+        });
+
+        console.log(after);
+
+        var blog = after.blog;
         res.render("front/blog", {
           admin: admins,
           blog: blog

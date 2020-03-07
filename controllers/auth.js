@@ -125,8 +125,9 @@ exports.postLoginAdmin = (req, res, next) => {
   Admin.findOne({ email: email })
     .then(admin => {
       if (!admin) {
-        return res.redirect("/login");
+        return res.redirect("/loginAdmin");
       }
+      console.log(admin);
       bcrypt
         .compare(password, admin.password)
         .then(doMatch => {
@@ -139,11 +140,11 @@ exports.postLoginAdmin = (req, res, next) => {
               res.redirect("/admin/dashboard");
             });
           }
-          res.redirect("/login");
+          res.redirect("/loginAdmin");
         })
         .catch(err => {
           console.log(err);
-          res.redirect("/login");
+          res.redirect("/loginAdmin");
         });
     })
     .catch(err => console.log(err));
