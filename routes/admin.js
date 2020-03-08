@@ -20,4 +20,7 @@ router.post("/admin/blog/update", adminContoller.updateBlog);
 
 router.post("/admin/blog/delete", adminContoller.deleteBlog);
 
+// * Category
+router.get("/admin/category", adminContoller.getCategory);
+
 module.exports = router;

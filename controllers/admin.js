@@ -135,3 +135,7 @@ exports.deleteBlog = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getCategory = (req, res, next) => {
+  res.render("back/admin/category");
+};
