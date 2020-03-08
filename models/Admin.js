@@ -24,6 +24,15 @@ const CategorySchema = new mongoose.Schema({
   }
 });
 
+const FaqSchema = new mongoose.Schema({
+  question: String,
+  answer: String,
+  date: {
+    type: String,
+    default: Date.now
+  }
+});
+
 const AdminSchema = new mongoose.Schema({
   email: String,
   password: String,
@@ -39,7 +48,8 @@ const AdminSchema = new mongoose.Schema({
   },
   phone: String,
   blog: [BlogSchema],
-  category: [CategorySchema]
+  category: [CategorySchema],
+  faq: [FaqSchema]
 });
 
 module.exports = mongoose.model("Admin", AdminSchema);

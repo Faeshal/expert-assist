@@ -181,3 +181,14 @@ exports.deleteCategory = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getFaq = (req, res, next) => {
+  Admin.findOne()
+    .then(admins => {
+      let faq = admins.faq;
+      res.render("back/admin/faq", {
+        faq: faq
+      });
+    })
+    .catch(err => console.log(err));
+};
