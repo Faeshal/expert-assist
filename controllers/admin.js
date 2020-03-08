@@ -137,5 +137,34 @@ exports.deleteBlog = (req, res, next) => {
 };
 
 exports.getCategory = (req, res, next) => {
-  res.render("back/admin/category");
+  Admin.findOne()
+    .then(admins => {
+      console.log(admins);
+      var category = admins.category;
+      console.log("=====================");
+      console.log(category);
+      res.render("back/admin/category", {
+        category: category
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postCategory = (req, res, next) => {
+  const name = req.body.name;
+  const testlink = req.body.testlink;
+  const id = req.session.admin._id;
+  Admin.findById(id)
+    .then(admin => {
+      admin.category.push({
+        name: name,
+        testlink: testlink
+      });
+      return admin.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/category");
+    })
+    .catch(err => console.log(err));
 };
