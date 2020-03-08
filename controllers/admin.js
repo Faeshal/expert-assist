@@ -168,3 +168,16 @@ exports.postCategory = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.deleteCategory = (req, res, next) => {
+  const id = req.body.id;
+  console.log(id);
+  // * $pull =  Query Native MongoDB
+  Admin.updateOne({ $pull: { category: { _id: id } } })
+    .then(admins => {
+      console.log(admins);
+      console.log("Category Deleted");
+      res.redirect("/admin/category");
+    })
+    .catch(err => console.log(err));
+};
