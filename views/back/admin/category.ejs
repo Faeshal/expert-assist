@@ -128,16 +128,18 @@
                   </tr>
                 </thead>
                 <tbody>
+                <% for (var i=0;i<category.length;i++) { %>
+                  <% var categorydata = category[i]; %>
                   <tr>
                     <td class="table-user">
-                      <b>John Michael</b>
+                      <b><%= categorydata.name %></b>
                     </td>
                     <td>
-                      <span class="text-muted">10/09/2018</span>
+                      <span class="text-muted"><%= categorydata.date %></span>
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"
-                        >Argon Dashboard PRO</a
+                        ><%= categorydata.testlink %></a
                       >
                     </td>
                     <td class="table-actions">
@@ -159,6 +161,7 @@
                       </a>
                     </td>
                   </tr>
+                <% } %>
                 </tbody>
               </table>
             </div>
