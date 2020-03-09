@@ -23,12 +23,13 @@ router.post("/admin/blog/delete", adminContoller.deleteBlog);
 // * Category
 router.get("/admin/category", adminContoller.getCategory);
 router.post("/admin/category", adminContoller.postCategory);
-router.post("/admin/category/delete", adminContoller.deleteCategory);
 router.post("/admin/category/update", adminContoller.updateCategory);
+router.post("/admin/category/delete", adminContoller.deleteCategory);
 
 // * FAQ
 router.get("/admin/faq", adminContoller.getFaq);
 router.post("/admin/faq", adminContoller.postFaq);
 router.post("/admin/faq/update", adminContoller.updateFaq);
+router.post("/admin/faq/delete", adminContoller.deleteFaq);
 
 module.exports = router;

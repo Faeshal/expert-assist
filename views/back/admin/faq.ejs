@@ -26,7 +26,7 @@
             </nav>
           </div>
           <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-neutral tombolTambahData" data-toggle="modal" data-target="#modal-form">New</a>
             <a href="#" class="btn btn-sm btn-neutral">Filters</a>
           </div>
         </div>
@@ -36,64 +36,8 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-8 mx-auto">
+      <div class="col-lg-10 mx-auto">
         <div class="card-wrapper">
-          <!-- CATEGORY FORM -->
-          <div class="card">
-            <!-- Card header -->
-            <div class="card-header">
-              <h3 class="mb-0">Create Question & Asnwer</h3>
-            </div>
-            <!-- Card body -->
-            <div class="card-body">
-              <form action="" method="POST">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <div class="input-group input-group-merge">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"
-                            ><i class="fas fa-user"></i
-                          ></span>
-                        </div>
-                        <input
-                          class="form-control"
-                          type="text"
-                          name="question"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <div class="input-group input-group-merge">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"
-                            ><i class="fas fa-envelope"></i
-                          ></span>
-                        </div>
-                        <textarea
-                          class="form-control"
-                          id="answer"
-                          name="answer"
-                          rows="3"
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-2 float-left">
-                    <div class="form-group">
-                      <div class="input-group input-group-merge">
-                        <button class="btn btn-primary" type="submit">
-                          Submit
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
           <!-- CATEGORY TABLE -->
           <div class="card">
             <!-- Card header -->
@@ -144,7 +88,7 @@
                       >
                     </td>
                     <td class="table-actions">
-                      <form method="GET" action="/admin/faq/delete">
+                      <form method="POST" action="/admin/faq/delete">
                         <a
                           href="javascript:void(0);"
                           class="table-action edit"
@@ -198,7 +142,7 @@
               <div class="card bg-secondary border-0 mb-0">
                 <div class="card-body px-lg-5 py-lg-5">
                   <div class="text-center text-muted mb-4 mt-4">
-                    <h3>Update FAQ</h3>
+                    <h3 id="formModalLabel">Update FAQ</h3>
                   </div>
                   <form role="form" method="POST" action="/admin/faq/update">
                     <div class="form-group mb-4">
@@ -228,14 +172,14 @@
                           ></span>
                         </div>
                         <input
-                          class="form-control answer text-"
+                          class="form-control answer text-dark"
                           type="text"
                           name="answer"
                         />
                       </div>
                     </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary my-4">
+                    <div class="text-center button-dynamic">
+                      <button type="submit" class="btn btn-primary my-4 text-center">
                         Update
                       </button>
                     </div>
@@ -250,7 +194,24 @@
 
     <script>
       $(document).ready(function() {
+
+          $(".tombolTambahData").on("click", function() {
+            $("#formModalLabel").html("Create FAQ");
+            $(".button-dynamic button[type=submit]").html("Submit");
+            $(".question").val("");
+            $(".answer").val("");
+
+            $(".modal-body form").attr(
+              "action",
+              "/admin/faq/"
+            );
+          });
+        
+
+
         $("#mytable").on("click", ".edit", function() {
+          $("#formModalLabel").html("Update FAQ");
+          $(".button-dynamic button[type=submit]").html("Update");
           var id = $(this).data("id");
           console.log(id);
           var question = $(this).data("question");

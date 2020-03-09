@@ -253,3 +253,14 @@ exports.updateFaq = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.deleteFaq = (req, res, next) => {
+  const id = req.body.id;
+  Admin.updateOne({ $pull: { faq: { _id: id } } })
+    .then(admins => {
+      console.log(admins);
+      console.log("Faq Deleted");
+      res.redirect("/admin/faq");
+    })
+    .catch(err => console.log(err));
+};
