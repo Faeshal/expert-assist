@@ -143,21 +143,21 @@
                       >
                     </td>
                     <td class="table-actions">
-                    <form method="GET" action="/admin/category/delete" >
                       <a
-                        href="<%=categorydata._id%>"
-                        class="table-action"
+                        href="/admin/category/update/<%=categorydata._id%>"
+                        class="table-action tampilModalUbah"
                         data-original-title="Edit category"
-                        data-toggle="modal" data-target="#modal-form"
+                        data-toggle="modal" data-target="#modal-form" data-id="<%=categorydata._id%>"
                       >
                         <i class="fas fa-user-edit"></i>
                       </a>
+                    <form method="POST" action="/admin/category/delete" >
                       <input type="hidden" value="<%= categorydata._id %>" name="id"/>
                       <button type="submit" onclick="return confirm('Are you sure you want to delete?');" class="table-action btn btn-sm"  data-toggle="tooltip" data-original-title="Delete Category"><i class="fas fa-trash"></i></button>    
                     </form>
                     </td>
                   </tr>
-                <% } %>
+                 <% } %>
                 </tbody>
               </table>
             </div>
@@ -165,6 +165,8 @@
         </div>
       </div>
     </div>
+  </div>
+
 
                   <!-- Modals -->
                   <div class="col-md-6">
@@ -177,12 +179,13 @@
                               <div class="text-center text-muted mb-4 mt-4">
                                 <h3>Update Category</h3>
                               </div>
-                              <form role="form" method="POST" action="">
+                              <form role="form" method="POST" action="/admin/category/update">
                                 <div class="form-group mb-4">
                                   <div class="input-group input-group-merge input-group-alternative">
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
+                                    <input type="hidden" name="id" id="id"> 
                                     <input class="form-control" placeholder="Name" type="text">
                                   </div>
                                 </div>
@@ -205,5 +208,38 @@
                     </div>
                   </div>
                 </div>
+
+              </div>
+
+    <script>
+    
+    $(function(){
+
+    $('.tampilModalUbah').on('click',function(){
+      $('.modal-body form').attr('action','http://localhost/phpmvc/public/mahasiswa/ubah');
+      const id = $(this).data('id');
+      console.log(id)
+    $.ajax({
+      url:'http://localhost/phpmvc/public/mahasiswa/getubah',
+      data: {id : id},
+      method: 'post',
+      dataType: 'json',
+      success: function(data){
+        console.log(data);
+        // $('#nama').val(data.nama);
+        // $('#nrp').val(data.nrp);
+        // $('#email').val(data.email);
+        // $('#jurusan').val(data.jurusan);				
+        // $('#id').val(data.id);		
+        }
+      });
+    });
+
+  });
+    
+    </script>
+
+
+
     <!-- Footer -->
     <%-include('../../layouts/back/admin/footer.ejs')%>

@@ -27,5 +27,6 @@ router.post("/admin/category/delete", adminContoller.deleteCategory);
 
 // * FAQ
 router.get("/admin/faq", adminContoller.getFaq);
+router.post("/admin/faq", adminContoller.postFaq);
 
 module.exports = router;

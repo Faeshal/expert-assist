@@ -192,3 +192,22 @@ exports.getFaq = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.postFaq = (req, res, next) => {
+  const question = req.body.question;
+  const answer = req.body.answer;
+  const id = req.session.admin._id;
+  Admin.findOne(id)
+    .then(admin => {
+      admin.faq.push({
+        question: question,
+        answer: answer
+      });
+      return admin.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/faq");
+    })
+    .catch(err => console.log(err));
+};
