@@ -232,3 +232,24 @@ exports.postFaq = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.updateFaq = (req, res, next) => {
+  const question = req.body.question;
+  const answer = req.body.answer;
+
+  const id = req.body.id;
+  Admin.updateOne(
+    { "faq._id": id },
+    {
+      $set: {
+        "faq.$.question": question,
+        "faq.$.answer": answer
+      }
+    }
+  )
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/faq");
+    })
+    .catch(err => console.log(err));
+};

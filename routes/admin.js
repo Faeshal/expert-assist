@@ -29,5 +29,6 @@ router.post("/admin/category/update", adminContoller.updateCategory);
 // * FAQ
 router.get("/admin/faq", adminContoller.getFaq);
 router.post("/admin/faq", adminContoller.postFaq);
+router.post("/admin/faq/update", adminContoller.updateFaq);
 
 module.exports = router;
