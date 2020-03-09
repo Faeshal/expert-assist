@@ -118,7 +118,7 @@
             </div>
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table align-items-center table-flush">
+              <table class="table align-items-center table-flush" id="mytable">
                 <thead class="thead-light">
                   <tr>
                     <th>Name</th>
@@ -143,15 +143,17 @@
                       >
                     </td>
                     <td class="table-actions">
+                    <form method="POST" action="/admin/category/delete" >
                       <a
-                        href="/admin/category/update/<%=categorydata._id%>"
-                        class="table-action tampilModalUbah"
+                        href="javascript:void(0);"
+                        class="table-action edit"
                         data-original-title="Edit category"
                         data-toggle="modal" data-target="#modal-form" data-id="<%=categorydata._id%>"
+                        data-name="<%=categorydata.name%>"
+                        data-testlink="<%=categorydata.testlink%>"
                       >
                         <i class="fas fa-user-edit"></i>
                       </a>
-                    <form method="POST" action="/admin/category/delete" >
                       <input type="hidden" value="<%= categorydata._id %>" name="id"/>
                       <button type="submit" onclick="return confirm('Are you sure you want to delete?');" class="table-action btn btn-sm"  data-toggle="tooltip" data-original-title="Delete Category"><i class="fas fa-trash"></i></button>    
                     </form>
@@ -185,8 +187,8 @@
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
-                                    <input type="hidden" name="id" id="id"> 
-                                    <input class="form-control" placeholder="Name" type="text">
+                                    <input type="hidden" name="id" class="id">
+                                    <input class="form-control name text-dark" placeholder="name" type="text" name="name">
                                   </div>
                                 </div>
                                 <div class="form-group">
@@ -194,11 +196,11 @@
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Exam Link" type="text">
+                                    <input class="form-control testlink text-dark" placeholder="Exam Link" type="text" name="testlink">
                                   </div>
                                 </div>
                                 <div class="text-center">
-                                  <button type="button" class="btn btn-primary my-4">Update</button>
+                                  <button type="submit" class="btn btn-primary my-4">Update</button>
                                 </div>
                               </form>
                             </div>
@@ -212,32 +214,19 @@
               </div>
 
     <script>
+        $(document).ready(function(){
+          $('#mytable').on('click','.edit',function(){
+            var id = $(this).data('id');
+            console.log(id);
+            var name = $(this).data('name');
+            var testlink = $(this).data('testlink');
+            $('.name').val(name);
+            $('.testlink').val(testlink);
+            $('.id').val(id);
+          });
     
-    $(function(){
-
-    $('.tampilModalUbah').on('click',function(){
-      $('.modal-body form').attr('action','http://localhost/phpmvc/public/mahasiswa/ubah');
-      const id = $(this).data('id');
-      console.log(id)
-    $.ajax({
-      url:'http://localhost/phpmvc/public/mahasiswa/getubah',
-      data: {id : id},
-      method: 'post',
-      dataType: 'json',
-      success: function(data){
-        console.log(data);
-        // $('#nama').val(data.nama);
-        // $('#nrp').val(data.nrp);
-        // $('#email').val(data.email);
-        // $('#jurusan').val(data.jurusan);				
-        // $('#id').val(data.id);		
-        }
-      });
-    });
-
-  });
-    
-    </script>
+        });
+    </script>>
 
 
 

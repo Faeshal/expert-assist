@@ -24,6 +24,7 @@ router.post("/admin/blog/delete", adminContoller.deleteBlog);
 router.get("/admin/category", adminContoller.getCategory);
 router.post("/admin/category", adminContoller.postCategory);
 router.post("/admin/category/delete", adminContoller.deleteCategory);
+router.post("/admin/category/update", adminContoller.updateCategory);
 
 // * FAQ
 router.get("/admin/faq", adminContoller.getFaq);

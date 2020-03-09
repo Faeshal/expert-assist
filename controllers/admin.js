@@ -169,6 +169,27 @@ exports.postCategory = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.updateCategory = (req, res, next) => {
+  const name = req.body.name;
+  const testlink = req.body.testlink;
+
+  const id = req.body.id;
+  Admin.updateOne(
+    { "category._id": id },
+    {
+      $set: {
+        "category.$.name": name,
+        "category.$.testlink": testlink
+      }
+    }
+  )
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/category");
+    })
+    .catch(err => console.log(err));
+};
+
 exports.deleteCategory = (req, res, next) => {
   const id = req.body.id;
   console.log(id);
