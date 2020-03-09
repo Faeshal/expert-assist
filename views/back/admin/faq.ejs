@@ -72,14 +72,21 @@
                             ><i class="fas fa-envelope"></i
                           ></span>
                         </div>
-                       <textarea class="form-control" id="answer" name="answer" rows="3" ></textarea>
+                        <textarea
+                          class="form-control"
+                          id="answer"
+                          name="answer"
+                          rows="3"
+                        ></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-2 float-left">
                     <div class="form-group">
                       <div class="input-group input-group-merge">
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" type="submit">
+                          Submit
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -122,9 +129,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                <% for (var i=0;i<faq.length;i++) { %>
-                  <% var faqdata = faq[i]; %>
                   <tr>
+                  <% for (var i=0;i<faq.length;i++) { %>
+                    <% var faqdata = faq[i]; %>
                     <td class="table-user">
                       <b><%= faqdata.question %></b>
                     </td>
@@ -137,24 +144,37 @@
                       >
                     </td>
                     <td class="table-actions">
-                    <form method="GET" action="/admin/faq/delete" >
-                      <a
-                        href="javascript:void(0);"
-                        class="table-action edit"
-                        data-original-title="Edit category"
-                        data-toggle="modal" data-target="#modal-form"
-                        data-id="<%=faqdata._id%>"
-                        data-question="<%=faqdata.question%>"
-                        data-answer="<%=faqdata.answer%>"
-                      >
-                        <i class="fas fa-user-edit"></i>
-                      </a>
-                      <input type="hidden" value="<%= faqdata._id %>" name="id"/>
-                      <button type="submit" onclick="return confirm('Are you sure you want to delete?');" class="table-action btn btn-sm"  data-toggle="tooltip" data-original-title="Delete Category"><i class="fas fa-trash"></i></button>    
-                    </form>
+                      <form method="GET" action="/admin/faq/delete">
+                        <a
+                          href="javascript:void(0);"
+                          class="table-action edit"
+                          data-original-title="Edit category"
+                          data-toggle="modal"
+                          data-target="#modal-form"
+                          data-id="<%=faqdata._id%>"
+                          data-question="<%=faqdata.question%>"
+                          data-answer="<%=faqdata.answer%>"
+                        >
+                          <i class="fas fa-user-edit"></i>
+                        </a>
+                        <input
+                          type="hidden"
+                          value="<%= faqdata._id %>"
+                          name="id"
+                        />
+                        <button
+                          type="submit"
+                          onclick="return confirm('Are you sure you want to delete?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="Delete Category"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
                     </td>
                   </tr>
-                <% } %>
+                 <% } %>
                 </tbody>
               </table>
             </div>
@@ -163,59 +183,85 @@
       </div>
     </div>
     <!-- Modals -->
-                  <div class="col-md-6">
-                  <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-                    <div class="modal-dialog modal- modal-dialog-centered " role="document">
-                      <div class="modal-content">
-                        <div class="modal-body p-0">
-                          <div class="card bg-secondary border-0 mb-0">
-                            <div class="card-body px-lg-5 py-lg-5">
-                              <div class="text-center text-muted mb-4 mt-4">
-                                <h3>Update FAQ</h3>
-                              </div>
-                              <form role="form" method="POST" action="/admin/faq/update">
-                                <div class="form-group mb-4">
-                                  <div class="input-group input-group-merge input-group-alternative">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                                    </div>
-                                    <input type="hidden" name="id" class="id">
-                                    <input class="form-control question text-dark"  type="text" name="question">
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                  <div class="input-group input-group-merge input-group-alternative">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                                    </div>
-                                    <input class="form-control answer text-" type="text" name="answer">
-                                  </div>
-                                </div>
-                                <div class="text-center">
-                                  <button type="submit" class="btn btn-primary my-4">Update</button>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
+    <div class="col-md-6">
+      <div
+        class="modal fade"
+        id="modal-form"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-form"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal- modal-dialog-centered " role="document">
+          <div class="modal-content">
+            <div class="modal-body p-0">
+              <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                  <div class="text-center text-muted mb-4 mt-4">
+                    <h3>Update FAQ</h3>
+                  </div>
+                  <form role="form" method="POST" action="/admin/faq/update">
+                    <div class="form-group mb-4">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-email-83"></i
+                          ></span>
                         </div>
+                        <input type="hidden" name="id" class="id" />
+                        <input
+                          class="form-control question text-dark"
+                          type="text"
+                          name="question"
+                        />
                       </div>
                     </div>
-                  </div>
+                    <div class="form-group">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-lock-circle-open"></i
+                          ></span>
+                        </div>
+                        <input
+                          class="form-control answer text-"
+                          type="text"
+                          name="answer"
+                        />
+                      </div>
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary my-4">
+                        Update
+                      </button>
+                    </div>
+                  </form>
                 </div>
-    
-                <script>
-                  $(document).ready(function(){
-                    $('#mytable').on('click','.edit',function(){
-                      var id = $(this).data('id');
-                      console.log(id);
-                      var question = $(this).data('question');
-                      var answer = $(this).data('answer');
-                      $('.question').val(question);
-                      $('.answer').val(answer);
-                      $('.id').val(id);
-                    });
-              
-                  });
-              </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+        $("#mytable").on("click", ".edit", function() {
+          var id = $(this).data("id");
+          console.log(id);
+          var question = $(this).data("question");
+          var answer = $(this).data("answer");
+          $(".question").val(question);
+          $(".answer").val(answer);
+          $(".id").val(id);
+        });
+      });
+    </script>
     <!-- Footer -->
     <%-include('../../layouts/back/admin/footer.ejs')%>
+  </div>
+</div>
