@@ -264,3 +264,77 @@ exports.deleteFaq = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getNews = (req, res, next) => {
+  Admin.findOne()
+    .then(admins => {
+      console.log(admins);
+      var news = admins.news;
+      console.log("=====================");
+      console.log(news);
+      res.render("back/admin/news", {
+        news: news
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postNews = (req, res, next) => {
+  const title = req.body.title;
+  const desc = req.body.desc;
+  const target = req.body.target;
+  const content = req.body.content;
+
+  const id = req.session.admin._id;
+  Admin.findOne(id)
+    .then(admin => {
+      admin.news.push({
+        title: title,
+        desc: desc,
+        target: target,
+        content: content
+      });
+      return admin.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/news");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.updateNews = (req, res, next) => {
+  const title = req.body.title;
+  const desc = req.body.desc;
+  const target = req.body.target;
+  const content = req.body.content;
+
+  const id = req.body.id;
+  Admin.updateOne(
+    { "news._id": id },
+    {
+      $set: {
+        "news.$.title": title,
+        "news.$.desc": desc,
+        "news.$.target": target,
+        "news.$.content": content
+      }
+    }
+  )
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/news");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.deleteNews = (req, res, next) => {
+  const id = req.body.id;
+  Admin.updateOne({ $pull: { news: { _id: id } } })
+    .then(admins => {
+      console.log(admins);
+      console.log("News Deleted");
+      res.redirect("/admin/news");
+    })
+    .catch(err => console.log(err));
+};

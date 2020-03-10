@@ -41,10 +41,6 @@ const NewsSchema = new mongoose.Schema({
   date: {
     type: String,
     default: Date.now
-  },
-  status: {
-    type: Boolean,
-    default: true
   }
 });
 

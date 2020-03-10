@@ -1,0 +1,281 @@
+<%-include('../../layouts/back/admin/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/admin/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/admin/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">News</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="javascript:void(0);" class="btn btn-sm btn-neutral tombolTambahData" data-toggle="modal" data-target="#modal-form">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-lg-11 mx-auto">
+        <div class="card-wrapper">
+          <!-- CATEGORY TABLE -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">News List</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <a
+                    href="#"
+                    class="btn btn-sm btn-neutral btn-round btn-icon"
+                    data-toggle="tooltip"
+                    data-original-title="Edit product"
+                  >
+                    <span class="btn-inner--icon"
+                      ><i class="fas fa-user-edit"></i
+                    ></span>
+                    <span class="btn-inner--text">Export</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Light Table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush" id="mytable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Target</th>
+                    <th>Content</th>
+                    <th>Created at</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <% for (var i=0;i<news.length;i++) { %>
+                    <% var newsdata = news[i]; %>
+                    <td class="table-user">
+                      <b><%= newsdata.title %></b>
+                    </td>
+                    <td>
+                      <span class="text-muted"><%= newsdata.desc %></span>
+                    </td>
+                    <td class="text-center">
+                      <span class="text-muted font-weight-bold"><%= newsdata.target %></span>
+                    </td>
+                    <td>
+                      <span class="text-muted"><%= newsdata.content %></span>
+                    </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold"
+                        ><%= newsdata.date %></a
+                      >
+                    </td>
+                    <td class="table-actions">
+                      <form method="POST" action="/admin/news/delete">
+                        <a
+                          href="javascript:void(0);"
+                          class="table-action edit"
+                          data-original-title="Edit category"
+                          data-toggle="modal"
+                          data-target="#modal-form"
+                          data-id="<%=newsdata._id%>"
+                          data-title="<%=newsdata.title%>"
+                          data-desc="<%=newsdata.desc%>"
+                          data-targetform="<%=newsdata.target%>"
+                          data-content="<%=newsdata.content%>"
+                        >
+                          <i class="fas fa-user-edit"></i>
+                        </a>
+                        <input
+                          type="hidden"
+                          value="<%= newsdata._id %>"
+                          name="id"
+                        />
+                        <button
+                          type="submit"
+                          onclick="return confirm('Are you sure you want to delete?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="Delete Category"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                 <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modals -->
+    <div class="col-md-6">
+      <div
+        class="modal fade"
+        id="modal-form"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-form"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal- modal-dialog-centered " role="document">
+          <div class="modal-content">
+            <div class="modal-body p-0">
+              <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                  <div class="text-center text-muted mb-4 mt-4">
+                    <h3 id="formModalLabel">Update News</h3>
+                  </div>
+                  <form role="form" method="POST" action="/admin/news/update">
+                    <div class="form-group mb-4">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-email-83"></i
+                          ></span>
+                        </div>
+                        <input type="hidden" name="id" class="id" />
+                        <input
+                          class="form-control title text-dark"
+                          type="text"
+                          name="title"
+                          placeholder="title"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-lock-circle-open"></i
+                          ></span>
+                        </div>
+                        <input
+                          class="form-control desc text-dark"
+                          type="text"
+                          name="desc"
+                          placeholder="Description"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-lock-circle-open"></i
+                          ></span>
+                        </div>
+                        <select class="form-control target" name="target">
+                          <option value="user">User</option>
+                          <option value="mentor">Mentor</option>
+                          <option value="all">All</option>
+                        </select> 
+                      </div>
+                    </div>
+                     <div class="form-group">
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-lock-circle-open"></i
+                          ></span>
+                        </div>
+                        <textarea class="form-control content" name="content" rows="3" placeholder="write some content ...."></textarea>
+                      </div>
+                    </div>
+                    <div class="text-center button-dynamic">
+                      <button type="submit" class="btn btn-primary my-4 text-center">
+                        Update
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+
+          $(".tombolTambahData").on("click", function() {
+            $("#formModalLabel").html("Create News");
+            $(".button-dynamic button[type=submit]").html("Submit");
+            $(".title").val("");
+            $(".desc").val("");
+            $(".content").val("");
+            $(".modal-body form").attr(
+              "action",
+              "/admin/news/"
+            );
+          });
+
+        $("#mytable").on("click", ".edit", function() {
+          $("#formModalLabel").html("Update News");
+          $(".button-dynamic button[type=submit]").html("Update");
+          $(".modal-body form").attr(
+              "action",
+              "/admin/news/update"
+            );
+          var id = $(this).data("id");
+          console.log(id);
+          var title = $(this).data("title");
+          var desc = $(this).data("desc");
+          var target = $(this).data("targetform");
+          // var target = $('#target').find(":selected").text();
+          // var target=$("#target option:selected")
+          // var target=$(this).children("option:selected").data("target")
+          var content = $(this).data("content");
+          $(".title").val(title);
+          $(".desc").val(desc);
+          // $(".target").val(target);  
+          // $('#target :selected').text(target);
+          $('.target').val(target)
+          // $(".target option:selected").val(target)
+          // $("select.target").val(target)
+          $(".content").val(content);
+          $(".id").val(id);
+        });
+      });
+    </script>
+    <!-- Footer -->
+    <%-include('../../layouts/back/admin/footer.ejs')%>
+  </div>
+</div>
