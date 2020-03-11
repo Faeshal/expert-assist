@@ -199,7 +199,8 @@
                             ><i class="ni ni-lock-circle-open"></i
                           ></span>
                         </div>
-                        <select class="form-control target" name="target">
+                        <select class="form-control target " name="target">
+                          <option value="" disabled selected hidden>Please Choose target...</option>
                           <option value="user">User</option>
                           <option value="mentor">Mentor</option>
                           <option value="all">All</option>
@@ -240,6 +241,7 @@
             $(".button-dynamic button[type=submit]").html("Submit");
             $(".title").val("");
             $(".desc").val("");
+            $(".target").val("");
             $(".content").val("");
             $(".modal-body form").attr(
               "action",
@@ -259,17 +261,10 @@
           var title = $(this).data("title");
           var desc = $(this).data("desc");
           var target = $(this).data("targetform");
-          // var target = $('#target').find(":selected").text();
-          // var target=$("#target option:selected")
-          // var target=$(this).children("option:selected").data("target")
           var content = $(this).data("content");
           $(".title").val(title);
           $(".desc").val(desc);
-          // $(".target").val(target);  
-          // $('#target :selected').text(target);
           $('.target').val(target)
-          // $(".target option:selected").val(target)
-          // $("select.target").val(target)
           $(".content").val(content);
           $(".id").val(id);
         });
