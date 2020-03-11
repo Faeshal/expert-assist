@@ -26,7 +26,13 @@
             </nav>
           </div>
           <div class="col-lg-6 col-5 text-right">
-            <a href="javascript:void(0);" class="btn btn-sm btn-neutral tombolTambahData" data-toggle="modal" data-target="#modal-form">New</a>
+            <a
+              href="javascript:void(0);"
+              class="btn btn-sm btn-neutral tombolTambahData"
+              data-toggle="modal"
+              data-target="#modal-form"
+              >New</a
+            >
             <a href="#" class="btn btn-sm btn-neutral">Filters</a>
           </div>
         </div>
@@ -76,7 +82,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                  <% for (var i=0;i<news.length;i++) { %>
+                    <% for (var i=0;i<news.length;i++) { %>
                     <% var newsdata = news[i]; %>
                     <td class="table-user">
                       <b><%= newsdata.title %></b>
@@ -85,7 +91,9 @@
                       <span class="text-muted"><%= newsdata.desc %></span>
                     </td>
                     <td class="text-center">
-                      <span class="text-muted font-weight-bold"><%= newsdata.target %></span>
+                      <span class="text-muted font-weight-bold"
+                        ><%= newsdata.target %></span
+                      >
                     </td>
                     <td>
                       <span class="text-muted"><%= newsdata.content %></span>
@@ -128,7 +136,7 @@
                       </form>
                     </td>
                   </tr>
-                 <% } %>
+                  <% } %>
                 </tbody>
               </table>
             </div>
@@ -200,14 +208,16 @@
                           ></span>
                         </div>
                         <select class="form-control target " name="target">
-                          <option value="" disabled selected hidden>Please Choose target...</option>
+                          <option value="" disabled selected hidden
+                            >Please Choose target...</option
+                          >
                           <option value="user">User</option>
                           <option value="mentor">Mentor</option>
                           <option value="all">All</option>
-                        </select> 
+                        </select>
                       </div>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                       <div
                         class="input-group input-group-merge input-group-alternative"
                       >
@@ -216,11 +226,19 @@
                             ><i class="ni ni-lock-circle-open"></i
                           ></span>
                         </div>
-                        <textarea class="form-control content" name="content" rows="3" placeholder="write some content ...."></textarea>
+                        <textarea
+                          class="form-control content"
+                          name="content"
+                          rows="3"
+                          placeholder="write some content ...."
+                        ></textarea>
                       </div>
                     </div>
                     <div class="text-center button-dynamic">
-                      <button type="submit" class="btn btn-primary my-4 text-center">
+                      <button
+                        type="submit"
+                        class="btn btn-primary my-4 text-center"
+                      >
                         Update
                       </button>
                     </div>
@@ -235,27 +253,20 @@
 
     <script>
       $(document).ready(function() {
-
-          $(".tombolTambahData").on("click", function() {
-            $("#formModalLabel").html("Create News");
-            $(".button-dynamic button[type=submit]").html("Submit");
-            $(".title").val("");
-            $(".desc").val("");
-            $(".target").val("");
-            $(".content").val("");
-            $(".modal-body form").attr(
-              "action",
-              "/admin/news/"
-            );
-          });
+        $(".tombolTambahData").on("click", function() {
+          $("#formModalLabel").html("Create News");
+          $(".button-dynamic button[type=submit]").html("Submit");
+          $(".title").val("");
+          $(".desc").val("");
+          $(".target").val("");
+          $(".content").val("");
+          $(".modal-body form").attr("action", "/admin/news/");
+        });
 
         $("#mytable").on("click", ".edit", function() {
           $("#formModalLabel").html("Update News");
           $(".button-dynamic button[type=submit]").html("Update");
-          $(".modal-body form").attr(
-              "action",
-              "/admin/news/update"
-            );
+          $(".modal-body form").attr("action", "/admin/news/update");
           var id = $(this).data("id");
           console.log(id);
           var title = $(this).data("title");
@@ -264,7 +275,7 @@
           var content = $(this).data("content");
           $(".title").val(title);
           $(".desc").val(desc);
-          $('.target').val(target)
+          $(".target").val(target);
           $(".content").val(content);
           $(".id").val(id);
         });
@@ -272,5 +283,3 @@
     </script>
     <!-- Footer -->
     <%-include('../../layouts/back/admin/footer.ejs')%>
-  </div>
-</div>

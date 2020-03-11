@@ -10,8 +10,8 @@ router.get("/admin/profile", adminContoller.getProfile);
 router.post("/admin/profile", adminContoller.createProfile);
 
 // * Blog
-router.get("/admin/bloglist", adminContoller.getAllBlog);
-router.get("/admin/blog", adminContoller.getCreateBlog);
+router.get("/admin/blog", adminContoller.getAllBlog);
+router.get("/admin/blog/create", adminContoller.getCreateBlog);
 router.post("/admin/blog", adminContoller.createBlog);
 router.get("/admin/blog/:id", adminContoller.getUpdateBlog);
 router.post("/admin/blog/update", adminContoller.updateBlog);

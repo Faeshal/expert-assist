@@ -20,17 +20,6 @@ exports.getProfile = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getAllBlog = (req, res, next) => {
-  Admin.findOne()
-    .then(admins => {
-      var blog = admins.blog;
-      res.render("back/admin/bloglist", {
-        blog: blog
-      });
-    })
-    .catch(err => console.log(err));
-};
-
 exports.createProfile = (req, res, next) => {
   const username = req.body.username;
   const phone = req.body.phone;
@@ -48,11 +37,22 @@ exports.createProfile = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.getAllBlog = (req, res, next) => {
+  Admin.findOne()
+    .then(admins => {
+      var blog = admins.blog;
+      res.render("back/admin/blog", {
+        blog: blog
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.getCreateBlog = (req, res, next) => {
   console.log(req.session.admin);
   Admin.findById(req.session.admin)
     .then(admin => {
-      res.render("back/admin/blog", {
+      res.render("back/admin/blogadd", {
         admin: admin
       });
     })

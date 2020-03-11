@@ -58,6 +58,7 @@ const AdminSchema = new mongoose.Schema({
     default: true
   },
   phone: String,
+  publicemail: String,
   blog: [BlogSchema],
   category: [CategorySchema],
   faq: [FaqSchema],
