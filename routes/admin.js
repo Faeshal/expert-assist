@@ -1,38 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const adminContoller = require("../controllers/admin");
+const isAuth = require("../middleware/is-auth");
 
 // * Welcome Dashboard
-router.get("/admin/dashboard", adminContoller.getDashboard);
+router.get("/admin/dashboard", isAuth, adminContoller.getDashboard);
 
 // * Profile
-router.get("/admin/profile", adminContoller.getProfile);
-router.post("/admin/profile", adminContoller.createProfile);
+router.get("/admin/profile", isAuth, adminContoller.getProfile);
+router.post("/admin/profile", isAuth, adminContoller.updateProfile);
 
 // * Blog
-router.get("/admin/blog", adminContoller.getAllBlog);
-router.get("/admin/blog/create", adminContoller.getCreateBlog);
-router.post("/admin/blog", adminContoller.createBlog);
-router.get("/admin/blog/:id", adminContoller.getUpdateBlog);
-router.post("/admin/blog/update", adminContoller.updateBlog);
-router.post("/admin/blog/delete", adminContoller.deleteBlog);
+router.get("/admin/blog", isAuth, adminContoller.getAllBlog);
+router.get("/admin/blog/create", isAuth, adminContoller.getCreateBlog);
+router.post("/admin/blog", isAuth, adminContoller.createBlog);
+router.get("/admin/blog/:id", isAuth, adminContoller.getUpdateBlog);
+router.post("/admin/blog/update", isAuth, adminContoller.updateBlog);
+router.post("/admin/blog/delete", isAuth, adminContoller.deleteBlog);
 
 // * Category
-router.get("/admin/category", adminContoller.getCategory);
-router.post("/admin/category", adminContoller.postCategory);
-router.post("/admin/category/update", adminContoller.updateCategory);
-router.post("/admin/category/delete", adminContoller.deleteCategory);
+router.get("/admin/category", isAuth, adminContoller.getCategory);
+router.post("/admin/category", isAuth, adminContoller.postCategory);
+router.post("/admin/category/update", isAuth, adminContoller.updateCategory);
+router.post("/admin/category/delete", isAuth, adminContoller.deleteCategory);
 
 // * FAQ
-router.get("/admin/faq", adminContoller.getFaq);
-router.post("/admin/faq", adminContoller.postFaq);
-router.post("/admin/faq/update", adminContoller.updateFaq);
-router.post("/admin/faq/delete", adminContoller.deleteFaq);
+router.get("/admin/faq", isAuth, adminContoller.getFaq);
+router.post("/admin/faq", isAuth, adminContoller.postFaq);
+router.post("/admin/faq/update", isAuth, adminContoller.updateFaq);
+router.post("/admin/faq/delete", isAuth, adminContoller.deleteFaq);
 
 // * News
-router.get("/admin/news", adminContoller.getNews);
-router.post("/admin/news", adminContoller.postNews);
-router.post("/admin/news/update", adminContoller.updateNews);
-router.post("/admin/news/delete", adminContoller.deleteNews);
+router.get("/admin/news", isAuth, adminContoller.getNews);
+router.post("/admin/news", isAuth, adminContoller.postNews);
+router.post("/admin/news/update", isAuth, adminContoller.updateNews);
+router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
 
 module.exports = router;

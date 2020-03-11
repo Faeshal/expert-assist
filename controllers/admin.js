@@ -4,7 +4,8 @@ exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/dashboard", {
-        admin: admin
+        admin: admin,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -14,20 +15,23 @@ exports.getProfile = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/profile", {
-        admin: admin
+        admin: admin,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
 };
 
-exports.createProfile = (req, res, next) => {
+exports.updateProfile = (req, res, next) => {
   const username = req.body.username;
   const phone = req.body.phone;
+  const publicemail = req.body.publicemail;
   const id = req.session.admin._id;
   Admin.findById(id)
     .then(admin => {
       admin.username = username;
       admin.phone = phone;
+      admin.publicemail = publicemail;
       return admin.save();
     })
     .then(result => {
@@ -42,7 +46,8 @@ exports.getAllBlog = (req, res, next) => {
     .then(admins => {
       var blog = admins.blog;
       res.render("back/admin/blog", {
-        blog: blog
+        blog: blog,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -53,7 +58,8 @@ exports.getCreateBlog = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/blogadd", {
-        admin: admin
+        admin: admin,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -90,7 +96,8 @@ exports.getUpdateBlog = (req, res, next) => {
       var blog = admins.blog[0];
       console.log(blog);
       res.render("back/admin/blogupdate", {
-        blog: blog
+        blog: blog,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -144,7 +151,8 @@ exports.getCategory = (req, res, next) => {
       console.log("=====================");
       console.log(category);
       res.render("back/admin/category", {
-        category: category
+        category: category,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -208,7 +216,8 @@ exports.getFaq = (req, res, next) => {
     .then(admins => {
       let faq = admins.faq;
       res.render("back/admin/faq", {
-        faq: faq
+        faq: faq,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));
@@ -273,7 +282,8 @@ exports.getNews = (req, res, next) => {
       console.log("=====================");
       console.log(news);
       res.render("back/admin/news", {
-        news: news
+        news: news,
+        isAuthenticated: req.session.isLoggedin
       });
     })
     .catch(err => console.log(err));

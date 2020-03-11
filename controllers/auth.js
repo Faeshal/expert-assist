@@ -4,7 +4,8 @@ const bcrypt = require("bcryptjs");
 
 exports.getRegister = (req, res, next) => {
   res.render("front/register", {
-    path: "front/register"
+    path: "front/register",
+    isAuthenticated: false
   });
 };
 
@@ -39,7 +40,9 @@ exports.postRegister = (req, res, next) => {
 };
 
 exports.getLogin = (req, res, next) => {
-  res.render("front/login");
+  res.render("front/login", {
+    isAuthenticated: false
+  });
 };
 
 exports.postLogin = (req, res, next) => {
@@ -78,7 +81,8 @@ exports.postLogin = (req, res, next) => {
 
 exports.getRegisterAdmin = (req, res, next) => {
   res.render("front/registerAdmin", {
-    path: "front/registerAdmin"
+    path: "front/registerAdmin",
+    isAuthenticated: false
   });
 };
 
@@ -116,7 +120,9 @@ exports.postRegisterAdmin = (req, res, next) => {
 };
 
 exports.getLoginAdmin = (req, res, next) => {
-  res.render("front/loginAdmin");
+  res.render("front/loginAdmin", {
+    isAuthenticated: false
+  });
 };
 
 exports.postLoginAdmin = (req, res, next) => {
@@ -134,7 +140,6 @@ exports.postLoginAdmin = (req, res, next) => {
           if (doMatch) {
             req.session.isLoggedIn = true;
             req.session.admin = admin;
-            // req.body.auth = req.auth.id;
             return req.session.save(err => {
               console.log(err);
               res.redirect("/admin/dashboard");

@@ -1,61 +1,181 @@
 <%-include('../../layouts/back/admin/header.ejs')%>
-  <!-- Sidenav -->
-  <%-include('../../layouts/back/admin/sideNav.ejs')%>
-  <!-- Main content -->
-  <div class="main-content" id="panel">
-    <!-- Topnav -->
-    <%-include('../../layouts/back/admin/topNav.ejs')%>
-    <!-- Header -->
-    <!-- Header -->
-    <div class="header bg-primary pb-6">
-      <div class="container-fluid">
-        <div class="header-body">
-          <div class="row align-items-center py-4">
-            <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Profile</h6>
+<!-- Sidenav -->
+<%-include('../../layouts/back/admin/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/admin/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Profile</h6>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 card-wrapper">
+        <!-- Headings -->
+        <div class="card card-profile bg-secondary mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <div class="card-profile-image">
+                <img
+                  src="https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/hipster_beard_male_man-512.png"
+                  class="rounded-circle border-secondary"
+                />
+              </div>
             </div>
-            <div class="col-lg-6 col-5 text-right">
-              <a href="#" class="btn btn-sm btn-neutral">New</a>
-              <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+          <div class="card-body pt-7 px-5">
+            <div class="text-center mb-4">
+              <h3><%=admin.username%></h3>
+              <p class="text-muted">Super Admin</p>
+              <p class="text-dark">
+                <%= admin.publicemail == null ? 'Not Set' : admin.publicemail %>
+                . <%=admin.phone%>
+              </p>
+            </div>
+            <div class="text-center">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm mt-2 mr-3 edit"
+                data-toggle="modal"
+                data-target="#modal-form"
+                data-id="<%=admin._id%>"
+                data-username="<%=admin.username%>"
+                data-phone="<%=admin.phone%>"
+                data-publicemail="<%=admin.publicemail%>"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                class="btn btn-dark btn-sm mt-2"
+                data-toggle="modal"
+                data-target="#modal-form"
+              >
+                Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modals -->
+      <div class="col-md-6">
+        <div
+          class="modal fade"
+          id="modal-form"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="modal-form"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal- modal-dialog-centered "
+            role="document"
+          >
+            <div class="modal-content">
+              <div class="modal-body p-0">
+                <div class="card bg-secondary border-0 mb-0">
+                  <div class="card-body px-lg-5 py-lg-5">
+                    <div class="text-center text-muted mb-4 mt-4">
+                      <h3>Update Profile</h3>
+                    </div>
+                    <form role="form" method="POST" action="/admin/profile">
+                      <div class="form-group mb-4">
+                        <div
+                          class="input-group input-group-merge input-group-alternative"
+                        >
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"
+                              ><i class="ni ni-email-83"></i
+                            ></span>
+                          </div>
+                          <input type="hidden" name="id" class="id" />
+                          <input
+                            class="form-control username text-dark"
+                            placeholder="username"
+                            type="text"
+                            name="username"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="input-group input-group-merge input-group-alternative"
+                        >
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"
+                              ><i class="ni ni-lock-circle-open"></i
+                            ></span>
+                          </div>
+                          <input
+                            class="form-control phone text-dark"
+                            placeholder="Phone .."
+                            type="text"
+                            name="phone"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="input-group input-group-merge input-group-alternative"
+                        >
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"
+                              ><i class="ni ni-lock-circle-open"></i
+                            ></span>
+                          </div>
+                          <input
+                            class="form-control publicemail text-dark"
+                            placeholder="Public Email"
+                            type="email"
+                            name="publicemail"
+                          />
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary my-4">
+                          Update
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Page content -->
-    <div class="container-fluid mt--6">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 card-wrapper">
-          <!-- Headings -->
-          <form action="/admin/profile" method="POST">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="mb-0 text-center">UPDATE DATA</h3>
-              </div>
-              <div class="card-body">
-                <div class="row py-3 align-items-center">
-                  <div class="col-lg-12">
-                      <input type="text" class="form-control" name ="username" placeholder="username">
-                    </div>
-                </div>
-                <div class="row py-3 align-items-center">
-                  <div class="col-lg-12">
-                      <input type="text" class="form-control" name ="phone" placeholder="phone" required>
-                    </div>
-                </div>
-                <div class="row py-3 align-items-center">
-                  <div class="col-lg-12">
-                      <input type="email" class="form-control" name ="publicemail" placeholder="publicemail" required>
-                    </div>
-                </div>
-                <div class="col-sm-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-     
 
-<%-include('../../layouts/back/admin/footer.ejs')%>
+    <script>
+      $(document).ready(function() {
+        $(".card").on("click", ".edit", function() {
+          var id = $(this).data("id");
+          var username = $(this).data("username");
+          var phone = $(this).data("phone");
+          var publicemail = $(this).data("publicemail");
+          $(".id").val(id);
+          $(".username").val(username);
+          $(".phone").val(phone);
+          $(".publicemail").val(publicemail);
+        });
+      });
+    </script>
+
+    <%-include('../../layouts/back/admin/footer.ejs')%>
+  </div>
+</div>
