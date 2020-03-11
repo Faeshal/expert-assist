@@ -157,6 +157,7 @@
                         <i class="fas fa-user-edit"></i>
                       </a>
                       <input type="hidden" value="<%= categorydata._id %>" name="id"/>
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                       <button type="submit" onclick="return confirm('Are you sure you want to delete?');" class="table-action btn btn-sm"  data-toggle="tooltip" data-original-title="Delete Category"><i class="fas fa-trash"></i></button>    
                     </form>
                     </td>

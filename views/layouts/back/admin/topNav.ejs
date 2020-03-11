@@ -223,6 +223,7 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 <form action="/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit" class="dropdown-item">
                   <i class="ni ni-user-run"></i>
                   <span>Logout</span>

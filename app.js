@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
+const csrf = require("csurf");
 const colors = require("colors");
 const morgan = require("morgan");
 const frontRoutes = require("./routes/front");
@@ -36,6 +37,8 @@ const store = new MongoDBStore({
   collection: "sessions"
 });
 
+const csrfProtection = csrf();
+
 app.use(
   session({
     secret: "my secret",
@@ -44,6 +47,8 @@ app.use(
     store: store
   })
 );
+
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -55,6 +60,13 @@ app.use((req, res, next) => {
       next();
     })
     .catch(err => console.log(err));
+});
+
+// * Security for CSRF Attack
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 // * Templating Engine
