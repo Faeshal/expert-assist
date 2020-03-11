@@ -5,7 +5,6 @@ exports.getDashboard = (req, res, next) => {
     .then(admin => {
       res.render("back/admin/dashboard", {
         admin: admin,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Welcome Admin"
       });
     })
@@ -17,7 +16,6 @@ exports.getProfile = (req, res, next) => {
     .then(admin => {
       res.render("back/admin/profile", {
         admin: admin,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Admin - Profile"
       });
     })
@@ -49,7 +47,6 @@ exports.getAllBlog = (req, res, next) => {
       var blog = admins.blog;
       res.render("back/admin/blog", {
         blog: blog,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Admin - Blog"
       });
     })
@@ -61,8 +58,7 @@ exports.getCreateBlog = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/blogadd", {
-        admin: admin,
-        isAuthenticated: req.session.isLoggedin
+        admin: admin
       });
     })
     .catch(err => console.log(err));
@@ -99,8 +95,7 @@ exports.getUpdateBlog = (req, res, next) => {
       var blog = admins.blog[0];
       console.log(blog);
       res.render("back/admin/blogupdate", {
-        blog: blog,
-        isAuthenticated: req.session.isLoggedin
+        blog: blog
       });
     })
     .catch(err => console.log(err));
@@ -155,7 +150,6 @@ exports.getCategory = (req, res, next) => {
       console.log(category);
       res.render("back/admin/category", {
         category: category,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Admin - Category"
       });
     })
@@ -221,7 +215,6 @@ exports.getFaq = (req, res, next) => {
       let faq = admins.faq;
       res.render("back/admin/faq", {
         faq: faq,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Admin - FAQ"
       });
     })
@@ -285,7 +278,6 @@ exports.getNews = (req, res, next) => {
       var news = admins.news;
       res.render("back/admin/news", {
         news: news,
-        isAuthenticated: req.session.isLoggedin,
         pageTitle: "Admin - News"
       });
     })
