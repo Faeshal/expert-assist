@@ -5,7 +5,8 @@ exports.getDashboard = (req, res, next) => {
     .then(admin => {
       res.render("back/admin/dashboard", {
         admin: admin,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Welcome Admin"
       });
     })
     .catch(err => console.log(err));
@@ -16,7 +17,8 @@ exports.getProfile = (req, res, next) => {
     .then(admin => {
       res.render("back/admin/profile", {
         admin: admin,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Admin - Profile"
       });
     })
     .catch(err => console.log(err));
@@ -47,7 +49,8 @@ exports.getAllBlog = (req, res, next) => {
       var blog = admins.blog;
       res.render("back/admin/blog", {
         blog: blog,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Admin - Blog"
       });
     })
     .catch(err => console.log(err));
@@ -152,7 +155,8 @@ exports.getCategory = (req, res, next) => {
       console.log(category);
       res.render("back/admin/category", {
         category: category,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Admin - Category"
       });
     })
     .catch(err => console.log(err));
@@ -217,7 +221,8 @@ exports.getFaq = (req, res, next) => {
       let faq = admins.faq;
       res.render("back/admin/faq", {
         faq: faq,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Admin - FAQ"
       });
     })
     .catch(err => console.log(err));
@@ -277,13 +282,11 @@ exports.deleteFaq = (req, res, next) => {
 exports.getNews = (req, res, next) => {
   Admin.findOne()
     .then(admins => {
-      console.log(admins);
       var news = admins.news;
-      console.log("=====================");
-      console.log(news);
       res.render("back/admin/news", {
         news: news,
-        isAuthenticated: req.session.isLoggedin
+        isAuthenticated: req.session.isLoggedin,
+        pageTitle: "Admin - News"
       });
     })
     .catch(err => console.log(err));
