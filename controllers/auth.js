@@ -3,8 +3,15 @@ const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 
 exports.getRegister = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("front/register", {
-    path: "front/register"
+    path: "front/register",
+    errorMessage: message
   });
 };
 
@@ -16,6 +23,10 @@ exports.postRegister = (req, res, next) => {
   User.findOne({ email: email })
     .then(userDoc => {
       if (userDoc) {
+        req.flash(
+          "error",
+          "E-Mail exists already, please pick a different one."
+        );
         res.redirect("/register");
       }
       return bcrypt
@@ -39,7 +50,15 @@ exports.postRegister = (req, res, next) => {
 };
 
 exports.getLogin = (req, res, next) => {
-  res.render("front/login");
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("front/login", {
+    errorMessage: message
+  });
 };
 
 exports.postLogin = (req, res, next) => {
@@ -48,6 +67,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
+        req.flash("error", "Invalid email or password.");
         return res.redirect("/login");
       }
       bcrypt
@@ -66,6 +86,7 @@ exports.postLogin = (req, res, next) => {
               }
             });
           }
+          req.flash("error", "Invalid email or password.");
           res.redirect("/login");
         })
         .catch(err => {
@@ -77,8 +98,15 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.getRegisterAdmin = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("front/registerAdmin", {
-    path: "front/registerAdmin"
+    path: "front/registerAdmin",
+    errorMessage: message
   });
 };
 
@@ -93,7 +121,11 @@ exports.postRegisterAdmin = (req, res, next) => {
     Admin.findOne({ email: email })
       .then(adminDoc => {
         if (adminDoc) {
-          res.redirect("/register");
+          req.flash(
+            "error",
+            "E-Mail exists already, please pick a different one."
+          );
+          return res.redirect("/registerAdmin");
         }
         return bcrypt
           .hash(password, 12)
@@ -116,7 +148,15 @@ exports.postRegisterAdmin = (req, res, next) => {
 };
 
 exports.getLoginAdmin = (req, res, next) => {
-  res.render("front/loginAdmin");
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("front/loginAdmin", {
+    errorMessage: message
+  });
 };
 
 exports.postLoginAdmin = (req, res, next) => {
@@ -125,6 +165,7 @@ exports.postLoginAdmin = (req, res, next) => {
   Admin.findOne({ email: email })
     .then(admin => {
       if (!admin) {
+        req.flash("error", "Invalid email or password.");
         return res.redirect("/loginAdmin");
       }
       console.log(admin);
@@ -139,6 +180,7 @@ exports.postLoginAdmin = (req, res, next) => {
               res.redirect("/admin/dashboard");
             });
           }
+          req.flash("error", "Invalid email or password.");
           res.redirect("/loginAdmin");
         })
         .catch(err => {

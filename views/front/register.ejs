@@ -1,77 +1,137 @@
 <%-include('../layouts/authentication/header.ejs')%>
-        <!-- Hero Start -->
-        <section class="vh-100" style="background: url('https://images.pexels.com/photos/2132891/pexels-photo-2132891.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940') center center;">
-            <div class="home-center">
-                <div class="home-desc-center">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="login_page bg-white shadow rounded p-4">
-                                    <div class="text-center">
-                                        <h4 class="mb-4">Register</h4>  
-                                    </div>
-                                    <form class="login-form" action="/register" method="POST">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <label>Your Email <span class="text-danger">*</span></label>
-                                                    <input type="email" class="form-control" placeholder="Email" name="email" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <label>Username <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="Mr.xxx" name="username" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <label>Password <span class="text-danger">*</span></label>
-                                                    <input type="password" 
-                                                    class="form-control" placeholder="Password" 
-                                                    name="password" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <label>Confirm Password <span class="text-danger">*</span></label>
-                                                    <input type="password" class="form-control" placeholder="Confirm Password" name="confirmPassword" >
-                                                </div>
-                                            </div>
-                                             <div class="col-md-12">
-                                                <div class="form-group position-relative">
-                                                    <label>Role<span class="text-danger">*</span></label>
-                                                    <select class="custom-select" name="level">
-                                                        <option selected>Select One</option>
-                                                        <option value="user">User</option>
-                                                        <option value="mentor">Mentor</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="custom-control m-0 custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                                        <label class="custom-control-label" for="customCheck1">I Accept <a href="#" class="text-primary">Terms And Condition</a></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                                <button class="btn btn-primary w-100" type="submit">Register</button>
-                                            </div>
-                                            <div class="mx-auto">
-                                                <p class="mb-0 mt-3"><small class="text-dark mr-2">Already have an account ?</small> <a href="/login" class="text-dark font-weight-bold">Sign in</a></p>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div> <!--end col-->
-                        </div><!--end row-->
-                    </div> <!--end container-->
+<!-- Hero Start -->
+<section
+  class="vh-100"
+  style="background: url('https://images.pexels.com/photos/2132891/pexels-photo-2132891.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940') center center;"
+>
+  <div class="home-center">
+    <div class="home-desc-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="login_page bg-white shadow rounded p-4">
+              <div class="text-center">
+                <h4 class="mb-4">Register</h4>
+              </div>
+              <% if (errorMessage) { %>
+              <div class="alert alert-danger text-center mb-3" role="alert">
+                <%=errorMessage%>
+              </div>
+              <% } %>
+              <form class="login-form" action="/register" method="POST">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group position-relative">
+                      <label
+                        >Your Email <span class="text-danger">*</span></label
+                      >
+                      <input
+                        type="email"
+                        class="form-control"
+                        placeholder="Email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group position-relative">
+                      <label>Username <span class="text-danger">*</span></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Mr.xxx"
+                        name="username"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group position-relative">
+                      <label>Password <span class="text-danger">*</span></label>
+                      <input
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        name="password"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group position-relative">
+                      <label
+                        >Confirm Password
+                        <span class="text-danger">*</span></label
+                      >
+                      <input
+                        type="password"
+                        class="form-control"
+                        placeholder="Confirm Password"
+                        name="confirmPassword"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group position-relative">
+                      <label>Role<span class="text-danger">*</span></label>
+                      <select class="custom-select" name="level">
+                        <option selected>Select One</option>
+                        <option value="user">User</option>
+                        <option value="mentor">Mentor</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="custom-control m-0 custom-checkbox">
+                        <input
+                          type="checkbox"
+                          class="custom-control-input"
+                          id="customCheck1"
+                        />
+                        <label class="custom-control-label" for="customCheck1"
+                          >I Accept
+                          <a href="#" class="text-primary"
+                            >Terms And Condition</a
+                          ></label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <input
+                      type="hidden"
+                      name="_csrf"
+                      value="<%= csrfToken %>"
+                    />
+                    <button class="btn btn-primary w-100" type="submit">
+                      Register
+                    </button>
+                  </div>
+                  <div class="mx-auto">
+                    <p class="mb-0 mt-3">
+                      <small class="text-dark mr-2"
+                        >Already have an account ?</small
+                      >
+                      <a href="/login" class="text-dark font-weight-bold"
+                        >Sign in</a
+                      >
+                    </p>
+                  </div>
                 </div>
+              </form>
             </div>
-        </section><!--end section-->
-        <!-- Hero End -->
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <!--end container-->
+    </div>
+  </div>
+</section>
+<!--end section-->
+<!-- Hero End -->
 
 <%-include('../layouts/authentication/footer.ejs')%>

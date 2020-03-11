@@ -12,6 +12,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const csrf = require("csurf");
+const flash = require("connect-flash");
 const colors = require("colors");
 const morgan = require("morgan");
 const frontRoutes = require("./routes/front");
@@ -49,6 +50,7 @@ app.use(
 );
 
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
