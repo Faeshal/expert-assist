@@ -1,7 +1,16 @@
 const Admin = require("../models/Admin");
 
 exports.getIndex = (req, res, next) => {
-  res.render("front/index");
+  Admin.findOne({ level: "admin" })
+    .then(admin => {
+      let session = req.session;
+      res.render("front/index", {
+        admin: admin,
+        session: session
+      });
+      console.log(session);
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getAllBlog = (req, res, next) => {

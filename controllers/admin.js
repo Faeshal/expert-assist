@@ -7,6 +7,7 @@ exports.getDashboard = (req, res, next) => {
         admin: admin,
         pageTitle: "Welcome Admin"
       });
+      console.log(req.session);
     })
     .catch(err => console.log(err));
 };

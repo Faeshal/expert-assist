@@ -5,7 +5,7 @@
         <div class="container">
           <div class="float-left">
             <div class="phone">
-              <i class="mdi mdi-phone-classic"></i> +1 800 123 45 67
+              <i class="mdi mdi-phone-classic mr-1"></i>  <%=admin.phone%>
             </div>
             <div class="email">
               <a href="#"> <i class="mdi mdi-email"></i> Support@mail.com </a>
@@ -16,16 +16,27 @@
               class="topbar-list list-unstyled d-flex"
               style="margin: 11px 0px;"
             >
+            <%if (isAuthenticated) { %>
+              <form id="form1" action="/logout" method="POST">
               <li class="list-inline-item">
                 <a href="javascript:void(0);"
-                  ><i class="mdi mdi-account mr-2"></i>Faeshal</a
+                  ><i class="mdi mdi-account mr-2"></i><%=session.admin.username%></a
                 >
               </li>
+              <li class="list-inline-item">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <a href="javascript:;" onclick="document.getElementById('form1').submit();"
+                  ><i class="mdi mdi-login mr-2"></i>Logout</a
+                >
+              </li>
+              </form>
+            <% } else { %>
               <li class="list-inline-item">
                 <a href="/login"
                   ><i class="mdi mdi-login mr-2"></i>Login</a
                 >
               </li>
+            <% } %>
             </ul>
           </div>
           <div class="clearfix"></div>
@@ -157,3 +168,4 @@
     </header>
     <!--end header-->
     <!-- Navbar End -->
+
