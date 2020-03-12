@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "../config.env" });
+const crypto = require("crypto");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
@@ -207,5 +208,52 @@ exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
     console.log(err);
     res.redirect("/");
+  });
+};
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("front/reset", {
+    errorMessage: message
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/reset");
+    }
+    const token = buffer.toString("hex");
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          req.flash("error", "No account with that email found.");
+          return res.redirect("/reset");
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(result => {
+        res.redirect("/");
+        const msg = {
+          to: req.body.email,
+          from: "expertassist@example.com",
+          subject: "Password reset",
+          text: "Congratulation & Welcome to the Club",
+          html: ` <p>You requested a password reset</p>
+          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`
+        };
+        return sgMail.send(msg);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   });
 };

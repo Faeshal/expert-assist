@@ -29,7 +29,9 @@ const UserSchema = new mongoose.Schema({
   phone: String,
   twitter: String,
   github: String,
-  linkedin: String
+  linkedin: String,
+  resetToken: String,
+  resetTokenExpiration: Date
 });
 
 module.exports = mongoose.model("User", UserSchema);
