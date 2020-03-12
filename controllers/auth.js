@@ -1,6 +1,10 @@
+const dotenv = require("dotenv");
+dotenv.config({ path: "../config.env" });
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getRegister = (req, res, next) => {
   let message = req.flash("error");
@@ -42,6 +46,14 @@ exports.postRegister = (req, res, next) => {
         })
         .then(result => {
           res.redirect("/login");
+          const msg = {
+            to: email,
+            from: "expertassist@example.com",
+            subject: "Sucessfully Register",
+            text: "Congratulation & Welcome to the Club",
+            html: "<strong>Congratulation & Welcome to the Club</strong>"
+          };
+          return sgMail.send(msg);
         });
     })
     .catch(err => {

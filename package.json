@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Faeshal/expert-assist#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.5.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
