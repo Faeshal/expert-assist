@@ -12,10 +12,17 @@ exports.getDashboard = (req, res, next) => {
 };
 
 exports.getProfile = (req, res, next) => {
-  res.render("back/user/profile");
+  User.findById(req.session.user._id)
+    .then(user => {
+      res.render("back/user/profile", {
+        user: user
+      });
+    })
+    .catch();
 };
 
-exports.createProfile = (req, res, next) => {
+exports.updateProfile = (req, res, next) => {
+  const id = req.body.id;
   const username = req.body.username;
   const profilePicture = req.body.profilePicture;
   const job = req.body.job;
@@ -26,24 +33,23 @@ exports.createProfile = (req, res, next) => {
   const github = req.body.github;
   const linkedin = req.body.linkedin;
 
-  const user = new User({
-    username: username,
-    profilePicture: profilePicture,
-    job: job,
-    bio: bio,
-    address: address,
-    phone: phone,
-    twitter: twitter,
-    github: github,
-    linkedin: linkedin
-  });
-  user
-    .save()
+  User.findOne({ _id: id })
+    .then(user => {
+      user.username = username;
+      user.profilePicture = profilePicture;
+      user.job = job;
+      user.bio = bio;
+      user.address = address;
+      user.phone = phone;
+      user.twitter = twitter;
+      user.github = github;
+      user.linkedin = linkedin;
+
+      return user.save();
+    })
     .then(result => {
-      console.log("Created Profile");
+      console.log("Profile Updated");
       res.redirect("/user/profile");
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => console.log(err));
 };

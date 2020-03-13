@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
+const isAuth = require("../middleware/is-auth");
 
-router.get("/user/dashboard", userController.getDashboard);
+router.get("/user/dashboard", isAuth, userController.getDashboard);
 
-router.get("/user/profile", userController.getProfile);
-router.post("/user/profile", userController.createProfile);
+// * Profile
+router.get("/user/profile", isAuth, userController.getProfile);
+router.post("/user/profile/update", isAuth, userController.updateProfile);
 
 module.exports = router;

@@ -84,7 +84,7 @@ exports.postLogin = (req, res, next) => {
         req.flash("error", "Invalid email or password.");
         return res.redirect("/login");
       }
-      bcrypt
+       bcrypt
         .compare(password, user.password)
         .then(doMatch => {
           if (doMatch) {
