@@ -63,6 +63,7 @@ exports.postRegister = (req, res, next) => {
 };
 
 exports.getLogin = (req, res, next) => {
+  console.log(req.session);
   let message = req.flash("error");
   if (message.length > 0) {
     message = message[0];
@@ -89,14 +90,9 @@ exports.postLogin = (req, res, next) => {
           if (doMatch) {
             req.session.isLoggedIn = true;
             req.session.user = user;
-            // req.body.auth = req.auth.id;
             return req.session.save(err => {
               console.log(err);
-              if (user.level == "mentor") {
-                res.redirect("/mentor/dashboard");
-              } else if (user.level == "user") {
-                res.redirect("/user/dashboard");
-              }
+              res.redirect("/user/dashboard");
             });
           }
           req.flash("error", "Invalid email or password.");

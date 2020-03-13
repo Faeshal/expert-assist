@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin");
+const User = require("../models/User");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })

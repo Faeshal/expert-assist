@@ -20,7 +20,9 @@
               <form id="form1" action="/logout" method="POST">
               <li class="list-inline-item">
                 <a href="javascript:void(0);"
-                  ><i class="mdi mdi-account mr-2"></i><%=session.admin.username%></a
+                  ><i class="mdi mdi-account mr-2"></i>session.admin.username
+                  <%=session.admin.username == '' ? session.user.username : session.admin.username  %>
+                  </a
                 >
               </li>
               <li class="list-inline-item">
