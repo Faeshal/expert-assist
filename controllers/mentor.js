@@ -11,6 +11,16 @@ exports.getDashboard = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.getExam = (req, res, next) => {
+  Mentor.findById(req.session.mentor)
+    .then(mentor => {
+      res.render("back/mentor/exam", {
+        mentor: mentor
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.getProfile = (req, res, next) => {
   Mentor.findById(req.session.mentor._id)
     .then(mentor => {

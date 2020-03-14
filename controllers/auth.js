@@ -16,7 +16,7 @@ exports.getRegister = (req, res, next) => {
     message = null;
   }
   res.render("front/register", {
-    path: "front/register",
+    pageTitle: "Register",
     errorMessage: message
   });
 };
@@ -110,7 +110,8 @@ exports.getLogin = (req, res, next) => {
     message = null;
   }
   res.render("front/login", {
-    errorMessage: message
+    errorMessage: message,
+    pageTitle: "Login"
   });
 };
 
@@ -233,7 +234,8 @@ exports.getLoginAdmin = (req, res, next) => {
     message = null;
   }
   res.render("front/loginAdmin", {
-    errorMessage: message
+    errorMessage: message,
+    pageTitle: "Login"
   });
 };
 
@@ -284,7 +286,8 @@ exports.getReset = (req, res, next) => {
     message = null;
   }
   res.render("front/reset", {
-    errorMessage: message
+    errorMessage: message,
+    pageTitle: "Reset Password"
   });
 };
 
@@ -339,7 +342,8 @@ exports.getNewPassword = (req, res, next) => {
       res.render("front/newPassword", {
         errorMessage: message,
         userId: user._id.toString(),
-        passwordToken: token
+        passwordToken: token,
+        pageTitle: "Reset Password"
       });
     })
     .catch(err => console.log(err));

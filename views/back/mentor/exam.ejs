@@ -1,0 +1,238 @@
+<%-include('../../layouts/back/mentor/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/mentor/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/mentor/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div
+    class="header pb-6 d-flex align-items-center"
+    style="min-height: 370px; background-image: url(https://images.pexels.com/photos/633566/pexels-photo-633566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); background-size: cover; background-position: center top;"
+  >
+    <!-- Mask -->
+    <span class="mask bg-gradient-default opacity-2"></span>
+    <!-- Header container -->
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6 justify-content-center mx-auto">
+    <div class="row">
+      <div class="col-xl-9 order-xl-2 justify-content-center mx-auto  ">
+        <div class="card card-profile" id="user-card">
+          <div
+            class="card-header text-center border-0 pt-5 pt-md-4 pb-0 pb-md-4"
+          >
+            <div class="d-flex justify-content-between ml-4 mr-4">
+              <a
+                href="javascript:void(0);"
+                class="btn btn-sm btn-primary update"
+                data-toggle="modal"
+                data-target="#exampleModalCenter"
+                data-id="<%=mentor._id%>"
+                >Update</a
+              >
+              <a
+                href="#"
+                class="btn btn-sm btn-dark float-right"
+                data-toggle="modal"
+                data-target="#modal-notification"
+                >15:00</a
+              >
+              <a
+                href="#"
+                class="btn btn-sm btn-danger float-right"
+                data-toggle="modal"
+                data-target="#modal-notification"
+                >Exam Rules</a
+              >
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            <div class="row mt-4 mb-2">
+              <div class="col-md-12">
+                <div class="text-center">
+                  <div class="embed-responsive embed-responsive-4by3">
+                    <iframe
+                      src="https://docs.google.com/forms/d/e/1FAIpQLScpSLXEwowR1vKQZ9G2y1CwGDiRjE91Hw3iKx44hYXEX9YNwQ/viewform?embedded=true"
+                      width="700"
+                      height="520"
+                      frameborder="0"
+                      marginheight="0"
+                      marginwidth="0"
+                      >Loading…</iframe
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="modal-notification"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modal-notification"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-danger modal-dialog-centered modal-"
+        role="document"
+      >
+        <div class="modal-content bg-gradient-danger">
+          <div class="modal-header">
+            <h6 class="modal-title" id="modal-title-notification">
+              Perhatikan Baik Baik
+            </h6>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="py-3 text-center">
+              <i class="ni ni-bell-55 ni-3x"></i>
+              <h4 class="heading mt-4">Peringatan Perihal Ujian</h4>
+              <p>
+                Waktu yang diberikan adalah 30 Menit , Bila waktu sudah habis ,
+                selesai tidak selesai segera submit jawaban kuis , bila telat
+                maka nilai 0.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white">Ok, Got it</button>
+            <button
+              type="button"
+              class="btn btn-link text-white ml-auto"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Edit -->
+    <div
+      class="modal fade"
+      id="exampleModalCenter"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Profile Details
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <form action="/mentor/profile/update" method="POST">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <input type="hidden" name="id" class="id" />
+                      <label for="recipient-name" class="col-form-label"
+                        >Username</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm username"
+                        name="username"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Address</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm address"
+                        name="address"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Phone</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm phone"
+                        name="phone"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Profile Picture:</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm profilepicture"
+                        name="profilepicture"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer mx-auto justify-content-center">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <button type="submit" class="btn btn-primary">
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modals Exam Rules -->
+
+      <!-- ? JQUERY -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script>
+        $(document).ready(function() {
+          $("#user-card").on("click", ".update", function() {
+            var id = $(this).data("id");
+            console.log(id);
+            var username = $(this).data("username");
+            var bio = $(this).data("bio");
+            var job = $(this).data("job");
+            $(".id").val(id);
+            $(".username").val(username);
+            $(".job").val(job);
+          });
+        });
+      </script>
+    </div>
+    <!-- Footer -->
+    <%-include('../../layouts/back/mentor/footer.ejs')%>
+  </div>
+</div>

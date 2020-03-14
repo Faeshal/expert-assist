@@ -10,7 +10,6 @@ const MentorSchema = new mongoose.Schema({
   },
   username: String,
   level: String,
-  expertise: String,
   profilepicture: String,
   coverpicture: String,
   bio: String,
@@ -37,7 +36,7 @@ const MentorSchema = new mongoose.Schema({
   ],
   status: {
     type: Boolean,
-    default: true
+    default: false
   },
   register: {
     type: Date,
