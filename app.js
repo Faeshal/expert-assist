@@ -18,7 +18,8 @@ const morgan = require("morgan");
 const frontRoutes = require("./routes/front");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
-const adminRotes = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
+const mentorRoutes = require("./routes/mentor");
 const Admin = require("./models/Admin");
 const User = require("./models/User");
 
@@ -79,8 +80,9 @@ app.set("views", "views");
 
 app.use(frontRoutes);
 app.use(authRoutes);
-app.use(adminRotes);
+app.use(adminRoutes);
 app.use(userRoutes);
+app.use(mentorRoutes);
 
 app.get("*", (req, res, next) => {
   res.status(404).render("layouts/404");

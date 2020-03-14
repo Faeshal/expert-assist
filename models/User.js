@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   password: {
     type: String,
@@ -31,7 +30,13 @@ const UserSchema = new mongoose.Schema({
   github: String,
   linkedin: String,
   resetToken: String,
-  resetTokenExpiration: Date
+  resetTokenExpiration: Date,
+  feedback: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Feedback"
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", UserSchema);

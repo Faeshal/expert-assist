@@ -1,0 +1,301 @@
+<%-include('../../layouts/back/mentor/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/mentor/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/mentor/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div
+    class="header pb-6 d-flex align-items-center"
+    style="min-height: 370px; background-image: url(https://images.pexels.com/photos/633566/pexels-photo-633566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); background-size: cover; background-position: center top;"
+  >
+    <!-- Mask -->
+    <span class="mask bg-gradient-default opacity-2"></span>
+    <!-- Header container -->
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6 justify-content-center mx-auto">
+    <div class="row">
+      <div class="col-xl-11 order-xl-2 justify-content-center mx-auto  ">
+        <div class="card card-profile" id="user-card">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <div class="card-profile-image">
+                <a href="#">
+                  <img
+                    src="../../back/assets/img/theme/team-4.jpg"
+                    class="rounded-circle"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="card-header text-center border-0 pt-5 pt-md-4 pb-0 pb-md-4"
+          >
+            <div class="d-flex justify-content-between ml-4 mr-4">
+              <a
+                href="javascript:void(0);"
+                class="btn btn-sm btn-primary update"
+                data-toggle="modal"
+                data-target="#exampleModalCenter"
+                data-id="<%=mentor._id%>"
+                >Update</a
+              >
+              <a href="#" class="btn btn-sm btn-default float-right"
+                >Change Pass</a
+              >
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            <div class="row">
+              <div class="col">
+                <div class="text-center">
+                  <h1 class="font-weight-bold">
+                    <%=mentor.username%>
+                  </h1>
+                  <div class="h5 font-weight-300">
+                    <i class="ni location_pin mr-2"></i><%=mentor.address%> -
+                    <%=mentor.job%>
+                  </div>
+                </div>
+                <div class="card-profile-stats d-flex justify-content-center">
+                  <div>
+                    <span class="heading">22</span>
+                    <span class="description">Friends</span>
+                  </div>
+                  <div>
+                    <span class="heading">10</span>
+                    <span class="description">Photos</span>
+                  </div>
+                  <div>
+                    <span class="heading">89</span>
+                    <span class="description">Comments</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="h5">
+                <% var bio=mentor.bio %>
+                <i class="ni business_briefcase-24 mr-2"></i>
+                <%= mentor.bio == null ? "Not Set" : bio.toUpperCase() %>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="w-65"><hr /></div>
+              <div>
+                <i class="ni education_hat mr-2"></i>Phone <%=mentor.phone%>
+              </div>
+              <div>
+                <i class="ni education_hat mr-2"></i>Twitter <%=mentor.twitter%>
+              </div>
+              <div>
+                <i class="ni education_hat mr-2"></i>Github <%=mentor.github%>
+              </div>
+              <div>
+                <i class="ni education_hat mr-2"></i>Linkedin <%=mentor.linkedin%>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModalCenter"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Profile Details
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <form action="/mentor/profile/update" method="POST">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <input type="hidden" name="id" class="id" />
+                      <label for="recipient-name" class="col-form-label"
+                        >Username</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm username"
+                        name="username"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Profile Picture:</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm profilepicture"
+                        name="profilepicture"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Job:</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm job"
+                        name="job"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Bio:</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm bio"
+                        name="bio"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Address</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm address"
+                        name="address"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Phone</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm phone"
+                        name="phone"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Twitter</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm twitter"
+                        name="twitter"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Github</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm github"
+                        name="github"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Linkedin</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm linkedin"
+                        name="linkedin"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <button type="submit" class="btn btn-primary">
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ? JQUERY -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script>
+        $(document).ready(function() {
+          $("#user-card").on("click", ".update", function() {
+            var id = $(this).data("id");
+            console.log(id);
+            var username = $(this).data("username");
+            var bio = $(this).data("bio");
+            var job = $(this).data("job");
+            var profilepicture = $(this).data("profilepicture");
+            var address = $(this).data("address");
+            var phone = $(this).data("phone");
+            var twitter = $(this).data("twitter");
+            var github = $(this).data("github");
+            var linkedin = $(this).data("linkedin");
+            $(".id").val(id);
+            $(".username").val(username);
+            $(".job").val(job);
+            $(".bio").val(bio);
+            $(".profilepicture").val(profilepicture);
+            $(".phone").val(phone);
+            $(".address").val(address);
+            $(".twitter").val(twitter);
+            $(".github").val(github);
+            $(".linkedin").val(linkedin);
+          });
+        });
+      </script>
+      <!-- Footer -->
+      <%-include('../../layouts/back/mentor/footer.ejs')%>
+    </div>
+  </div>
+</div>
