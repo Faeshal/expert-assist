@@ -38,13 +38,14 @@ exports.updateProfile = (req, res, next) => {
   const address = req.body.address;
   const job = req.body.job;
   const phone = req.body.phone;
-  const profilepicture = req.file;
-  if (!profilepicture) {
-    console.log("Profile Picture is empty");
-  }
+  // const profilepicture = req.file;
 
-  // const profilepicture = req.file.path.replace("\\", "/");
+  const profilepicture = req.files["profilepicture"][0];
 
+  const coverpicture = req.files["coverpicture"][0];
+
+  // console.log(req.files["coverpicture"][0].path);
+  console.log("================");
   console.log(req.body);
   Mentor.findOne({ _id: id })
     .then(mentor => {
@@ -55,8 +56,21 @@ exports.updateProfile = (req, res, next) => {
 
       if (profilepicture) {
         fileHelper.deleteFile(mentor.profilepicture);
-        mentor.profilepicture = req.file.path.replace("\\", "/");
+        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+          "\\",
+          "/"
+        );
       }
+
+      if (coverpicture) {
+        fileHelper.deleteFile(mentor.coverpicture);
+        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
+          "\\",
+          "/"
+        );
+      }
+
+      console.log(mentor.coverpicture);
 
       return mentor.save();
     })

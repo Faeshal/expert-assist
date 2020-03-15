@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const express = require("express");
 const app = express();
+
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -29,13 +30,14 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors());
 
-// * Multer
+// * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+    // cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+    cb(null, Date.now() + "_" + file.originalname);
   }
 });
 
@@ -54,12 +56,28 @@ const fileFilter = (req, file, cb) => {
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
+
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// * Multer
+// app.use(
+//   multer({ storage: fileStorage, fileFilter: fileFilter }).single(
+//     "profilepicture"
+//   )
+// );
+
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single(
-    "profilepicture"
-  )
+  multer({ storage: fileStorage, fileFilter: fileFilter }).fields([
+    {
+      name: "profilepicture",
+      maxCount: 1
+    },
+    {
+      name: "coverpicture",
+      maxCount: 1
+    }
+  ])
 );
 
 // * Session & Cookie

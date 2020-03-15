@@ -9,7 +9,7 @@
   <!-- Header -->
   <div
     class="header pb-6 d-flex align-items-center"
-    style="min-height: 370px; background-image: url(https://images.pexels.com/photos/633566/pexels-photo-633566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); background-size: cover; background-position: center top;"
+    style="min-height: 370px; background-image: url(/<%=mentor.coverpicture%>); background-size: cover; background-position: center top;"
   >
     <!-- Mask -->
     <span class="mask bg-gradient-default opacity-2"></span>
@@ -113,7 +113,7 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
+    <!--  Modal -->
     <div
       class="modal fade"
       id="exampleModalCenter"
@@ -210,7 +210,20 @@
                         type="file"
                         class="form-control form-control-sm profilepicture"
                         name="profilepicture"
-                        id="profilepicture"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Cover Picture:</label
+                      >
+                      <input
+                        type="file"
+                        class="form-control form-control-sm coverpicture"
+                        name="coverpicture"
                       />
                     </div>
                   </div>
@@ -237,13 +250,11 @@
             var job = $(this).data("job");
             var address = $(this).data("address");
             var phone = $(this).data("phone");
-            var profilepicture = $(this).data("profilepicture");
             $(".id").val(id);
             $(".username").val(username);
             $(".job").val(job);
             $(".phone").val(phone);
             $(".address").val(address);
-            $(".profilepicture").val(profilepicture);
           });
         });
       </script>
