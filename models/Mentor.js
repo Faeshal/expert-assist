@@ -34,6 +34,10 @@ const MentorSchema = new mongoose.Schema({
       ref: "Feedback"
     }
   ],
+  exam: {
+    type: Boolean,
+    default: false
+  },
   status: {
     type: Boolean,
     default: false
