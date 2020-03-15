@@ -35,29 +35,33 @@ exports.getProfile = (req, res, next) => {
 exports.updateProfile = (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
-  const profilepicture = req.file.path.replace("\\", "/");
-  const job = req.body.job;
   const address = req.body.address;
+  const job = req.body.job;
   const phone = req.body.phone;
-
+  const profilepicture = req.file;
   if (!profilepicture) {
     console.log("Profile Picture is empty");
   }
 
+  // const profilepicture = req.file.path.replace("\\", "/");
+
+  console.log(req.body);
   Mentor.findOne({ _id: id })
     .then(mentor => {
       mentor.username = username;
+      mentor.address = address;
+      mentor.job = job;
+      mentor.phone = phone;
+
       if (profilepicture) {
         fileHelper.deleteFile(mentor.profilepicture);
         mentor.profilepicture = req.file.path.replace("\\", "/");
       }
-      mentor.job = job;
-      mentor.address = address;
-      mentor.phone = phone;
 
       return mentor.save();
     })
     .then(result => {
+      console.log(result);
       console.log("Profile Updated");
       res.redirect("/mentor/profile");
     })

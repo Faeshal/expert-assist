@@ -14,7 +14,6 @@ const cors = require("cors");
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const colors = require("colors");
-const { v4: uuidv4 } = require("uuid");
 const morgan = require("morgan");
 const multer = require("multer");
 const frontRoutes = require("./routes/front");
@@ -36,7 +35,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, uuidv4() + "-" + file.originalname);
+    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
   }
 });
 

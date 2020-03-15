@@ -62,13 +62,13 @@
                     <%=mentor.username%>
                   </h1>
                   <div class="h5 font-weight-300">
-                    <i class="ni location_pin mr-2 phone"></i><%=mentor.phone %> - <%=
-                    mentor.email %>
+                    <i class="ni location_pin mr-2 "></i><%=mentor.phone %> -
+                    <%= mentor.email %>
                   </div>
                 </div>
                 <div class="card-profile-stats d-flex justify-content-center">
                   <div>
-                    <span class="heading address"
+                    <span class="heading "
                       ><%= mentor.address == null ? "Not Set" : mentor.address
                       %>
                     </span>
@@ -90,6 +90,7 @@
                 >Waiting For Exam Assesment</span
               >
             </div>
+            <!-- Jika Sudah Lulus -->
             <% } %> <% if (mentor.status == true) { %>
             <div class="text-center">
               <div class="w-65"><hr /></div>
@@ -158,21 +159,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label"
-                        >Profile Picture:</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control form-control-sm profilepicture"
-                        name="profilepicture"
-                        id="profilepicture"
-                      />
-                    </div>
-                  </div>
-                </div>
+
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
@@ -213,6 +200,21 @@
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label"
+                        >Profile Picture:</label
+                      >
+                      <input
+                        type="file"
+                        class="form-control form-control-sm profilepicture"
+                        name="profilepicture"
+                        id="profilepicture"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div class="modal-footer justify-content-center mx-auto">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <button type="submit" class="btn btn-primary">
@@ -233,15 +235,15 @@
             console.log(id);
             var username = $(this).data("username");
             var job = $(this).data("job");
-            var profilepicture = $(this).data("profilepicture");
             var address = $(this).data("address");
             var phone = $(this).data("phone");
+            var profilepicture = $(this).data("profilepicture");
             $(".id").val(id);
             $(".username").val(username);
             $(".job").val(job);
-            $(".profilepicture").val(profilepicture);
             $(".phone").val(phone);
             $(".address").val(address);
+            $(".profilepicture").val(profilepicture);
           });
         });
       </script>
