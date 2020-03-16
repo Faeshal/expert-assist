@@ -1,4 +1,5 @@
 const Mentor = require("../models/Mentor");
+const Admin = require("../models/Admin");
 const fileHelper = require("../util/file");
 
 exports.getDashboard = (req, res, next) => {
@@ -6,16 +7,6 @@ exports.getDashboard = (req, res, next) => {
   Mentor.findById(req.session.mentor)
     .then(mentor => {
       res.render("back/mentor/dashboard", {
-        mentor: mentor
-      });
-    })
-    .catch(err => console.log(err));
-};
-
-exports.getExam = (req, res, next) => {
-  Mentor.findById(req.session.mentor)
-    .then(mentor => {
-      res.render("back/mentor/exam", {
         mentor: mentor
       });
     })
@@ -78,6 +69,81 @@ exports.updateProfile = (req, res, next) => {
       console.log(result);
       console.log("Profile Updated");
       res.redirect("/mentor/profile");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getExam = (req, res, next) => {
+  Admin.findOne({ level: "admin" })
+    .then(admin => {
+      console.log(admin.category[0].name);
+      if (!admin) {
+        console.log("Admin not found");
+        res.render("layouts/500");
+      } else {
+        Mentor.findById(req.session.mentor)
+          .then(mentor => {
+            res.render("back/mentor/exam", {
+              mentor: mentor,
+              admin: admin
+            });
+          })
+          .catch(err => console.log(err));
+      }
+    })
+    .catch();
+};
+
+exports.postExam = (req, res, next) => {
+  const expertise = req.body.expertise;
+
+  const exam = req.body.exam;
+  const id = req.session.mentor._id;
+  Mentor.findById(id)
+    .then(mentor => {
+      mentor.expertise = expertise;
+      mentor.exam = exam;
+      return mentor.save();
+    })
+    .then(result => {
+      res.redirect("/mentor/exam/begin");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getBeginExam = (req, res, next) => {
+  Admin.findOne({ level: "admin" })
+    .then(admin => {
+      console.log(admin.category[0].name);
+      if (!admin) {
+        console.log("Admin not found");
+      } else {
+        Mentor.findById(req.session.mentor._id)
+          .then(mentor => {
+            console.log("-=-=-=-=-=-=-=-=-=-=-");
+            console.log(mentor.expertise);
+            console.log("=====================");
+            // * Compare
+            let testlink;
+
+            if (mentor.expertise == admin.category[0].name) {
+              testlink = admin.category[0].testlink;
+            } else if (mentor.expertise == admin.category[1].name) {
+              testlink = admin.category[1].testlink;
+            } else if (mentor.expertise == admin.category[2].name) {
+              testlink = admin.category[2].testlink;
+            } else {
+              console.log("Test Link not found");
+              res.render("layouts/500");
+            }
+            res.render("back/mentor/begin", {
+              mentor: mentor,
+              admin: admin,
+              testlink: testlink
+            });
+          })
+          .catch(err => console.log(err));
+      }
     })
     .catch(err => console.log(err));
 };

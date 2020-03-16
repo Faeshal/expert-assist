@@ -30,8 +30,6 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
 
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);
-router.get("/mentor/exam", isAuth, mentorController.getExam);
-
 router.get("/mentor/profile", isAuth, mentorController.getProfile);
 router.post(
   "/mentor/profile/update",
@@ -48,5 +46,11 @@ router.post(
   ]),
   mentorController.updateProfile
 );
+
+router.get("/mentor/exam", isAuth, mentorController.getExam);
+
+router.post("/mentor/exam", isAuth, mentorController.postExam);
+
+router.get("/mentor/exam/begin", isAuth, mentorController.getBeginExam);
 
 module.exports = router;

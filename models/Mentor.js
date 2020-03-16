@@ -20,6 +20,7 @@ const MentorSchema = new mongoose.Schema({
   github: String,
   linkedin: String,
   job: String,
+  expertise: String,
   desc: String,
   cv: String,
   sertifikat: String,
