@@ -39,14 +39,15 @@ exports.updateProfile = (req, res, next) => {
   const job = req.body.job;
   const phone = req.body.phone;
   // const profilepicture = req.file;
+  const profilepicture = req.files["profilepicture"];
+  const coverpicture = req.files["coverpicture"];
 
-  const profilepicture = req.files["profilepicture"][0];
-
-  const coverpicture = req.files["coverpicture"][0];
-
-  // console.log(req.files["coverpicture"][0].path);
+  console.log("*********************");
+  console.log(req.files["profilepicture"]);
   console.log("================");
-  console.log(req.body);
+  console.log(req.files["coverpicture"]);
+  console.log("================");
+  console.log(req.files);
   Mentor.findOne({ _id: id })
     .then(mentor => {
       mentor.username = username;
