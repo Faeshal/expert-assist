@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const fileHelper = require("../util/file");
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
@@ -24,7 +25,6 @@ exports.getProfile = (req, res, next) => {
 exports.updateProfile = (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
-  const profilePicture = req.body.profilePicture;
   const job = req.body.job;
   const bio = req.body.bio;
   const address = req.body.address;
@@ -32,11 +32,11 @@ exports.updateProfile = (req, res, next) => {
   const twitter = req.body.twitter;
   const github = req.body.github;
   const linkedin = req.body.linkedin;
+  const profilepicture = req.file;
 
   User.findOne({ _id: id })
     .then(user => {
       user.username = username;
-      user.profilePicture = profilePicture;
       user.job = job;
       user.bio = bio;
       user.address = address;
@@ -44,6 +44,11 @@ exports.updateProfile = (req, res, next) => {
       user.twitter = twitter;
       user.github = github;
       user.linkedin = linkedin;
+
+      if (profilepicture) {
+        // fileHelper.deleteFile(mentor.profilepicture);
+        user.profilepicture = profilepicture.path.replace("\\", "/");
+      }
 
       return user.save();
     })

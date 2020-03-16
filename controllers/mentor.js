@@ -38,7 +38,6 @@ exports.updateProfile = (req, res, next) => {
   const address = req.body.address;
   const job = req.body.job;
   const phone = req.body.phone;
-  // const profilepicture = req.file;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
