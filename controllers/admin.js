@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin");
+const Mentor = require("../models/Mentor");
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
@@ -341,6 +342,32 @@ exports.deleteNews = (req, res, next) => {
       console.log(admins);
       console.log("News Deleted");
       res.redirect("/admin/news");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getMentorAll = (req, res, next) => {
+  Mentor.find({ status: true })
+    .then(mentor => {
+      res.render("back/admin/allmentor", {
+        mentor: mentor,
+        pageTitle: "Admin - All Mentor"
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getMentorExam = (req, res, next) => {
+  Mentor.find({ status: false })
+    .sort({ _id: 1 })
+    .then(mentor => {
+      if (!mentor) {
+        console.log("No Mentor Unqualified");
+      }
+      res.render("back/admin/mentorExam", {
+        mentor: mentor,
+        pageTitle: "Admin - Mentor Exam"
+      });
     })
     .catch(err => console.log(err));
 };
