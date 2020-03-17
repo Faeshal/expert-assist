@@ -28,8 +28,15 @@
       <div class="col-lg-8">
         <!-- Pricing card -->
         <% if (mentor.exam == false){ %>
-        <div class="card card-pricing border-0 text-center mb-2">
-          <div class="card-header bg-transparent">
+        <div class="card card-pricing border-0 text-center mb-2 mt-2">
+          <div class="card-header bg-transparent ">
+            <img
+              class="img-fluid "
+              width="35%"
+              alt="Responsive image"
+              src="../../back/assets/img/custom/exambegin.png"
+              alt=""
+            />
             <h3 class="text-uppercase ls-1 text-primary py-3 mb-0">
               MENTOR EXAM
             </h3>
@@ -39,9 +46,6 @@
             >
           </div>
           <div class="card-body px-lg-7">
-            <h5 class="text-center mb-4 text-muted">
-              Silahkan pilih bidang keahlian anda & klik tombol Begin
-            </h5>
             <form action="/mentor/exam/" method="POST">
               <div class="display-4">
                 <div class="form-group">
@@ -50,7 +54,9 @@
                     name="expertise"
                     required
                   >
-                    <option selected value="">Select Your Expertise</option>
+                    <option selected value="">
+                      Pilih bidang keahlian anda</option
+                    >
                     <option value="<%= admin.category[0].name %>"
                       ><%= admin.category[0].name %></option
                     >
@@ -72,7 +78,22 @@
           </div>
         </div>
         <% }else { %>
-        <h1 class="text-center">SUDAH MENGERJAKAN TEST</h1>
+        <div class="card card-pricing border-0 text-center mb-2">
+          <div class="card-body px-lg-7">
+            <img
+              class="img-fluid"
+              alt="Responsive image"
+              src="../../back/assets/img/custom/examwait.png"
+              alt=""
+            />
+            <h3 class="text-center mb-4 text-primary">
+              Ujian Telah selesai dilakukan
+            </h3>
+            <h5 class="text-center mb-4 text-muted">
+              Silahkan Menunggu Pengumuman
+            </h5>
+          </div>
+        </div>
         <% } %>
       </div>
     </div>

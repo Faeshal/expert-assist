@@ -49,14 +49,14 @@ exports.postRegister = (req, res, next) => {
           })
           .then(result => {
             res.redirect("/login");
-            const msg = {
-              to: email,
-              from: "expertassist@example.com",
-              subject: "Sucessfully Register",
-              text: "Congratulation & Welcome to the Club",
-              html: "<strong>Congratulation & Welcome to the Club</strong>"
-            };
-            return sgMail.send(msg);
+            // const msg = {
+            //   to: email,
+            //   from: "expertassist@example.com",
+            //   subject: "Sucessfully Register",
+            //   text: "Congratulation & Welcome to the Club",
+            //   html: "<strong>Congratulation & Welcome to the Club</strong>"
+            // };
+            // return sgMail.send(msg);
           });
       })
       .catch(err => {
@@ -85,14 +85,14 @@ exports.postRegister = (req, res, next) => {
           })
           .then(result => {
             res.redirect("/login");
-            const msg = {
-              to: email,
-              from: "expertassist@example.com",
-              subject: "Sucessfully Register",
-              text: "Congratulation & Welcome to the Club",
-              html: "<strong>Congratulation & Welcome to the Club</strong>"
-            };
-            return sgMail.send(msg);
+            // const msg = {
+            //   to: email,
+            //   from: "expertassist@example.com",
+            //   subject: "Sucessfully Register",
+            //   text: "Congratulation & Welcome to the Club",
+            //   html: "<strong>Congratulation & Welcome to the Club</strong>"
+            // };
+            // return sgMail.send(msg);
           });
       })
       .catch(err => {
