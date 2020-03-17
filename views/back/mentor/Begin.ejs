@@ -7,37 +7,40 @@
   <%-include('../../layouts/back/mentor/topNav.ejs')%>
   <!-- Header -->
   <!-- Header -->
+  <!-- * Count -->
   <script>
-    // Mengatur waktu akhir perhitungan mundur
-    var countDownDate = new Date("Dec 5, 2020 15:37:25").getTime();
+    function startTimer(duration, display) {
+      var timer = duration,
+        minutes,
+        seconds;
+      setInterval(function() {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
 
-    // Memperbarui hitungan mundur setiap 1 detik
-    var x = setInterval(function() {
-      // Untuk mendapatkan tanggal dan waktu hari ini
-      var now = new Date().getTime();
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      // Temukan jarak antara sekarang dan tanggal hitung mundur
-      var distance = countDownDate - now;
+        display.textContent = minutes + ":" + seconds;
 
-      // Perhitungan waktu untuk hari, jam, menit dan detik
-      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      var hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // if (--timer < 0) {
+        //   timer = duration;
+        // }
 
-      // Keluarkan hasil dalam elemen dengan id = "demo"
-      document.getElementById("demo").innerHTML =
-        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        if (--timer < 0) {
+          document.getElementById("time").innerHTML = "EXPIRED";
+          window.location = "http://localhost:3000/mentor/profile";
+          alert("Succesfully Updated");
+        }
+      }, 1000);
+    }
 
-      // Jika hitungan mundur selesai, tulis beberapa teks
-      if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("demo").innerHTML = "EXPIRED";
-      }
-    }, 1000);
+    window.onload = function() {
+      var fiveMinutes = 60 * 0.3,
+        display = document.querySelector("#time");
+      startTimer(fiveMinutes, display);
+    };
   </script>
+
   <div class="header pb-6">
     <div class="container-fluid">
       <div class="header-body">
@@ -73,7 +76,7 @@
               <p class="font-weight-bold text-danger d-inline-block">Timer :</p>
               <span
                 class="badge badge-warning badge-lg display-2 font-weight-bold"
-                id="demo"
+                id="time"
               >
               </span>
             </li>
