@@ -44,8 +44,8 @@
             <form action="/mentor/exam/" method="POST">
               <div class="display-4">
                 <div class="form-group">
-                  <select class="custom-select text-dark" name="expertise">
-                    <option selected>Select Your Expertise</option>
+                  <select class="custom-select text-dark" name="expertise" required>
+                    <option selected value="">Select Your Expertise</option>
                     <option value="<%= admin.category[0].name %>"
                       ><%= admin.category[0].name %></option
                     >
