@@ -7,6 +7,7 @@
   <%-include('../../layouts/back/admin/topNav.ejs')%>
   <!-- Header -->
   <!-- Header -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <div class="header bg-primary pb-6">
     <div class="container-fluid">
       <div class="header-body">
@@ -64,11 +65,11 @@
             <tr>
               <th>Username</th>
               <th>Email</th>
-              <th>Register</th>
+              <th>Date</th>
+              <th>Time</th>
               <th>Expertise</th>
               <th>Exam Status</th>
               <th>Action</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -81,7 +82,13 @@
                 <b><%=mentorData.email%></b>
               </td>
               <td>
-                <span class="text-muted"><%=mentorData.register%></span>
+                <span class="text-muted"
+                  ><%= moment(mentorData.register).format("LL")%></span>
+              </td>
+              <td>
+                <span class="text-muted"
+                  ><%= moment(mentorData.register).format("LT")%></span
+                >
               </td>
               <td>
                 <b
@@ -90,37 +97,22 @@
                 >
               </td>
               <td>
-                <%if (mentorData.exam === true) {%>
+                <%if (mentorData.exam_take === true) {%>
                 <b class="font-weight-bold text-blue">Finished</b>
                 <% } else { %>
                 <b class="font-weight-bold text-danger">Not Yet</b>
                 <% } %>
               </td>
               <td class="table-actions">
-                <form method="POST" action="/admin/mentor/exam/update">
-                  <a
-                    href="/admin/blog/<%=mentorData._id%>"
-                    class="table-action table-action-edit"
-                    data-toggle="tooltip"
-                    data-original-title="edit blog"
-                  >
-                    <i class="fas fa-user-edit"></i>
-                  </a>
-                  <input
-                    type="hidden"
-                    value="<%= mentorData._id %>"
-                    name="id"
-                  />
-                  <button
-                    type="submit"
-                    onclick="return confirm('Are you sure you want to delete this item?');"
-                    class="table-action btn btn-sm"
-                    data-toggle="tooltip"
-                    data-original-title="Delete blog"
-                  >
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </form>
+                <a
+                  href="/admin/blog/<%=mentorData._id%>"
+                  class="table-action table-action-edit"
+                  data-toggle="tooltip"
+                  data-original-title="edit blog"
+                >
+                  <i class="fas fa-user-edit"></i>
+                </a>
+                <input type="hidden" value="<%= mentorData._id %>" name="id" />
               </td>
             </tr>
             <% }) %>
@@ -129,7 +121,30 @@
       </div>
     </div>
 
+    <script>
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+      let dateObj = new Date();
+      let month = monthNames[dateObj.getMonth()];
+      let day = String(dateObj.getDate()).padStart(2, "0");
+      let year = dateObj.getFullYear();
+      let output = month + "\n" + day + "," + year;
+    </script>
+
     <!-- Footer -->
+
     <%-include('../../layouts/back/admin/footer.ejs')%>
   </div>
 </div>

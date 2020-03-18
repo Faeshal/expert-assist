@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const moment = require("moment");
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
@@ -366,7 +367,8 @@ exports.getMentorExam = (req, res, next) => {
       }
       res.render("back/admin/mentorExam", {
         mentor: mentor,
-        pageTitle: "Admin - Mentor Exam"
+        pageTitle: "Admin - Mentor Exam",
+        moment: moment
       });
     })
     .catch(err => console.log(err));
