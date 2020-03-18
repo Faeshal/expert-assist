@@ -41,11 +41,11 @@ const MentorSchema = new mongoose.Schema({
       ref: "Feedback"
     }
   ],
-  exam_take: {
+  examstatus: {
     type: Boolean,
     default: false
   },
-  status: {
+  mentorstatus: {
     type: Boolean,
     default: false
   },

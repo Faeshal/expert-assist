@@ -7,7 +7,6 @@
   <%-include('../../layouts/back/admin/topNav.ejs')%>
   <!-- Header -->
   <!-- Header -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <div class="header bg-primary pb-6">
     <div class="container-fluid">
       <div class="header-body">
@@ -22,7 +21,7 @@
                 <li class="breadcrumb-item">
                   <a href="#"><i class="fas fa-home"></i></a>
                 </li>
-                <li class="breadcrumb-item"><a href="#">All Users</a></li>
+                <li class="breadcrumb-item"><a href="#">All Mentor</a></li>
               </ol>
             </nav>
           </div>
@@ -41,7 +40,7 @@
       <div class="card-header border-0">
         <div class="row">
           <div class="col-6">
-            <h3 class="mb-0">User Table</h3>
+            <h3 class="mb-0">Mentor Table</h3>
           </div>
           <div class="col-6 text-right">
             <a
@@ -60,7 +59,7 @@
       </div>
       <!-- Light table -->
       <div class="table-responsive">
-        <table class="table align-items-center table-flush">
+        <table class="table align-items-center table-flush" id="#mytable">
           <thead class="thead-light">
             <tr>
               <th>Username</th>
@@ -68,8 +67,8 @@
               <th>Date</th>
               <th>Time</th>
               <th>Expertise</th>
-              <th>Exam Status</th>
-              <th>Action</th>
+              <th class="text-center">Exam Status</th>
+              <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -79,11 +78,12 @@
                 <b><%=mentorData.username%></b>
               </td>
               <td class="table-user">
-                <b><%=mentorData.email%></b>
+                <span class="text-muted"><%=mentorData.email%></span>
               </td>
               <td>
                 <span class="text-muted"
-                  ><%= moment(mentorData.register).format("LL")%></span>
+                  ><%= moment(mentorData.register).format("LL")%></span
+                >
               </td>
               <td>
                 <span class="text-muted"
@@ -96,23 +96,30 @@
                   :mentorData.expertise %></b
                 >
               </td>
-              <td>
-                <%if (mentorData.exam_take === true) {%>
+              <td class="text-center">
+                <%if (mentorData.examstatus === true) {%>
                 <b class="font-weight-bold text-blue">Finished</b>
                 <% } else { %>
                 <b class="font-weight-bold text-danger">Not Yet</b>
                 <% } %>
               </td>
-              <td class="table-actions">
+              <td class="table-actions text-center">
                 <a
-                  href="/admin/blog/<%=mentorData._id%>"
-                  class="table-action table-action-edit"
-                  data-toggle="tooltip"
-                  data-original-title="edit blog"
+                  href="javascript:void(0);"
+                  class="table-action table-action-edit edit"
+                  data-toggle="modal"
+                  data-target="#modal-default"
+                  data-id="<%=mentorData._id%>"
+                  data-username="<%=mentorData.username%>"
+                  data-mentorstatus="<%=mentorData.mentorstatus%>"
                 >
                   <i class="fas fa-user-edit"></i>
+                  <input
+                    type="hidden"
+                    value="<%= mentorData._id %>"
+                    name="id"
+                  />
                 </a>
-                <input type="hidden" value="<%= mentorData._id %>" name="id" />
               </td>
             </tr>
             <% }) %>
@@ -120,31 +127,82 @@
         </table>
       </div>
     </div>
-
+    <!-- Modals -->
+    <div
+      class="modal fade"
+      id="modal-default"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modal-default"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal- modal-dialog-centered modal-"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="modal-title-default">
+              Give Score
+            </h6>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/mentor/exam/update" method="POST">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  class="form-control username"
+                  name="username"
+                />
+              </div>
+              <div class="form-group ">
+                <input type="hidden" name="id" value="<%= mentor._id %>" />
+                <label for="exampleInputEmail1">Exam Result</label>
+                <select
+                  class="form-control font-weight-bold text-dark mentorstatus"
+                  name="mentorstatus"
+                  required
+                >
+                  <option value="" selected>The Result is...</option>
+                  <option value="true">Passed</option>
+                  <option value="false">Failed</option>
+                </select>
+              </div>
+              <div class="form-group text-center">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <button type="submit" class="btn btn-primary">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Jquery  -->
     <script>
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ];
-      let dateObj = new Date();
-      let month = monthNames[dateObj.getMonth()];
-      let day = String(dateObj.getDate()).padStart(2, "0");
-      let year = dateObj.getFullYear();
-      let output = month + "\n" + day + "," + year;
+      $(document).ready(function() {
+        $("#mytable").on("click", ".edit", function() {
+          var id = $(this).data("id");
+          console.log(id);
+          var username = $(this).data("username");
+          var mentorstatus = $(this).data("mentorstatus");
+          $(".username").val(username);
+          $(".mentorstatus").val(mentorstatus);
+          $(".id").val(id);
+        });
+      });
     </script>
-
     <!-- Footer -->
-
     <%-include('../../layouts/back/admin/footer.ejs')%>
   </div>
 </div>

@@ -97,12 +97,12 @@ exports.getExam = (req, res, next) => {
 exports.postExam = (req, res, next) => {
   const expertise = req.body.expertise;
 
-  const exam_take = req.body.exam_take;
+  const examstatus = req.body.examstatus;
   const id = req.session.mentor._id;
   Mentor.findById(id)
     .then(mentor => {
       mentor.expertise = expertise;
-      mentor.exam_take = exam_take;
+      mentor.examstatus = examstatus;
       return mentor.save();
     })
     .then(result => {

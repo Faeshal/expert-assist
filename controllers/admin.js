@@ -348,18 +348,19 @@ exports.deleteNews = (req, res, next) => {
 };
 
 exports.getMentorAll = (req, res, next) => {
-  Mentor.find({ status: true })
+  Mentor.find({ mentorstatus: true })
     .then(mentor => {
-      res.render("back/admin/allmentor", {
+      res.render("back/admin/mentorAll", {
         mentor: mentor,
-        pageTitle: "Admin - All Mentor"
+        pageTitle: "Admin - All Mentor",
+        moment: moment
       });
     })
     .catch(err => console.log(err));
 };
 
 exports.getMentorExam = (req, res, next) => {
-  Mentor.find({ status: false })
+  Mentor.find({ mentorstatus: false })
     .sort({ _id: 1 })
     .then(mentor => {
       if (!mentor) {
@@ -370,6 +371,20 @@ exports.getMentorExam = (req, res, next) => {
         pageTitle: "Admin - Mentor Exam",
         moment: moment
       });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postScore = (req, res, next) => {
+  const mentorstatus = req.body.mentorstatus;
+  const id = req.body.id;
+  Mentor.findById(id)
+    .then(mentor => {
+      mentor.mentorstatus = mentorstatus;
+      return save();
+    })
+    .then(result => {
+      res.redirect("/admin/mentorExam");
     })
     .catch(err => console.log(err));
 };

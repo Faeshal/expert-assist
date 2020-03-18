@@ -27,7 +27,7 @@
     <div class="row justify-content-center mx-auto mb-6">
       <div class="col-lg-8">
         <!-- Pricing card -->
-        <% if (mentor.exam_take == false){ %>
+        <% if (mentor.examstatus == false){ %>
         <div class="card card-pricing border-0 text-center mb-2 mt-2">
           <div class="card-header bg-transparent ">
             <img
@@ -69,7 +69,7 @@
                   </select>
                 </div>
               </div>
-              <input type="hidden" name="exam_take" value="true" />
+              <input type="hidden" name="examstatus" value="true" />
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button type="submit" class="btn btn-primary mb-3">
                 Begin Test
@@ -77,7 +77,7 @@
             </form>
           </div>
         </div>
-        <% }else { %>
+        <% } else { %>
         <div class="card card-pricing border-0 text-center mb-2">
           <div class="card-body px-lg-7">
             <img
