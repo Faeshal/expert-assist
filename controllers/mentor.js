@@ -74,6 +74,7 @@ exports.updateProfile = (req, res, next) => {
 };
 
 exports.getExam = (req, res, next) => {
+  console.log(req.session.mentor);
   Admin.findOne({ level: "admin" })
     .then(admin => {
       console.log(admin.category[0].name);
@@ -96,7 +97,6 @@ exports.getExam = (req, res, next) => {
 
 exports.postExam = (req, res, next) => {
   const expertise = req.body.expertise;
-
   const examstatus = req.body.examstatus;
   const id = req.session.mentor._id;
   Mentor.findById(id)
@@ -112,38 +112,35 @@ exports.postExam = (req, res, next) => {
 };
 
 exports.getBeginExam = (req, res, next) => {
-  Admin.findOne({ level: "admin" })
-    .then(admin => {
-      console.log(admin.category[0].name);
-      if (!admin) {
-        console.log("Admin not found");
-      } else {
-        Mentor.findById(req.session.mentor._id)
-          .then(mentor => {
-            console.log("-=-=-=-=-=-=-=-=-=-=-");
-            console.log(mentor.expertise);
-            console.log("=====================");
-            // * Compare
+  Admin.findOne({ level: "admin" }).then(admin => {
+    if (!admin) {
+      console.log("Admin not found");
+    } else {
+      Mentor.findById(req.session.mentor._id)
+        .then(mentor => {
+          console.log(req.session.mentor);
+          console.log("------");
+          // * Compare
+          if (!mentor.expertise) {
+            res.redirect("/mentor/dashboard");
+            console.log("Not Auhtorize");
+          } else {
             let testlink;
-
             if (mentor.expertise == admin.category[0].name) {
               testlink = admin.category[0].testlink;
             } else if (mentor.expertise == admin.category[1].name) {
               testlink = admin.category[1].testlink;
             } else if (mentor.expertise == admin.category[2].name) {
               testlink = admin.category[2].testlink;
-            } else {
-              console.log("Test Link not found");
-              res.render("layouts/500");
             }
             res.render("back/mentor/begin", {
               mentor: mentor,
               admin: admin,
               testlink: testlink
             });
-          })
-          .catch(err => console.log(err));
-      }
-    })
-    .catch(err => console.log(err));
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  });
 };
