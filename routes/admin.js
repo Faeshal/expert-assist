@@ -39,6 +39,6 @@ router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
 // * Mentor
 router.get("/admin/mentor/all", adminContoller.getMentorAll);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
-// router.post("/admin/mentor/exam/update");
+router.post("/admin/mentor/exam/update", adminContoller.postScore);
 
 module.exports = router;

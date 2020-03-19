@@ -376,15 +376,17 @@ exports.getMentorExam = (req, res, next) => {
 };
 
 exports.postScore = (req, res, next) => {
+  const username = req.body.username;
   const mentorstatus = req.body.mentorstatus;
   const id = req.body.id;
   Mentor.findById(id)
     .then(mentor => {
+      mentor.username = username;
       mentor.mentorstatus = mentorstatus;
-      return save();
+      return mentor.save();
     })
     .then(result => {
-      res.redirect("/admin/mentorExam");
+      res.redirect("/admin/mentor/exam");
     })
     .catch(err => console.log(err));
 };
