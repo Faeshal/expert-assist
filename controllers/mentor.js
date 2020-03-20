@@ -132,13 +132,10 @@ exports.getBeginExam = (req, res, next) => {
           if (!mentor.expertise) {
             res.redirect("/mentor/dashboard");
             console.log("Not Auhtorize");
-          }
-
-          // else if (mentor.examstatus == true) {
-          //   res.redirect("/mentor/dashboard");
-          //   console.log("Exam Finished");
-          // }
-          else {
+          } else if (mentor.examstatus == true) {
+            res.redirect("/mentor/dashboard");
+            console.log("Exam Finished");
+          } else {
             let testlink;
             if (mentor.expertise == admin.category[0].name) {
               testlink = admin.category[0].testlink;
