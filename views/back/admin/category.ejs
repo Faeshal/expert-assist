@@ -141,7 +141,10 @@
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"
-                        ><%= categorydata.testlink %></a
+                        >
+                        <% let str = categorydata.testlink %> 
+                        <%= str.substring(8, 30); %>
+                        </a
                       >
                     </td>
                     <td class="table-actions">

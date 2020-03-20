@@ -153,7 +153,8 @@ exports.getCategory = (req, res, next) => {
       console.log(category);
       res.render("back/admin/category", {
         category: category,
-        pageTitle: "Admin - Category"
+        pageTitle: "Admin - Category",
+        moment: moment
       });
     })
     .catch(err => console.log(err));
