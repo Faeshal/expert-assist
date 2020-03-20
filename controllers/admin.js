@@ -348,7 +348,7 @@ exports.deleteNews = (req, res, next) => {
 };
 
 exports.getMentorAll = (req, res, next) => {
-  Mentor.find({ mentorstatus: true })
+  Mentor.find({ $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }] })
     .then(mentor => {
       res.render("back/admin/mentorAll", {
         mentor: mentor,
@@ -360,7 +360,7 @@ exports.getMentorAll = (req, res, next) => {
 };
 
 exports.getMentorExam = (req, res, next) => {
-  Mentor.find({ mentorstatus: false })
+  Mentor.find({ mentorstatus: "false" })
     .sort({ _id: 1 })
     .then(mentor => {
       if (!mentor) {

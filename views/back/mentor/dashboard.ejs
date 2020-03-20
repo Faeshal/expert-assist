@@ -1,356 +1,397 @@
-  <%-include('../../layouts/back/mentor/header.ejs')%>
-  <!-- Sidenav -->
-  <%-include('../../layouts/back/mentor/sideNav.ejs')%>
-  <!-- Main content -->
-  <div class="main-content" id="panel">
-    <!-- Topnav -->
-   <%-include('../../layouts/back/mentor/topNav.ejs')%>
-    <!-- Header -->
-    <!-- Header -->
-    <div class="header pb-6">
-      <div class="container-fluid">
-        <div class="header-body">
-          <div class="row align-items-center py-4">
-            <div class="col-lg-6 col-7">
-              <h6 class="h2 d-inline-block mb-0">Alternative</h6>
-              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                <ol class="breadcrumb breadcrumb-links">
-                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                  <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Alternative</li>
-                </ol>
-              </nav>
-            </div>
-            <div class="col-lg-6 col-5 text-right">
-              <a href="#" class="btn btn-sm btn-neutral">New</a>
-              <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-            </div>
+<%-include('../../layouts/back/mentor/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/mentor/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/mentor/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+
+  <div class="header pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 d-inline-block mb-0">Alternative</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  Alternative
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
           </div>
         </div>
       </div>
     </div>
-    <!-- Page content -->
-    <div class="container-fluid mt--6">
-       <div class="row">
-            <div class="col-xl-3 col-md-6">
-              <div class="card card-stats">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
-                      <span class="h2 font-weight-bold mb-0">350,897</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                        <i class="ni ni-active-40"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card card-stats">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
-                      <span class="h2 font-weight-bold mb-0">2,356</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                        <i class="ni ni-chart-pie-35"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card card-stats">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
-                      <span class="h2 font-weight-bold mb-0">924</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                        <i class="ni ni-money-coins"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card card-stats">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                        <i class="ni ni-chart-bar-32"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-      <div class="card-deck flex-column flex-xl-row">
-        <div class="card">
-          <div class="card-header bg-transparent">
-            <h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-            <h2 class="h3 mb-0">Sales value</h2>
-          </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-xl-3 col-md-6">
+        <div class="card card-stats">
+          <!-- Card body -->
           <div class="card-body">
-            <!-- Chart -->
-            <div class="chart">
-              <!-- Chart wrapper -->
-              <canvas id="chart-sales" class="chart-canvas"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header bg-transparent">
-            <div class="row align-items-center">
+            <div class="row">
               <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                <h2 class="h3 mb-0">Total orders</h2>
+                <h5 class="card-title text-uppercase text-muted mb-0">
+                  Total traffic
+                </h5>
+                <span class="h2 font-weight-bold mb-0">350,897</span>
+              </div>
+              <div class="col-auto">
+                <div
+                  class="icon icon-shape bg-gradient-red text-white rounded-circle shadow"
+                >
+                  <i class="ni ni-active-40"></i>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <!-- Chart -->
-            <div class="chart">
-              <canvas id="chart-bars" class="chart-canvas"></canvas>
-            </div>
-          </div>
-        </div>
-        <!-- Progress track -->
-        <div class="card">
-          <!-- Card header -->
-          <div class="card-header">
-            <div class="row align-items-center">
-              <div class="col-8">
-                <!-- Surtitle -->
-                <h6 class="surtitle">5/23 projects</h6>
-                <!-- Title -->
-                <h5 class="h3 mb-0">Progress track</h5>
-              </div>
-              <div class="col-4 text-right">
-                <a href="#!" class="btn btn-sm btn-neutral">Action</a>
-              </div>
-            </div>
-          </div>
-          <!-- Card body -->
-          <div class="card-body">
-            <!-- List group -->
-            <ul class="list-group list-group-flush list my--3">
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/bootstrap.jpg">
-                    </a>
-                  </div>
-                  <div class="col">
-                    <h5>Argon Design System</h5>
-                    <div class="progress progress-xs mb-0">
-                      <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/angular.jpg">
-                    </a>
-                  </div>
-                  <div class="col">
-                    <h5>Angular Now UI Kit PRO</h5>
-                    <div class="progress progress-xs mb-0">
-                      <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/sketch.jpg">
-                    </a>
-                  </div>
-                  <div class="col">
-                    <h5>Black Dashboard</h5>
-                    <div class="progress progress-xs mb-0">
-                      <div class="progress-bar bg-red" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/react.jpg">
-                    </a>
-                  </div>
-                  <div class="col">
-                    <h5>React Material Dashboard</h5>
-                    <div class="progress progress-xs mb-0">
-                      <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/vue.jpg">
-                    </a>
-                  </div>
-                  <div class="col">
-                    <h5>Vue Paper UI Kit PRO</h5>
-                    <div class="progress progress-xs mb-0">
-                      <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
+            <p class="mt-3 mb-0 text-sm">
+              <span class="text-success mr-2"
+                ><i class="fa fa-arrow-up"></i> 3.48%</span
+              >
+              <span class="text-nowrap">Since last month</span>
+            </p>
           </div>
         </div>
       </div>
-     
-      <div class="card-deck flex-column flex-xl-row">
-        <!-- Members list group card -->
-        <div class="card">
-          <!-- Card header -->
-          <div class="card-header">
-            <!-- Title -->
-            <h5 class="h3 mb-0">Team members</h5>
-          </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="card card-stats">
           <!-- Card body -->
           <div class="card-body">
-            <!-- List group -->
-            <ul class="list-group list-group-flush list my--3">
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/team-1.jpg">
-                    </a>
-                  </div>
-                  <div class="col ml--2">
-                    <h4 class="mb-0">
-                      <a href="#!">John Michael</a>
-                    </h4>
-                    <span class="text-success">●</span>
-                    <small>Online</small>
-                  </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-primary">Add</button>
-                  </div>
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">
+                  New users
+                </h5>
+                <span class="h2 font-weight-bold mb-0">2,356</span>
+              </div>
+              <div class="col-auto">
+                <div
+                  class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow"
+                >
+                  <i class="ni ni-chart-pie-35"></i>
                 </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/team-2.jpg">
-                    </a>
-                  </div>
-                  <div class="col ml--2">
-                    <h4 class="mb-0">
-                      <a href="#!">Alex Smith</a>
-                    </h4>
-                    <span class="text-warning">●</span>
-                    <small>In a meeting</small>
-                  </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-primary">Add</button>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/team-3.jpg">
-                    </a>
-                  </div>
-                  <div class="col ml--2">
-                    <h4 class="mb-0">
-                      <a href="#!">Samantha Ivy</a>
-                    </h4>
-                    <span class="text-danger">●</span>
-                    <small>Offline</small>
-                  </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-primary">Add</button>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item px-0">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../back/assets/img/theme/team-4.jpg">
-                    </a>
-                  </div>
-                  <div class="col ml--2">
-                    <h4 class="mb-0">
-                      <a href="#!">John Michael</a>
-                    </h4>
-                    <span class="text-success">●</span>
-                    <small>Online</small>
-                  </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-primary">Add</button>
-                  </div>
-                </div>
-              </li>
-            </ul>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-sm">
+              <span class="text-success mr-2"
+                ><i class="fa fa-arrow-up"></i> 3.48%</span
+              >
+              <span class="text-nowrap">Since last month</span>
+            </p>
           </div>
         </div>
       </div>
-      <!-- Footer -->
-      <%-include('../../layouts/back/mentor/footer.ejs')%>
+      <div class="col-xl-3 col-md-6">
+        <div class="card card-stats">
+          <!-- Card body -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
+                <span class="h2 font-weight-bold mb-0">924</span>
+              </div>
+              <div class="col-auto">
+                <div
+                  class="icon icon-shape bg-gradient-green text-white rounded-circle shadow"
+                >
+                  <i class="ni ni-money-coins"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-sm">
+              <span class="text-success mr-2"
+                ><i class="fa fa-arrow-up"></i> 3.48%</span
+              >
+              <span class="text-nowrap">Since last month</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="card card-stats">
+          <!-- Card body -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">
+                  Performance
+                </h5>
+                <span class="h2 font-weight-bold mb-0">49,65%</span>
+              </div>
+              <div class="col-auto">
+                <div
+                  class="icon icon-shape bg-gradient-info text-white rounded-circle shadow"
+                >
+                  <i class="ni ni-chart-bar-32"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-sm">
+              <span class="text-success mr-2"
+                ><i class="fa fa-arrow-up"></i> 3.48%</span
+              >
+              <span class="text-nowrap">Since last month</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-deck flex-column flex-xl-row">
+      <div class="card">
+        <div class="card-header bg-transparent">
+          <h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
+          <h2 class="h3 mb-0">Sales value</h2>
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <div class="chart">
+            <!-- Chart wrapper -->
+            <canvas id="chart-sales" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+              <h2 class="h3 mb-0">Total orders</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <div class="chart">
+            <canvas id="chart-bars" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Progress track -->
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <!-- Surtitle -->
+              <h6 class="surtitle">5/23 projects</h6>
+              <!-- Title -->
+              <h5 class="h3 mb-0">Progress track</h5>
+            </div>
+            <div class="col-4 text-right">
+              <a href="#!" class="btn btn-sm btn-neutral">Action</a>
+            </div>
+          </div>
+        </div>
+        <!-- Card body -->
+        <div class="card-body">
+          <!-- List group -->
+          <div class="text-center pb-1 pt-2 pr-2 pl-2">
+            <img
+              class="img-fluid"
+              alt="Responsive image"
+              src="../../back/assets/img/custom/welcome.png"
+              alt=""
+            />
+            <hr />
+            <h3 class="text-left text-primary">
+              News
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-deck flex-column flex-xl-row">
+      <!-- Members list group card -->
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header">
+          <!-- Title -->
+          <h5 class="h3 mb-0">Team members</h5>
+        </div>
+        <!-- Card body -->
+        <div class="card-body">
+          <!-- List group -->
+          <ul class="list-group list-group-flush list my--3">
+            <li class="list-group-item px-0">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Avatar -->
+                  <a href="#" class="avatar rounded-circle">
+                    <img
+                      alt="Image placeholder"
+                      src="../../back/assets/img/theme/team-1.jpg"
+                    />
+                  </a>
+                </div>
+                <div class="col ml--2">
+                  <h4 class="mb-0">
+                    <a href="#!">John Michael</a>
+                  </h4>
+                  <span class="text-success">●</span>
+                  <small>Online</small>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-sm btn-primary">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item px-0">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Avatar -->
+                  <a href="#" class="avatar rounded-circle">
+                    <img
+                      alt="Image placeholder"
+                      src="../../back/assets/img/theme/team-2.jpg"
+                    />
+                  </a>
+                </div>
+                <div class="col ml--2">
+                  <h4 class="mb-0">
+                    <a href="#!">Alex Smith</a>
+                  </h4>
+                  <span class="text-warning">●</span>
+                  <small>In a meeting</small>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-sm btn-primary">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item px-0">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Avatar -->
+                  <a href="#" class="avatar rounded-circle">
+                    <img
+                      alt="Image placeholder"
+                      src="../../back/assets/img/theme/team-3.jpg"
+                    />
+                  </a>
+                </div>
+                <div class="col ml--2">
+                  <h4 class="mb-0">
+                    <a href="#!">Samantha Ivy</a>
+                  </h4>
+                  <span class="text-danger">●</span>
+                  <small>Offline</small>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-sm btn-primary">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item px-0">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Avatar -->
+                  <a href="#" class="avatar rounded-circle">
+                    <img
+                      alt="Image placeholder"
+                      src="../../back/assets/img/theme/team-4.jpg"
+                    />
+                  </a>
+                </div>
+                <div class="col ml--2">
+                  <h4 class="mb-0">
+                    <a href="#!">John Michael</a>
+                  </h4>
+                  <span class="text-success">●</span>
+                  <small>Online</small>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-sm btn-primary">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <% if (mentor.mentorstatus == "new") { %>
+    <!-- Modals -->
+    <div
+      class="modal fade"
+      id="modal-notification"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modal-notification"
+      aria-hidden="true"
+      data-keyboard="false"
+      data-backdrop="static"
+    >
+      <div
+        class="modal-dialog modal-primary modal-dialog-centered modal-"
+        role="document"
+      >
+        <div class="modal-content bg-gradient-primary">
+          <div class="modal-header">
+            <h6 class="modal-title" id="modal-title-notification">
+              Welcome & Congratulation🎊
+            </h6>
+          </div>
+          <form
+            method="POST"
+            action="/mentor/update/mentorstatus"
+            id="statusform"
+          >
+            <div class="modal-body">
+              <div class="py-3 text-center">
+                <i class="ni ni-bell-55 ni-3x"></i>
+                <h4 class="heading mt-4">Now You Become an Expert</h4>
+                <p>
+                  But First you must update your profile , so the user can see
+                  your skill & ability. If you have a question feel free to
+                  contact us . Don’t be afraid of moving forward. The future is
+                  bright.
+                </p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <input type="hidden" name="id" class="id" />
+              <input type="hidden" name="mentorstatus" value="true" />
+              <button
+                onclick="statusSubmit()"
+                type="submit"
+                class="btn btn-white float-right"
+                data-dismiss="modal"
+              >
+                Ok, Got it
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- Footer -->
+    <%-include('../../layouts/back/mentor/footer.ejs')%>
+  </div>
+</div>

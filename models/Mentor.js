@@ -46,8 +46,8 @@ const MentorSchema = new mongoose.Schema({
     default: false
   },
   mentorstatus: {
-    type: Boolean,
-    default: false
+    type: String,
+    default: "false"
   },
   register: {
     type: Date,

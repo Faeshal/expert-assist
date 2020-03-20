@@ -13,6 +13,18 @@ exports.getDashboard = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.postMentorStatus = (req, res, next) => {
+  const mentorstatus = req.body.mentorstatus;
+  Mentor.findById(req.session.mentor._id)
+    .then(mentor => {
+      mentor.mentorstatus = mentorstatus;
+      return mentor.save().then(result => {
+        res.redirect("/mentor/profile");
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.getProfile = (req, res, next) => {
   Mentor.findById(req.session.mentor._id)
     .then(mentor => {
@@ -130,9 +142,9 @@ exports.getBeginExam = (req, res, next) => {
           console.log("------");
           // * Compare
           if (!mentor.expertise) {
-            res.redirect("/mentor/dashboard");
+            res.render("layouts/404");
             console.log("Not Auhtorize");
-          } else if (mentor.examstatus == true) {
+          } else if (mentor.examstatus == "true") {
             res.redirect("/mentor/dashboard");
             console.log("Exam Finished");
           } else {
