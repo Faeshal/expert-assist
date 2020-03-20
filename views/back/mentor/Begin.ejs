@@ -76,12 +76,7 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item h3">Selamat Mengerjakan</li>
             <li class="list-group-item">
-              <p class="font-weight-bold text-danger d-inline-block">Timer :</p>
-              <span
-                class="badge badge-warning badge-lg display-2 font-weight-bold"
-                id="time"
-              >
-              </span>
+              <h3 class="text-danger" id="time"></h3>
             </li>
           </ul>
           <!-- Card body -->
@@ -129,6 +124,7 @@
                 class="btn btn-primary"
                 id="createbutton"
                 data-dismiss="modal"
+                onclick="timer()"
               >
                 Save changes
               </button>
