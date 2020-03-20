@@ -97,16 +97,24 @@ exports.getExam = (req, res, next) => {
 
 exports.postExam = (req, res, next) => {
   const expertise = req.body.expertise;
-  const examstatus = req.body.examstatus;
   const id = req.session.mentor._id;
   Mentor.findById(id)
     .then(mentor => {
       mentor.expertise = expertise;
-      mentor.examstatus = examstatus;
       return mentor.save();
     })
     .then(result => {
       res.redirect("/mentor/exam/begin");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postBeginExam = (req, res, next) => {
+  const examstatus = req.body.examstatus;
+  Mentor.findById(req.session.mentor._id)
+    .then(mentor => {
+      mentor.examstatus = examstatus;
+      return mentor.save();
     })
     .catch(err => console.log(err));
 };
@@ -124,6 +132,9 @@ exports.getBeginExam = (req, res, next) => {
           if (!mentor.expertise) {
             res.redirect("/mentor/dashboard");
             console.log("Not Auhtorize");
+          } else if (mentor.examstatus == true) {
+            res.redirect("/mentor/dashboard");
+            console.log("Exam Finished");
           } else {
             let testlink;
             if (mentor.expertise == admin.category[0].name) {

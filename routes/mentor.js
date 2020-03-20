@@ -52,6 +52,8 @@ router.get("/mentor/exam", isAuth, mentorController.getExam);
 
 router.post("/mentor/exam", isAuth, mentorController.postExam);
 
-router.get("/mentor/exam/begin", isAuth, isExam, mentorController.getBeginExam);
+router.get("/mentor/exam/begin", isAuth, mentorController.getBeginExam);
+
+router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
 module.exports = router;
