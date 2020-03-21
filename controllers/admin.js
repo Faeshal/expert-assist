@@ -99,7 +99,8 @@ exports.getUpdateBlog = (req, res, next) => {
       var blog = admins.blog[0];
       console.log(blog);
       res.render("back/admin/blogupdate", {
-        blog: blog
+        blog: blog,
+        pageTitle: "Admin - Update Blog"
       });
     })
     .catch(err => console.log(err));

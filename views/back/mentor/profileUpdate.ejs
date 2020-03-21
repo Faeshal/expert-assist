@@ -30,7 +30,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row justify-content-center">
-      <div class="col-lg-10 card-wrapper">
+      <div class="col-lg-11 card-wrapper">
         <!-- Headings -->
         <form
           action="/mentor/profile/update?_csrf=<%=csrfToken%>"
@@ -211,8 +211,7 @@
                     class="form-control"
                     id="summernote"
                     name="desc"
-                    value="<%=mentor.desc%>"
-                  ></textarea>
+                  ><%=mentor.desc%></textarea>
                 </div>
               </div>
               <div class="col-sm-12 text-center pt-2 pb-2">
