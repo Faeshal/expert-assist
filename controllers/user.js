@@ -27,7 +27,7 @@ exports.updateProfile = (req, res, next) => {
   const username = req.body.username;
   const job = req.body.job;
   const bio = req.body.bio;
-  const address = req.body.address;
+  const city = req.body.city;
   const phone = req.body.phone;
   const twitter = req.body.twitter;
   const github = req.body.github;
@@ -39,7 +39,7 @@ exports.updateProfile = (req, res, next) => {
       user.username = username;
       user.job = job;
       user.bio = bio;
-      user.address = address;
+      user.city = city;
       user.phone = phone;
       user.twitter = twitter;
       user.github = github;

@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
     default: "."
   },
   bio: String,
-  address: String,
+  city: String,
   phone: String,
   twitter: String,
   github: String,

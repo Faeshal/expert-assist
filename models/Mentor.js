@@ -20,7 +20,7 @@ const MentorSchema = new mongoose.Schema({
   },
   bio: String,
   price: String,
-  address: String,
+  city: String,
   phone: String,
   twitter: String,
   github: String,

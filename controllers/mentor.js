@@ -35,12 +35,31 @@ exports.getProfile = (req, res, next) => {
     .catch();
 };
 
+exports.getUpdateProfile = (req, res, next) => {
+  Mentor.findById(req.session.mentor._id)
+    .then(mentor => {
+      res.render("back/mentor/profileUpdate", {
+        mentor: mentor
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.updateProfile = (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
-  const address = req.body.address;
+  const price = req.body.price;
+  const city = req.body.city;
   const job = req.body.job;
   const phone = req.body.phone;
+  const cv = req.body.cv;
+  const desc = req.body.desc;
+  const bio = req.body.bio;
+  const portofolio = req.body.portofolio;
+  const experience = req.body.experience;
+  const twitter = req.body.twitter;
+  const github = req.body.github;
+  const linkedin = req.body.linkedin;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
@@ -53,12 +72,12 @@ exports.updateProfile = (req, res, next) => {
   Mentor.findOne({ _id: id })
     .then(mentor => {
       mentor.username = username;
-      mentor.address = address;
+      mentor.price = price;
+      mentor.city = city;
       mentor.job = job;
-      mentor.phone = phone;
 
       if (profilepicture) {
-        fileHelper.deleteFile(mentor.profilepicture);
+        // fileHelper.deleteFile(mentor.profilepicture);
         mentor.profilepicture = req.files["profilepicture"][0].path.replace(
           "\\",
           "/"
@@ -66,12 +85,22 @@ exports.updateProfile = (req, res, next) => {
       }
 
       if (coverpicture) {
-        fileHelper.deleteFile(mentor.coverpicture);
+        // fileHelper.deleteFile(mentor.coverpicture);
         mentor.coverpicture = req.files["coverpicture"][0].path.replace(
           "\\",
           "/"
         );
       }
+
+      mentor.phone = phone;
+      mentor.twitter = twitter;
+      mentor.github = github;
+      mentor.linkedin = linkedin;
+      mentor.experience = experience;
+      mentor.portofolio = portofolio;
+      mentor.cv = cv;
+      mentor.bio = bio;
+      mentor.desc = desc;
 
       console.log(mentor.coverpicture);
 
@@ -144,7 +173,7 @@ exports.getBeginExam = (req, res, next) => {
           if (!mentor.expertise) {
             res.render("layouts/404");
             console.log("Not Auhtorize");
-          } else if (mentor.examstatus == "true") {
+          } else if (mentor.examstatus == true) {
             res.redirect("/mentor/dashboard");
             console.log("Exam Finished");
           } else {

@@ -51,17 +51,11 @@
               <span class="nav-link-text">Exam</span>
             </a>
           </li>
-          <% } else { %>
+          <% } else if(mentor.status=="true" || "new") { %>
           <li class="nav-item">
             <a class="nav-link" href="/mentor/dashboard">
               <i class="ni ni-shop text-primary"></i>
               <span class="nav-link-text">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mentor/profile">
-              <i class="ni ni-ungroup text-orange"></i>
-              <span class="nav-link-text">Profile</span>
             </a>
           </li>
           <li class="nav-item">

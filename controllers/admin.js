@@ -61,7 +61,8 @@ exports.getCreateBlog = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then(admin => {
       res.render("back/admin/blogadd", {
-        admin: admin
+        admin: admin,
+        pageTitle: "Admin - Create Blog"
       });
     })
     .catch(err => console.log(err));

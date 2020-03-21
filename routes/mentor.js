@@ -37,6 +37,7 @@ router.post(
   mentorController.postMentorStatus
 );
 router.get("/mentor/profile", isAuth, mentorController.getProfile);
+router.get("/mentor/profile/update", isAuth, mentorController.getUpdateProfile);
 router.post(
   "/mentor/profile/update",
   isAuth,
