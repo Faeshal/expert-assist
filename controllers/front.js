@@ -86,3 +86,15 @@ exports.getDetailBlog = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getDetailMentor = (req, res, next) => {
+  const id = req.params.id;
+  Mentor.findOne({ _id: id })
+    .then(mentor => {
+      console.log(mentor);
+      res.render("front/jobDetail", {
+        mentor: mentor
+      });
+    })
+    .catch(err => console.log(err));
+};

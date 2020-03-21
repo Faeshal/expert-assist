@@ -7,4 +7,6 @@ router.get("/", frontController.getIndex);
 router.get("/blog", frontController.getAllBlog);
 router.get("/blog/:id", frontController.getDetailBlog);
 
+router.get("/mentor/:id", frontController.getDetailMentor);
+
 module.exports = router;
