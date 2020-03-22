@@ -56,18 +56,6 @@ app.use(
 app.use(csrfProtection);
 app.use(flash());
 
-// app.use((req, res, next) => {
-//   if (!req.session.user) {
-//     return next();
-//   }
-//   User.findById(req.session.user._id)
-//     .then(user => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch(err => console.log(err));
-// });
-
 // * Security for CSRF Attack
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;

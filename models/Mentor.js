@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const MentorSchema = new mongoose.Schema({
   email: {
-    type: String
+    type: String,
+    required: true
   },
   password: {
-    type: String
+    type: String,
+    required: true
   },
   title: String,
   username: String,
@@ -34,12 +36,6 @@ const MentorSchema = new mongoose.Schema({
   portofolio: String,
   resetToken: String,
   resetTokenExpiration: Date,
-  review: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review"
-    }
-  ],
   examstatus: {
     type: Boolean,
     default: false

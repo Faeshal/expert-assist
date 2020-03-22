@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
-const Review = require("../models/Review");
 const fileHelper = require("../util/file");
 
 exports.getDashboard = (req, res, next) => {
@@ -61,38 +60,38 @@ exports.updateProfile = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.postReview = (req, res, next) => {
-  const content = req.body.content;
-  const rating = req.body.rating;
-  const mentor = req.body.mentor;
-  const user = req.session.user._id;
-  Mentor.findOne({ _id: mentor })
-    .then(mentor => {
-      if (!mentor) {
-        console.log("No Mentor Found");
-      }
+// exports.postReview = (req, res, next) => {
+//   const content = req.body.content;
+//   const rating = req.body.rating;
+//   const mentor = req.body.mentor;
+//   const user = req.session.user._id;
+//   Mentor.findOne({ _id: mentor })
+//     .then(mentor => {
+//       if (!mentor) {
+//         console.log("No Mentor Found");
+//       }
 
-      const review = new Review({
-        user: user,
-        mentor: mentor,
-        content: content,
-        rating: rating
-      });
+//       const review = new Review({
+//         user: user,
+//         mentor: mentor,
+//         content: content,
+//         rating: rating
+//       });
 
-      // ** Saving Disini
-      review.save((err, review) => {
-        review
-          .populate({ path: "mentor", select: ["username", "email"] })
-          .populate({ path: "user", select: ["username", "email"] })
-          .execPopulate()
-          .then(doc => {
-            console.log(doc);
-          });
-      });
-    })
-    .then(result => {
-      console.log("Review Saved");
-      res.redirect("/");
-    })
-    .catch(err => console.log(err));
-};
+//       return review.save();
+//     })
+//     .then(result => {
+//       console.log(result);
+//       console.log("Review Saved");
+//       res.redirect("/");
+//     })
+//     .catch(err => console.log(err));
+// };
+
+// review
+//   .populate({ path: "mentor", select: ["username", "email"] })
+//   .populate({ path: "user", select: ["username", "email"] })
+//   .execPopulate()
+//   .then(doc => {
+//     console.log(doc);
+//   });

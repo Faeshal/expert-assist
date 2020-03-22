@@ -3,7 +3,6 @@ const router = express.Router();
 const mentorController = require("../controllers/mentor");
 const multer = require("multer");
 const isAuth = require("../middleware/is-auth");
-const isExam = require("../middleware/is-exam");
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({

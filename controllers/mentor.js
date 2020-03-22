@@ -4,7 +4,7 @@ const fileHelper = require("../util/file");
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
-  Mentor.findById(req.session.mentor)
+  Mentor.findOne({ _id: req.session.mentor._id })
     .then(mentor => {
       res.render("back/mentor/dashboard", {
         mentor: mentor
@@ -123,7 +123,7 @@ exports.getExam = (req, res, next) => {
         console.log("Admin not found");
         res.render("layouts/500");
       } else {
-        Mentor.findById(req.session.mentor)
+        Mentor.findById(req.session.mentor._id)
           .then(mentor => {
             res.render("back/mentor/exam", {
               mentor: mentor,

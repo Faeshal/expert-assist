@@ -40,6 +40,4 @@ router.post(
   userController.updateProfile
 );
 
-router.post("/user/review", isAuth, userController.postReview);
-
 module.exports = router;
