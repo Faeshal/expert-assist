@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const FeedbackSchema = new mongoose.Schema({
-  feedback: String,
-  rating: String,
+const ReviewSchema = new mongoose.Schema({
+  content: String,
+  rating: Number,
   datetime: {
     type: Date,
     default: Date.now
@@ -16,4 +16,4 @@ const FeedbackSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Feedback", FeedbackSchema);
+module.exports = mongoose.model("Review", ReviewSchema);

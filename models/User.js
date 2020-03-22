@@ -31,10 +31,10 @@ const UserSchema = new mongoose.Schema({
   linkedin: String,
   resetToken: String,
   resetTokenExpiration: Date,
-  feedback: [
+  review: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Feedback"
+      ref: "Review"
     }
   ]
 });

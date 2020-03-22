@@ -77,7 +77,7 @@ exports.updateProfile = (req, res, next) => {
       mentor.job = job;
 
       if (profilepicture) {
-        // fileHelper.deleteFile(mentor.profilepicture);
+        fileHelper.deleteFile(mentor.profilepicture);
         mentor.profilepicture = req.files["profilepicture"][0].path.replace(
           "\\",
           "/"
@@ -85,7 +85,7 @@ exports.updateProfile = (req, res, next) => {
       }
 
       if (coverpicture) {
-        // fileHelper.deleteFile(mentor.coverpicture);
+        fileHelper.deleteFile(mentor.coverpicture);
         mentor.coverpicture = req.files["coverpicture"][0].path.replace(
           "\\",
           "/"

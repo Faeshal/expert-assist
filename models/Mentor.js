@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 const MentorSchema = new mongoose.Schema({
   email: {
-    type: String,
-    required: true
+    type: String
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
+  title: String,
   username: String,
   level: String,
   profilepicture: {
@@ -35,10 +34,10 @@ const MentorSchema = new mongoose.Schema({
   portofolio: String,
   resetToken: String,
   resetTokenExpiration: Date,
-  feedback: [
+  review: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Feedback"
+      ref: "Review"
     }
   ],
   examstatus: {
