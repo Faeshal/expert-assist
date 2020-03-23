@@ -38,8 +38,10 @@ router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
 
 // * Mentor
 router.get("/admin/mentor/all", adminContoller.getMentorAll);
+router.post("/admin/mentor/all", adminContoller.postMentorBlock);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
 router.post("/admin/mentor/exam/update", adminContoller.postScore);
+router.get("/admin/mentor/block", adminContoller.getBlockMentor);
 
 // ** User
 router.get("/admin/user/all", adminContoller.getUserAll);

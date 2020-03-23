@@ -432,7 +432,36 @@ exports.postUserBlock = (req, res, next) => {
       return user.save();
     })
     .then(result => {
-      res.redirect("/admin/user/all");
+      res.redirect("/admin/user/block");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getBlockMentor = (req, res, next) => {
+  Mentor.find({ mentorstatus: "block" })
+    .sort({ _id: 1 })
+    .then(mentor => {
+      res.render("back/admin/mentorBlock", {
+        mentor: mentor,
+        pageTitle: "Admin - Mentor Blocked",
+        moment: moment,
+        v: v
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postMentorBlock = (req, res, next) => {
+  const id = req.body.id;
+  const mentorstatus = req.body.mentorstatus;
+
+  Mentor.findById(id)
+    .then(mentor => {
+      mentor.mentorstatus = mentorstatus;
+      return mentor.save();
+    })
+    .then(result => {
+      res.redirect("/admin/mentor/block");
     })
     .catch(err => console.log(err));
 };

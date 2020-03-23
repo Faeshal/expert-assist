@@ -22,7 +22,9 @@
                 <li class="breadcrumb-item">
                   <a href="#"><i class="fas fa-home"></i></a>
                 </li>
-                <li class="breadcrumb-item"><a href="#">All Qualified Mentor</a></li>
+                <li class="breadcrumb-item">
+                  <a href="#">All Qualified Mentor</a>
+                </li>
               </ol>
             </nav>
           </div>
@@ -41,7 +43,7 @@
       <div class="card-header border-0">
         <div class="row">
           <div class="col-6">
-            <h3 class="mb-0">Mentor Table</h3>
+            <h3 class="mb-0">Block Mentor</h3>
           </div>
           <div class="col-6 text-right">
             <a
@@ -68,6 +70,7 @@
               <th>Date</th>
               <th>Time</th>
               <th>Expertise</th>
+              <th>Status</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
@@ -82,25 +85,34 @@
               </td>
               <td>
                 <span class="text-muted"
-                  ><%= moment(mentorData.register).format("LL")%></span>
+                  ><%= moment(mentorData.register).format("LL")%></span
+                >
               </td>
               <td>
                 <span class="text-muted"
                   ><%= moment(mentorData.register).format("LT")%></span
                 >
               </td>
-              <td >
+              <td>
                 <b
                   ><%= mentorData.expertise == null ? "Not Set"
                   :mentorData.expertise %></b
                 >
               </td>
-              <td class="table-actions text-center">
+              <td class="table-user">
+                <b class="text-danger"><%=mentorData.mentorstatus%></b>
+              </td>
+              <td class="table-actions text-center myTd">
                 <a
-                  href="/admin/blog/<%=mentorData._id%>"
-                  class="table-action table-action-edit"
-                  data-toggle="tooltip"
-                  data-original-title="edit blog"
+                  href="javascript:void(0);"
+                  class="table-action table-action-edit edit"
+                  data-toggle="modal"
+                  data-target="#exampleModal"
+                  data-original-title="edit user"
+                  data-id="<%=mentorData._id%>"
+                  data-username="<%=mentorData.username%>"
+                  data-mentorstatus="<%=mentorData.mentorstatus%>"
+                  data-original-title="edit mentor"
                 >
                   <i class="fas fa-user-edit"></i>
                 </a>
@@ -112,27 +124,69 @@
         </table>
       </div>
     </div>
-
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Score</h5>
+          </div>
+          <form method="POST" action="/admin/mentor/all">
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="hidden" class="id" name="id" />
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  class="form-control username"
+                  name="username"
+                  id="username"
+                  readonly="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="username">Action</label>
+                <select
+                  class="form-control target text-dark font-weight-bold "
+                  name="mentorstatus"
+                  required
+                >
+                  <option value="" selected>Choose Action...</option>
+                  <option value="true">Un-Block</option>
+                  <option value="block">Block</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button type="submit" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- jquery -->
     <script>
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ];
-      let dateObj = new Date();
-      let month = monthNames[dateObj.getMonth()];
-      let day = String(dateObj.getDate()).padStart(2, "0");
-      let year = dateObj.getFullYear();
-      let output = month + "\n" + day + "," + year;
+      $(document).ready(function() {
+        $(".myTd").on("click", ".edit", function() {
+          var id = $(this).data("id");
+          console.log(id);
+          var username = $(this).data("username");
+          var mentorstatus = $(this).data("mentorstatus");
+          $(".id").val(id);
+          $(".username").val(username);
+          $(".mentorstatus").val(mentorstatus);
+        });
+      });
     </script>
 
     <!-- Footer -->
