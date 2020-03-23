@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "../config.env" });
 const crypto = require("crypto");
+const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
@@ -26,6 +27,17 @@ exports.postRegister = (req, res, next) => {
   const password = req.body.password;
   const username = req.body.username;
   const level = req.body.level;
+
+  // *Express Validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render("front/register", {
+      pageTitle: "Register",
+      errorMessage: errors.array()[0].msg
+    });
+  }
+
   if (level == "user") {
     User.findOne({ email: email })
       .then(userDoc => {

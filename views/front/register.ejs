@@ -18,7 +18,7 @@
                 <%=errorMessage%>
               </div>
               <% } %>
-              <form class="login-form" action="/register" method="POST">
+              <form class="login-form" action="/register?_csrf=<%=csrfToken%>" method="POST" novalidate>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group position-relative">
@@ -100,11 +100,6 @@
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <input
-                      type="hidden"
-                      name="_csrf"
-                      value="<%= csrfToken %>"
-                    />
                     <button class="btn btn-primary w-100" type="submit">
                       Register
                     </button>
