@@ -41,4 +41,7 @@ router.get("/admin/mentor/all", adminContoller.getMentorAll);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
 router.post("/admin/mentor/exam/update", adminContoller.postScore);
 
+// ** User
+router.get("/admin/user/all", adminContoller.getUserAll);
+
 module.exports = router;

@@ -1,0 +1,130 @@
+<%-include('../../layouts/back/admin/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/admin/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/admin/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="#">All Qualified User</a>
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="/admin/blog/create" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="card">
+      <!-- Card header -->
+      <div class="card-header border-0">
+        <div class="row">
+          <div class="col-6">
+            <h3 class="mb-0">User Table</h3>
+          </div>
+          <div class="col-6 text-right">
+            <a
+              href="#"
+              class="btn btn-sm btn-neutral btn-round btn-icon"
+              data-toggle="tooltip"
+              data-original-title="Edit product"
+            >
+              <span class="btn-inner--icon"
+                ><i class="fas fa-User-edit"></i
+              ></span>
+              <span class="btn-inner--text">Export</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Light table -->
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Job</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% user.forEach(userData => { %>
+            <tr>
+              <td class="table-User">
+                <b><%=userData.username%></b>
+              </td>
+              <td class="table-User">
+                <span class="text-muted"><%=userData.email%></span>
+              </td>
+              <td class="table-User">
+                <span class="text-muted"><%=userData.phone%></span>
+              </td>
+              <td class="table-User">
+                <span class="text-muted"><%=userData.job%></span>
+              </td>
+              <td>
+                <span class="text-muted"
+                  ><%= moment(userData.register).format("LL")%></span
+                >
+              </td>
+              <td>
+                <span class="text-muted"
+                  ><%= moment(userData.register).format("LT")%></span
+                >
+              </td>
+
+              <td class="table-User">
+                <span class="text-success"
+                  ><%= v.capitalize(userData.status) %>
+                </span>
+              </td>
+              <td class="table-actions text-center">
+                <a
+                  href="/admin/blog/<%=userData._id%>"
+                  class="table-action table-action-edit"
+                  data-toggle="tooltip"
+                  data-original-title="edit user"
+                >
+                  <i class="fas fa-user-edit"></i>
+                </a>
+                <input type="hidden" value="<%= userData._id %>" name="id" />
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+
+    <%-include('../../layouts/back/admin/footer.ejs')%>
+  </div>
+</div>

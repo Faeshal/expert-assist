@@ -15,10 +15,13 @@ const UserSchema = new mongoose.Schema({
     default: Date.now
   },
   status: {
-    type: Boolean,
-    default: true
+    type: String,
+    default: "true"
   },
-  profilepicture: String,
+  profilepicture: {
+    type: String,
+    default: "images/default_avatar.png"
+  },
   job: {
     type: String,
     default: "."

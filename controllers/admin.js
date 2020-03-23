@@ -1,6 +1,8 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const User = require("../models/User");
 const moment = require("moment");
+const v = require("voca");
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
@@ -389,6 +391,19 @@ exports.postScore = (req, res, next) => {
     })
     .then(result => {
       res.redirect("/admin/mentor/exam");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getUserAll = (req, res, next) => {
+  User.find({ status: "true" })
+    .then(user => {
+      res.render("back/admin/userAll", {
+        user: user,
+        pageTitle: "Admin - All User",
+        moment: moment,
+        v: v
+      });
     })
     .catch(err => console.log(err));
 };
