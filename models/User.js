@@ -22,10 +22,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "images/default_avatar.png"
   },
-  job: {
-    type: String,
-    default: "."
-  },
+  job: String,
   bio: String,
   city: String,
   phone: String,
