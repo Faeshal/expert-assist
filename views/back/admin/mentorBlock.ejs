@@ -1,0 +1,142 @@
+<%-include('../../layouts/back/admin/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/admin/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/admin/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">All Qualified Mentor</a></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="/admin/blog/create" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="card">
+      <!-- Card header -->
+      <div class="card-header border-0">
+        <div class="row">
+          <div class="col-6">
+            <h3 class="mb-0">Mentor Table</h3>
+          </div>
+          <div class="col-6 text-right">
+            <a
+              href="#"
+              class="btn btn-sm btn-neutral btn-round btn-icon"
+              data-toggle="tooltip"
+              data-original-title="Edit product"
+            >
+              <span class="btn-inner--icon"
+                ><i class="fas fa-user-edit"></i
+              ></span>
+              <span class="btn-inner--text">Export</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Light table -->
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Expertise</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% mentor.forEach(mentorData => { %>
+            <tr>
+              <td class="table-user">
+                <b><%=mentorData.username%></b>
+              </td>
+              <td class="table-user">
+                <span class="text-muted"><%=mentorData.email%></span>
+              </td>
+              <td>
+                <span class="text-muted"
+                  ><%= moment(mentorData.register).format("LL")%></span>
+              </td>
+              <td>
+                <span class="text-muted"
+                  ><%= moment(mentorData.register).format("LT")%></span
+                >
+              </td>
+              <td >
+                <b
+                  ><%= mentorData.expertise == null ? "Not Set"
+                  :mentorData.expertise %></b
+                >
+              </td>
+              <td class="table-actions text-center">
+                <a
+                  href="/admin/blog/<%=mentorData._id%>"
+                  class="table-action table-action-edit"
+                  data-toggle="tooltip"
+                  data-original-title="edit blog"
+                >
+                  <i class="fas fa-user-edit"></i>
+                </a>
+                <input type="hidden" value="<%= mentorData._id %>" name="id" />
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+      let dateObj = new Date();
+      let month = monthNames[dateObj.getMonth()];
+      let day = String(dateObj.getDate()).padStart(2, "0");
+      let year = dateObj.getFullYear();
+      let output = month + "\n" + day + "," + year;
+    </script>
+
+    <!-- Footer -->
+
+    <%-include('../../layouts/back/admin/footer.ejs')%>
+  </div>
+</div>

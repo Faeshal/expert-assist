@@ -42,7 +42,7 @@
       <div class="card-header border-0">
         <div class="row">
           <div class="col-6">
-            <h3 class="mb-0">User Table</h3>
+            <h3 class="mb-0">Block User</h3>
           </div>
           <div class="col-6 text-right">
             <a
@@ -108,13 +108,14 @@
               <td class="table-actions text-center myTd">
                 <a
                   href="javascript:void(0);"
-                  class="table-action edit"
+                  class="table-action table-action-edit edit"
                   data-toggle="modal"
                   data-target="#exampleModal"
                   data-original-title="edit user"
                   data-id="<%=userData._id%>"
                   data-username="<%=userData.username%>"
                   data-status="<%=userData.status%>"
+                  data-original-title="edit user"
                 >
                   <i class="fas fa-user-edit"></i>
                 </a>
@@ -126,7 +127,7 @@
         </table>
       </div>
     </div>
-    <!-- Modals -->
+
     <!-- Modal -->
     <div
       class="modal fade"
@@ -139,12 +140,13 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Score</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Un Block</h5>
           </div>
           <form method="POST" action="/admin/user/all">
             <div class="modal-body">
               <div class="form-group">
                 <input type="hidden" class="id" name="id" />
+                <h3 class="text-center text-primary">Are You Sure ?</h3>
                 <label for="username">Username</label>
                 <input
                   type="text"
@@ -170,7 +172,7 @@
             <div class="modal-footer">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button type="submit" class="btn btn-primary">
-                Save changes
+                UnBlock
               </button>
             </div>
           </form>
@@ -193,6 +195,7 @@
     </script>
 
     <!-- Footer -->
+
     <%-include('../../layouts/back/admin/footer.ejs')%>
   </div>
 </div>

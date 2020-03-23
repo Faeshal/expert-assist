@@ -407,3 +407,32 @@ exports.getUserAll = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getBlockUser = (req, res, next) => {
+  User.find({ status: "block" })
+    .sort({ _id: 1 })
+    .then(user => {
+      res.render("back/admin/userBlock", {
+        user: user,
+        pageTitle: "Admin - user Blocked",
+        moment: moment,
+        v: v
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postUserBlock = (req, res, next) => {
+  const id = req.body.id;
+  const status = req.body.status;
+
+  User.findById(id)
+    .then(user => {
+      user.status = status;
+      return user.save();
+    })
+    .then(result => {
+      res.redirect("/admin/user/all");
+    })
+    .catch(err => console.log(err));
+};
