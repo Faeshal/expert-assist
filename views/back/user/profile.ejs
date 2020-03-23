@@ -46,7 +46,7 @@
                 data-bio="<%=user.bio%>"
                 data-profilepicture="<%=user.profilepicture%>"
                 data-job="<%=user.job%>"
-                data-address="<%=user.address%>"
+                data-city="<%=user.city%>"
                 data-phone="<%=user.phone%>"
                 data-twitter="<%=user.twitter%>"
                 data-github="<%=user.github%>"
@@ -66,7 +66,7 @@
                     <%=user.username%>
                   </h1>
                   <div class="h5 font-weight-300">
-                    <i class="ni location_pin mr-2"></i><%=user.address%> -
+                    <i class="ni location_pin mr-2"></i><%=user.city%> -
                     <%=user.job%>
                   </div>
                 </div>
@@ -189,12 +189,12 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="message-text" class="col-form-label"
-                        >Address</label
+                        >city</label
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm address"
-                        name="address"
+                        class="form-control form-control-sm city"
+                        name="city"
                       />
                     </div>
                   </div>
@@ -283,7 +283,7 @@
             var username = $(this).data("username");
             var bio = $(this).data("bio");
             var job = $(this).data("job");
-            var address = $(this).data("address");
+            var city = $(this).data("city");
             var phone = $(this).data("phone");
             var twitter = $(this).data("twitter");
             var github = $(this).data("github");
@@ -293,7 +293,7 @@
             $(".job").val(job);
             $(".bio").val(bio);
             $(".phone").val(phone);
-            $(".address").val(address);
+            $(".city").val(city);
             $(".twitter").val(twitter);
             $(".github").val(github);
             $(".linkedin").val(linkedin);

@@ -36,6 +36,7 @@
             class="card-header text-center border-0 pt-5 pt-md-4 pb-0 pb-md-4"
           >
             <div class="d-flex justify-content-between ml-4 mr-4">
+              <% if (mentor.mentorstatus=="false") {%>
               <a
                 href="javascript:void(0);"
                 class="btn btn-sm btn-primary update"
@@ -44,11 +45,16 @@
                 data-id="<%=mentor._id%>"
                 data-username="<%=mentor.username%>"
                 data-profilepicture="<%=mentor.profilepicture%>"
-                data-address="<%=mentor.address%>"
+                data-city="<%=mentor.city%>"
                 data-job="<%=mentor.job%>"
                 data-phone="<%=mentor.phone%>"
                 >Update</a
               >
+              <% } else if (mentor.mentorstatus=="true"){ %>
+              <a href="/mentor/profile/update" class="btn btn-sm btn-success"
+                >Update</a
+              >
+              <%} %>
               <a href="#" class="btn btn-sm btn-default float-right"
                 >Change Pass</a
               >
@@ -62,17 +68,15 @@
                     <%=mentor.username%>
                   </h1>
                   <div class="h5 font-weight-300">
-                    <i class="ni location_pin mr-2 "></i><%=mentor.phone %> -
-                    <%= mentor.email %>
+                    <%=mentor.phone %> - <%= mentor.email %>
                   </div>
                 </div>
                 <div class="card-profile-stats d-flex justify-content-center">
                   <div>
                     <span class="heading "
-                      ><%= mentor.address == null ? "Not Set" : mentor.address
-                      %>
+                      ><%= mentor.city == null ? "Not Set" : mentor.city %>
                     </span>
-                    <span class="description">Address</span>
+                    <span class="description">city</span>
                   </div>
                   <div>
                     <span class="heading"
@@ -83,7 +87,7 @@
                 </div>
               </div>
             </div>
-            <% if (mentor.status == false) { %>
+            <% if (mentor.mentorstatus == "false") { %>
             <div class="text-center mt-4">
               <b class="text-dark ">Status</b><br />
               <span class="badge badge-pill badge-warning"
@@ -91,23 +95,41 @@
               >
             </div>
             <!-- Jika Sudah Lulus -->
-            <% } %> <% if (mentor.status == true) { %>
-            <div class="text-center">
-              <div class="w-65"><hr /></div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Phone <%=mentor.phone%>
+            <% } %> <% if (mentor.mentorstatus == "true") { %>
+            <div class="row mt-3 text-center mx-auto justify-content-center">
+              <div class="col-md-3">
+                <i class="fas fa-phone mr-2 fa-lg"></i><%= mentor.phone %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Twitter <%=mentor.twitter%>
+              <div class="col-md-3">
+                <i class="fab fa-twitter mr-2 fa-lg"></i><%= mentor.twitter %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Github <%=mentor.github%>
+              <div class="col-md-3">
+                <i class="fab fa-github mr-2 fa-lg"></i><%= mentor.github %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Linkedin
-                <%=mentor.linkedin%>
+              <div class="col-md-3">
+                <i class="fab fa-linkedin mr-2 fa-lg"></i><%= mentor.linkedin %>
               </div>
             </div>
+            <div class="row mt-3 text-center mx-auto justify-content-center">
+              <div class="col-md-4">
+                <i class="fas fa-hourglass-half mr-2 fa-lg "></i><%=
+                mentor.experience %>
+              </div>
+              <div class="col-md-4">
+                <i class="fas fa-book-open mr-2 fa-lg"></i><%= mentor.cv %>
+              </div>
+              <div class="col-md-4">
+                <i class="fas fa-address-card mr-2 fa-lg"></i><%=
+                mentor.portofolio %>
+              </div>
+            </div>
+            <hr />
+            <div class="row mt-3 mx-auto justify-content-center">
+              <div class="col-md-10">
+                <%- mentor.desc %>
+              </div>
+            </div>
+
             <% } %>
           </div>
         </div>
@@ -164,12 +186,12 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="message-text" class="col-form-label"
-                        >Address</label
+                        >City</label
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm address"
-                        name="address"
+                        class="form-control form-control-sm city"
+                        name="city"
                       />
                     </div>
                   </div>
@@ -229,7 +251,6 @@
                   </div>
                 </div>
                 <div class="modal-footer justify-content-center mx-auto">
-                 
                   <button type="submit" class="btn btn-primary">
                     Save changes
                   </button>
@@ -248,13 +269,13 @@
             console.log(id);
             var username = $(this).data("username");
             var job = $(this).data("job");
-            var address = $(this).data("address");
+            var city = $(this).data("city");
             var phone = $(this).data("phone");
             $(".id").val(id);
             $(".username").val(username);
             $(".job").val(job);
             $(".phone").val(phone);
-            $(".address").val(address);
+            $(".city").val(city);
           });
         });
       </script>

@@ -1,15 +1,28 @@
 const Admin = require("../models/Admin");
 const User = require("../models/User");
+const Mentor = require("../models/Mentor");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })
     .then(admin => {
       let session = req.session;
-      res.render("front/index", {
-        admin: admin,
-        session: session
-      });
-      console.log(session);
+      if (!admin) {
+        console.log("Admin Not Found");
+        res.render("layouts/500");
+      } else {
+        Mentor.find({
+          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }]
+        })
+          .then(mentor => {
+            // console.log(mentor);
+            res.render("front/index", {
+              admin: admin,
+              session: session,
+              mentor: mentor
+            });
+          })
+          .catch(err => console.log(err));
+      }
     })
     .catch(err => console.log(err));
 };
@@ -69,6 +82,18 @@ exports.getDetailBlog = (req, res, next) => {
       var blog = admins.blog[0];
       res.render("front/blogdetail", {
         blog: blog
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getDetailMentor = (req, res, next) => {
+  const id = req.params.id;
+  Mentor.findOne({ _id: id })
+    .then(mentor => {
+      console.log(mentor);
+      res.render("front/mentorDetail", {
+        mentor: mentor
       });
     })
     .catch(err => console.log(err));
