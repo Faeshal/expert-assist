@@ -1,15 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
+const { body } = require("express-validator");
 const authController = require("../controllers/auth");
 
 // * Auth User & Mentor
 router.get("/register", authController.getRegister);
 router.post(
   "/register",
-  check("email")
-    .isEmail()
-    .withMessage("Please Enter a Valid Email"),
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please Enter a Valid Email"),
+    body("username", "Please Give some username")
+      .not()
+      .isEmpty(),
+    body("password", "Please enter a password at least 3 character")
+      .isLength({ min: 3 })
+      .isAlphanumeric(),
+    body("level", "Please Select a Role")
+      .not()
+      .isEmpty(),
+    body("confirmPassword").custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords Not Match!");
+      }
+      return true;
+    })
+  ],
   authController.postRegister
 );
 router.get("/login", authController.getLogin);
