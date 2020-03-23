@@ -10,13 +10,16 @@ router.post(
   [
     body("email")
       .isEmail()
-      .withMessage("Please Enter a Valid Email"),
+      .withMessage("Please Enter a Valid Email")
+      .normalizeEmail(),
     body("username", "Please Give some username")
       .not()
-      .isEmpty(),
+      .isEmpty()
+      .trim(),
     body("password", "Please enter a password at least 3 character")
       .isLength({ min: 3 })
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
     body("level", "Please Select a Role")
       .not()
       .isEmpty(),
@@ -35,10 +38,15 @@ router.post(
   [
     body("email")
       .isEmail()
-      .withMessage("Please enter a valid email address."),
+      .withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
     body("password", "Password has to be valid.")
       .isLength({ min: 5 })
       .isAlphanumeric()
+      .trim(),
+    body("level", "Please, Select a Role")
+      .not()
+      .isEmpty()
   ],
   authController.postLogin
 );
