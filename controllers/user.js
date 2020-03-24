@@ -1,6 +1,13 @@
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const fileHelper = require("../util/file");
+const midtransClient = require("midtrans-client");
+// Create Snap API instance
+let snap = new midtransClient.Snap({
+  isProduction: false,
+  serverKey: "SB-Mid-server-vMgJOtss_zGeLfqAK_KNolSh",
+  clientKey: "SB-Mid-client-9HOSFzP6dyj593ww"
+});
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
@@ -95,3 +102,45 @@ exports.updateProfile = (req, res, next) => {
 //   .then(doc => {
 //     console.log(doc);
 //   });
+
+exports.getCheckout = (req, res, next) => {
+  const id = req.params.id;
+  let transactionToken;
+  var redirect;
+  Mentor.findById(id)
+    .then(mentor => {
+      // *Midtrans
+      let parameter = {
+        transaction_details: {
+          order_id: "test-transaction-123",
+          gross_amount: 1
+        },
+        credit_card: {
+          secure: true
+        }
+      };
+      // create transaction
+      snap
+        .createTransaction(parameter)
+        .then(transaction => {
+          // transaction token
+          transactionToken = transaction.token;
+          midtransactionToken = transaction.token;
+          console.log("transactionToken:", transactionToken);
+
+          // transaction redirect url
+          let transactionRedirectUrl = transaction.redirect_url;
+          redirect = transactionRedirectUrl;
+          console.log("transactionRedirectUrl:", transactionRedirectUrl);
+        })
+        .then(result => {
+          res.render("back/user/checkout", {
+            mentor: mentor,
+            transactionToken: transactionToken,
+            redirect: redirect
+          });
+          console.log(midtransactionToken);
+        });
+    })
+    .catch(err => console.log(err));
+};

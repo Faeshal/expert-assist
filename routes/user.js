@@ -40,4 +40,6 @@ router.post(
   userController.updateProfile
 );
 
+router.get("/user/checkout/:id", userController.getCheckout);
+
 module.exports = router;
