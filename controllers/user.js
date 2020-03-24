@@ -109,6 +109,10 @@ exports.getCheckout = (req, res, next) => {
       mentorUsername = mentor.username;
       mentorPrice = mentor.price;
       mentorId = mentor._id;
+      console.log("------------------");
+      console.log(mentorId);
+      console.log("------------------");
+      // res.locals.mentorId = mentorId;
 
       // *Stripe
       return stripe.checkout.sessions.create({
@@ -122,7 +126,12 @@ exports.getCheckout = (req, res, next) => {
             quantity: 1
           }
         ],
-        success_url: req.protocol + "://" + req.get("host") + "/",
+        success_url:
+          req.protocol +
+          "://" +
+          req.get("host") +
+          "/checkout/success/" +
+          mentorId,
         cancel_url: "https://stripe.com/docs/payments/accept-a-payment"
       });
     })
@@ -138,18 +147,23 @@ exports.getCheckout = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-// exports.postCheckout = (req, res, next) => {
-//   const
-// };
-
-// .then(() => {
-//   var payment = new Payment();
-//   payment.user = req.session.user._id;
-//   payment.mentor = mentorId;
-//   payment.total = mentorPrice;
-//   payment.save(err => {
-//     if (err) {
-//       console.log(err);
-//     }
-//   });
-// })
+exports.postCheckoutSuccess = (req, res, next) => {
+  const mentorId = req.params.mentorId;
+  console.log("-------MENTOR_ID--------");
+  console.log(mentorId);
+  const userId = req.session.user._id;
+  Mentor.findOne({ _id: mentorId })
+    .then(mentor => {
+      const payment = new Payment({
+        user: userId,
+        mentor: mentor._id,
+        total: mentor.price
+      });
+      return payment.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/");
+    })
+    .catch(err => console.log(err));
+};

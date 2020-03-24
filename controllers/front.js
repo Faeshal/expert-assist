@@ -89,6 +89,7 @@ exports.getDetailBlog = (req, res, next) => {
 
 exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
+  console.log(id);
   Mentor.findOne({ _id: id })
     .then(mentor => {
       res.render("front/mentorDetail", {
