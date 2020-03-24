@@ -1,12 +1,55 @@
 const express = require("express");
 const router = express.Router();
+const { body } = require("express-validator");
 const authController = require("../controllers/auth");
 
-// * Auth User
+// * Auth User & Mentor
 router.get("/register", authController.getRegister);
-router.post("/register", authController.postRegister);
+router.post(
+  "/register",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please Enter a Valid Email")
+      .normalizeEmail(),
+    body("username", "Please Give some username")
+      .not()
+      .isEmpty()
+      .trim(),
+    body("password", "Please enter a password at least 3 character")
+      .isLength({ min: 3 })
+      .isAlphanumeric()
+      .trim(),
+    body("level", "Please Select a Role")
+      .not()
+      .isEmpty(),
+    body("confirmPassword").custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords Not Match!");
+      }
+      return true;
+    })
+  ],
+  authController.postRegister
+);
 router.get("/login", authController.getLogin);
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
+    body("password", "Password has to be valid.")
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      .trim(),
+    body("level", "Please, Select a Role")
+      .not()
+      .isEmpty()
+  ],
+  authController.postLogin
+);
 
 // * Auth Admin
 router.get("/registerAdmin", authController.getRegisterAdmin);

@@ -18,20 +18,21 @@
                 <%=errorMessage%>
               </div>
               <% } %>
-              <form class="login-form" action="/register" method="POST">
+              <form
+                class="login-form"
+                action="/register?_csrf=<%=csrfToken%>"
+                method="POST"
+                novalidate
+              >
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group position-relative">
                       <label
                         >Your Email <span class="text-danger">*</span></label
                       >
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder="Email"
-                        name="email"
-                        required
-                      />
+                      <input type="email" 
+                       class="<%= validationErrors.find(e => e.param === "email") ? "form-control border border-danger" : "form-control" %>" placeholder="Email"
+                      name="email" value="<%= oldInput.email %>" />
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -39,23 +40,20 @@
                       <label>Username <span class="text-danger">*</span></label>
                       <input
                         type="text"
-                        class="form-control"
+                        class="<%= validationErrors.find(e => e.param === "username") ? "form-control border border-danger" : "form-control" %>" 
                         placeholder="Mr.xxx"
                         name="username"
-                        required
+                        value="<%= oldInput.username %>"
                       />
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group position-relative">
                       <label>Password <span class="text-danger">*</span></label>
-                      <input
-                        type="password"
-                        class="form-control"
-                        placeholder="Password"
-                        name="password"
-                        required
-                      />
+                      <input type="password" 
+                      class="<%= validationErrors.find(e => e.param === "password") ? "form-control border border-danger" : "form-control" %>" 
+                      placeholder="Password"
+                      name="password" value="<%= oldInput.password %>" />
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -66,9 +64,10 @@
                       >
                       <input
                         type="password"
-                        class="form-control"
+                        class="<%= validationErrors.find(e => e.param === "confirmPassword") ? "form-control border border-danger" : "form-control" %>" 
                         placeholder="Confirm Password"
                         name="confirmPassword"
+                        value="<%= oldInput.confirmPassword %>"
                       />
                     </div>
                   </div>
@@ -76,7 +75,7 @@
                     <div class="form-group position-relative">
                       <label>Role<span class="text-danger">*</span></label>
                       <select class="custom-select" name="level">
-                        <option selected>Select One</option>
+                        <option value="" selected>Select One</option>
                         <option value="user">User</option>
                         <option value="mentor">Mentor</option>
                       </select>
@@ -100,11 +99,6 @@
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <input
-                      type="hidden"
-                      name="_csrf"
-                      value="<%= csrfToken %>"
-                    />
                     <button class="btn btn-primary w-100" type="submit">
                       Register
                     </button>

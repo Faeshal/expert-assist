@@ -1,6 +1,8 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const User = require("../models/User");
 const moment = require("moment");
+const v = require("voca");
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
@@ -390,6 +392,77 @@ exports.postScore = (req, res, next) => {
     })
     .then(result => {
       res.redirect("/admin/mentor/exam");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getUserAll = (req, res, next) => {
+  User.find({ status: "true" })
+    .then(user => {
+      res.render("back/admin/userAll", {
+        user: user,
+        pageTitle: "Admin - All User",
+        moment: moment,
+        v: v
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getBlockUser = (req, res, next) => {
+  User.find({ status: "block" })
+    .sort({ _id: 1 })
+    .then(user => {
+      res.render("back/admin/userBlock", {
+        user: user,
+        pageTitle: "Admin - user Blocked",
+        moment: moment,
+        v: v
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postUserBlock = (req, res, next) => {
+  const id = req.body.id;
+  const status = req.body.status;
+
+  User.findById(id)
+    .then(user => {
+      user.status = status;
+      return user.save();
+    })
+    .then(result => {
+      res.redirect("/admin/user/block");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getBlockMentor = (req, res, next) => {
+  Mentor.find({ mentorstatus: "block" })
+    .sort({ _id: 1 })
+    .then(mentor => {
+      res.render("back/admin/mentorBlock", {
+        mentor: mentor,
+        pageTitle: "Admin - Mentor Blocked",
+        moment: moment,
+        v: v
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postMentorBlock = (req, res, next) => {
+  const id = req.body.id;
+  const mentorstatus = req.body.mentorstatus;
+
+  Mentor.findById(id)
+    .then(mentor => {
+      mentor.mentorstatus = mentorstatus;
+      return mentor.save();
+    })
+    .then(result => {
+      res.redirect("/admin/mentor/block");
     })
     .catch(err => console.log(err));
 };

@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "../config.env" });
 const crypto = require("crypto");
+const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
@@ -17,7 +18,14 @@ exports.getRegister = (req, res, next) => {
   }
   res.render("front/register", {
     pageTitle: "Register",
-    errorMessage: message
+    errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+      username: "",
+      confirmPassword: ""
+    },
+    validationErrors: []
   });
 };
 
@@ -26,74 +34,94 @@ exports.postRegister = (req, res, next) => {
   const password = req.body.password;
   const username = req.body.username;
   const level = req.body.level;
+
+  // *Express Validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render("front/register", {
+      pageTitle: "Register",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        username: username,
+        confirmPassword: req.body.confirmPassword
+      },
+      validationErrors: errors.array()
+    });
+  }
+
   if (level == "user") {
-    User.findOne({ email: email })
+    User.findOne({ $or: [{ email: email }, { username: username }] })
       .then(userDoc => {
         if (userDoc) {
           req.flash(
             "error",
-            "E-Mail exists already, please pick a different one."
+            "E-Mail / Username already exist, please pick a different one."
           );
           res.redirect("/register");
-        }
-        return bcrypt
-          .hash(password, 12)
-          .then(hashedPassword => {
-            const user = new User({
-              email: email,
-              password: hashedPassword,
-              username: username,
-              level: level
+        } else {
+          return bcrypt
+            .hash(password, 12)
+            .then(hashedPassword => {
+              const user = new User({
+                email: email,
+                password: hashedPassword,
+                username: username,
+                level: level
+              });
+              return user.save();
+            })
+            .then(result => {
+              res.redirect("/login");
+              // const msg = {
+              //   to: email,
+              //   from: "expertassist@example.com",
+              //   subject: "Sucessfully Register",
+              //   text: "Congratulation & Welcome to the Club",
+              //   html: "<strong>Congratulation & Welcome to the Club</strong>"
+              // };
+              // return sgMail.send(msg);
             });
-            return user.save();
-          })
-          .then(result => {
-            res.redirect("/login");
-            // const msg = {
-            //   to: email,
-            //   from: "expertassist@example.com",
-            //   subject: "Sucessfully Register",
-            //   text: "Congratulation & Welcome to the Club",
-            //   html: "<strong>Congratulation & Welcome to the Club</strong>"
-            // };
-            // return sgMail.send(msg);
-          });
+        }
       })
       .catch(err => {
         console.log(err);
       });
   } else if (level == "mentor") {
-    Mentor.findOne({ email: email })
+    Mentor.findOne({ $or: [{ email: email }, { username: username }] })
       .then(mentorDoc => {
         if (mentorDoc) {
           req.flash(
             "error",
-            "E-Mail exists already, please pick a different one."
+            "E-Mail / Username already exist, please pick a different one."
           );
           res.redirect("/register");
-        }
-        return bcrypt
-          .hash(password, 12)
-          .then(hashedPassword => {
-            const mentor = new Mentor({
-              email: email,
-              password: hashedPassword,
-              username: username,
-              level: level
+        } else {
+          return bcrypt
+            .hash(password, 12)
+            .then(hashedPassword => {
+              const mentor = new Mentor({
+                email: email,
+                password: hashedPassword,
+                username: username,
+                level: level
+              });
+              return mentor.save();
+            })
+            .then(result => {
+              res.redirect("/login");
+              // const msg = {
+              //   to: email,
+              //   from: "expertassist@example.com",
+              //   subject: "Sucessfully Register",
+              //   text: "Congratulation & Welcome to the Club",
+              //   html: "<strong>Congratulation & Welcome to the Club</strong>"
+              // };
+              // return sgMail.send(msg);
             });
-            return mentor.save();
-          })
-          .then(result => {
-            res.redirect("/login");
-            // const msg = {
-            //   to: email,
-            //   from: "expertassist@example.com",
-            //   subject: "Sucessfully Register",
-            //   text: "Congratulation & Welcome to the Club",
-            //   html: "<strong>Congratulation & Welcome to the Club</strong>"
-            // };
-            // return sgMail.send(msg);
-          });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -110,8 +138,13 @@ exports.getLogin = (req, res, next) => {
     message = null;
   }
   res.render("front/login", {
+    pageTitle: "Login",
     errorMessage: message,
-    pageTitle: "Login"
+    oldInput: {
+      email: "",
+      password: ""
+    },
+    validationErrors: []
   });
 };
 
@@ -119,12 +152,33 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const level = req.body.level;
+  // *Express Validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render("front/login", {
+      pageTitle: "login",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password
+      },
+      validationErrors: errors.array()
+    });
+  }
   if (level == "user") {
     User.findOne({ email: email })
       .then(user => {
         if (!user) {
-          req.flash("error", "Invalid email or password.");
-          return res.redirect("/login");
+          return res.status(422).render("front/login", {
+            pageTitle: "login",
+            errorMessage: "Invalid email or password",
+            oldInput: {
+              email: email,
+              password: password
+            },
+            validationErrors: []
+          });
         }
         bcrypt
           .compare(password, user.password)
@@ -137,8 +191,15 @@ exports.postLogin = (req, res, next) => {
                 res.redirect("/user/dashboard");
               });
             }
-            req.flash("error", "Invalid email or password.");
-            res.redirect("/login");
+            return res.status(422).render("front/login", {
+              pageTitle: "login",
+              errorMessage: "Invalid email or password",
+              oldInput: {
+                email: email,
+                password: password
+              },
+              validationErrors: []
+            });
           })
           .catch(err => {
             console.log(err);
@@ -150,8 +211,15 @@ exports.postLogin = (req, res, next) => {
     Mentor.findOne({ email: email })
       .then(mentor => {
         if (!mentor) {
-          req.flash("error", "Invalid email or password.");
-          return res.redirect("/login");
+          return res.status(422).render("front/login", {
+            pageTitle: "login",
+            errorMessage: "Invalid email or password",
+            oldInput: {
+              email: email,
+              password: password
+            },
+            validationErrors: []
+          });
         }
         bcrypt
           .compare(password, mentor.password)
@@ -164,8 +232,15 @@ exports.postLogin = (req, res, next) => {
                 res.redirect("/mentor/dashboard");
               });
             }
-            req.flash("error", "Invalid email or password.");
-            res.redirect("/login");
+            return res.status(422).render("front/login", {
+              pageTitle: "login",
+              errorMessage: "Invalid email or password",
+              oldInput: {
+                email: email,
+                password: password
+              },
+              validationErrors: []
+            });
           })
           .catch(err => {
             console.log(err);
