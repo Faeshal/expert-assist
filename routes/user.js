@@ -40,4 +40,9 @@ router.post(
   userController.updateProfile
 );
 
+router.get("/user/checkout/:id", isAuth, userController.getCheckout);
+// router.post("/user/checkout", isAuth, userController.postCheckout);
+// router.get("/checkout/success", userController.postCheckoutSuccess);
+// router.get("/user/checkout/cancel", isAuth, userController.getCheckout);
+
 module.exports = router;

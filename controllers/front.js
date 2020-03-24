@@ -91,7 +91,6 @@ exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
   Mentor.findOne({ _id: id })
     .then(mentor => {
-      console.log(mentor);
       res.render("front/mentorDetail", {
         mentor: mentor
       });

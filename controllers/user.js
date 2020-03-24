@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
+const Payment = require("../models/Payment");
 const fileHelper = require("../util/file");
+const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
@@ -95,3 +97,59 @@ exports.updateProfile = (req, res, next) => {
 //   .then(doc => {
 //     console.log(doc);
 //   });
+
+exports.getCheckout = (req, res, next) => {
+  const id = req.params.id;
+  let mentorUsername;
+  let mentorPrice = 0;
+  let mentorId;
+  res.locals.mentorPrice = mentorPrice;
+  Mentor.findById(id)
+    .then(mentor => {
+      mentorUsername = mentor.username;
+      mentorPrice = mentor.price;
+      mentorId = mentor._id;
+
+      // *Stripe
+      return stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            name: mentor.username,
+            description: "User Payment",
+            amount: mentor.price,
+            currency: "usd",
+            quantity: 1
+          }
+        ],
+        success_url: req.protocol + "://" + req.get("host") + "/",
+        cancel_url: "https://stripe.com/docs/payments/accept-a-payment"
+      });
+    })
+    .then(session => {
+      console.log(session.id);
+      res.render("back/user/checkout", {
+        mentorUsername: mentorUsername,
+        mentorPrice: mentorPrice,
+        user: req.session.user,
+        sessionId: session.id
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+// exports.postCheckout = (req, res, next) => {
+//   const
+// };
+
+// .then(() => {
+//   var payment = new Payment();
+//   payment.user = req.session.user._id;
+//   payment.mentor = mentorId;
+//   payment.total = mentorPrice;
+//   payment.save(err => {
+//     if (err) {
+//       console.log(err);
+//     }
+//   });
+// })

@@ -23,6 +23,7 @@ const adminRoutes = require("./routes/admin");
 const mentorRoutes = require("./routes/mentor");
 const Admin = require("./models/Admin");
 const User = require("./models/User");
+const Mentor = require("./models/Mentor");
 
 // * Security
 app.use(helmet());
@@ -60,6 +61,7 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
+  // res.locals.mentorPrice = 988;
   next();
 });
 
