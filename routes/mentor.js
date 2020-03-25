@@ -62,5 +62,15 @@ router.get("/mentor/exam/begin", isAuth, mentorController.getBeginExam);
 router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
+router.post(
+  "/mentor/schedule/delete",
+  isAuth,
+  mentorController.postDeleteSchedule
+);
+router.post(
+  "/mentor/schedule/update",
+  isAuth,
+  mentorController.postUpdateSchedule
+);
 
 module.exports = router;

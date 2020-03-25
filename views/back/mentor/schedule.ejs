@@ -77,7 +77,7 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th>Note</th>
-                    <th>Approval</th>
+                    <th class="text-center">Approval</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -107,23 +107,36 @@
                         ><%= scheduleData.note %>
                       </a>
                     </td>
-                    <td>
+                    <td class="text-center">
+                      <% if(scheduleData.approve==true) { %>
                       <a href="#!" class="font-weight-bold"
                         ><%= scheduleData.approve %>
                       </a>
+                      <% } else { %>
+                      <a href="#!" class="font-weight-bold text-danger"
+                        ><%= scheduleData.approve %>
+                      </a>
+                      <% } %>
                     </td>
-                    <td class="table-actions">
-                      <form method="POST" action="/admin/faq/delete">
+                    <td class="table-actions myTd">
+                      <form method="POST" action="/mentor/schedule/delete">
                         <a
                           href="javascript:void(0);"
                           class="table-action edit"
                           data-original-title="Edit category"
                           data-toggle="modal"
-                          data-target="#modal-form"
+                          data-target="#exampleModal"
+                          data-id="<%=scheduleData._id%>"
+                          data-approve="<%=scheduleData.approve%>"
+                          data-username="<%=scheduleData.user.username%>"
                         >
                           <i class="fas fa-user-edit"></i>
                         </a>
-                        <input type="hidden" value="" name="id" />
+                        <input
+                          type="hidden"
+                          value="<%= scheduleData._id %>"
+                          name="id"
+                        />
                         <input
                           type="hidden"
                           name="_csrf"
@@ -149,6 +162,79 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Booking Aproval</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="/mentor/schedule/update" method="POST">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="exampleInputPassword1">Username</label>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="id" class="id" />
+                <input
+                  type="text"
+                  class="form-control username"
+                  id="exampleInputPassword1"
+                  readonly="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Approval</label>
+                <select
+                  class="form-control "
+                  id="exampleFormControlSelect1"
+                  required
+                  name="approve"
+                >
+                  <option selected value="">Choose One...</option>
+                  <option value="false">Reject</option>
+                  <option value="true">Approve</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jquery -->
+    <script>
+      $(document).ready(function() {
+        $(".myTd").on("click", ".edit", function() {
+          var id = $(this).data("id");
+          console.log(id);
+          var approve = $(this).data("approve");
+          var username = $(this).data("username");
+          $(".approve").val(approve);
+          $(".username").val(username);
+          $(".id").val(id);
+        });
+      });
+    </script>
 
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>

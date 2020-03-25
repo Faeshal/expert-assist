@@ -213,3 +213,28 @@ exports.getSchedule = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.postDeleteSchedule = (req, res, next) => {
+  const id = req.body.id;
+  Schedule.findByIdAndDelete(id)
+    .then(result => {
+      console.log(result);
+      res.redirect("/mentor/schedule");
+    })
+    .catch(er => console.log(err));
+};
+
+exports.postUpdateSchedule = (req, res, next) => {
+  const id = req.body.id;
+  const approve = req.body.approve;
+  Schedule.findById(id)
+    .then(schedule => {
+      schedule.approve = approve;
+      return schedule.save();
+    })
+    .then(result => {
+      console.log(result);
+      res.redirect("/mentor/schedule");
+    })
+    .catch(err => console.log(err));
+};
