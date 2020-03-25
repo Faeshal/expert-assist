@@ -1,7 +1,9 @@
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
+const Schedule = require("../models/Schedule");
 const fileHelper = require("../util/file");
+const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 
 exports.getDashboard = (req, res, next) => {
@@ -164,6 +166,53 @@ exports.postCheckoutSuccess = (req, res, next) => {
     .then(result => {
       console.log(result);
       res.redirect("/");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getSchedule = (req, res, next) => {
+  const id = req.session.user._id;
+  Payment.findOne({ user: id })
+    .populate("user", "username")
+    .populate("mentor", "username")
+    .exec()
+    .then(payment => {
+      console.log(payment);
+      Schedule.find({ user: req.session.user._id })
+        .populate("mentor", "username")
+        .exec()
+        .then(schedule => {
+          console.log(schedule);
+          res.render("back/user/schedule", {
+            user: req.session.user,
+            payment: payment,
+            schedule: schedule,
+            moment: moment
+          });
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+exports.postSchedule = (req, res, next) => {
+  const user = req.body.user;
+  const mentor = req.body.mentor;
+  const datetime = req.body.datetime;
+  const note = req.body.note;
+  const schedule = new Schedule({
+    user: user,
+    mentor: mentor,
+    datetime: datetime,
+    note: note
+  });
+  return schedule
+    .save()
+    .then(result => {
+      console.log(result);
+      res.redirect("/user/schedule");
     })
     .catch(err => console.log(err));
 };

@@ -45,4 +45,7 @@ router.get("/checkout/success/:mentorId", userController.postCheckoutSuccess);
 // router.post("/user/checkout", isAuth, userController.postCheckout);
 // router.get("/user/checkout/cancel", isAuth, userController.getCheckout);
 
+router.get("/user/schedule", isAuth, userController.getSchedule);
+router.post("/user/schedule", isAuth, userController.postSchedule);
+
 module.exports = router;
