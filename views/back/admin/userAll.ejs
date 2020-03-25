@@ -61,7 +61,7 @@
       </div>
       <!-- Light table -->
       <div class="table-responsive">
-        <table class="table align-items-center table-flush">
+        <table id="example" class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr>
               <th>Username</th>
@@ -177,6 +177,18 @@
         </div>
       </div>
     </div>
+    <script>
+      $(document).ready(function() {
+        $("#example").DataTable({
+          lengthChange: true,
+          paging: true,
+          ordering: false,
+          info: false,
+          stateSave: true,
+          pageLength: 2
+        });
+      });
+    </script>
     <!-- jquery -->
     <script>
       $(document).ready(function() {
