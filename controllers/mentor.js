@@ -1,6 +1,8 @@
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
+const Schedule = require("../models/Schedule");
 const fileHelper = require("../util/file");
+const moment = require("moment");
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
@@ -195,4 +197,19 @@ exports.getBeginExam = (req, res, next) => {
         .catch(err => console.log(err));
     }
   });
+};
+
+exports.getSchedule = (req, res, next) => {
+  const id = req.session.mentor._id;
+  Schedule.find({ mentor: id })
+    .populate({ path: "user", select: ["username", "email"] })
+    .then(schedule => {
+      console.log(schedule);
+      res.render("back/mentor/schedule", {
+        mentor: req.session.mentor._id,
+        schedule: schedule,
+        moment: moment
+      });
+    })
+    .catch(err => console.log(err));
 };

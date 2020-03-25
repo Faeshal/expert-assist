@@ -1,0 +1,156 @@
+<%-include('../../layouts/back/mentor/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/mentor/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/mentor/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-secondary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-dark d-inline-block mb-0">Schedule</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a
+              href="javascript:void(0);"
+              class="btn btn-sm btn-neutral tombolTambahData"
+              data-toggle="modal"
+              data-target="#modal-form"
+              >New</a
+            >
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-lg-11 mx-auto">
+        <div class="card-wrapper">
+          <!-- CATEGORY TABLE -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">Approval Booking</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <a
+                    href="#"
+                    class="btn btn-sm btn-neutral btn-round btn-icon"
+                    data-toggle="tooltip"
+                    data-original-title="Edit product"
+                  >
+                    <span class="btn-inner--icon"
+                      ><i class="fas fa-user-edit"></i
+                    ></span>
+                    <span class="btn-inner--text">Export</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Light Table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush" id="mytable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Note</th>
+                    <th>Approval</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% schedule.forEach(scheduleData=>{ %>
+                  <tr>
+                    <td class="table-user">
+                      <b><%= scheduleData.user.username %> </b>
+                    </td>
+                    <td>
+                      <span class="text-dark"
+                        ><%= scheduleData.user.email %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-muted"
+                        ><%= moment(scheduleData.datetime).format("LL") %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-muted"
+                        ><%= moment(scheduleData.datetime).format("LT") %></span
+                      >
+                    </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold"
+                        ><%= scheduleData.note %>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold"
+                        ><%= scheduleData.approve %>
+                      </a>
+                    </td>
+                    <td class="table-actions">
+                      <form method="POST" action="/admin/faq/delete">
+                        <a
+                          href="javascript:void(0);"
+                          class="table-action edit"
+                          data-original-title="Edit category"
+                          data-toggle="modal"
+                          data-target="#modal-form"
+                        >
+                          <i class="fas fa-user-edit"></i>
+                        </a>
+                        <input type="hidden" value="" name="id" />
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          value="<%= csrfToken %>"
+                        />
+                        <button
+                          type="submit"
+                          onclick="return confirm('Are you sure you want to delete?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="Delete Category"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <%-include('../../layouts/back/mentor/footer.ejs')%>
+  </div>
+</div>
