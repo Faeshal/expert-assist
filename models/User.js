@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
   github: String,
   linkedin: String,
   resetToken: String,
-  resetTokenExpiration: Date
+  resetTokenExpiration: Date,
+  stories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Story" }]
 });
 
 module.exports = mongoose.model("User", UserSchema);

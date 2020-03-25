@@ -47,7 +47,8 @@ const MentorSchema = new mongoose.Schema({
   register: {
     type: Date,
     default: Date.now
-  }
+  },
+  review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }]
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

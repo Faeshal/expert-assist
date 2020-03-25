@@ -48,4 +48,7 @@ router.get("/admin/user/all", adminContoller.getUserAll);
 router.post("/admin/user/all", adminContoller.postUserBlock);
 router.get("/admin/user/block", adminContoller.getBlockUser);
 
+// * Payment
+router.get("/admin/payment", adminContoller.getPayment);
+
 module.exports = router;

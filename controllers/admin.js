@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const Payment = require("../models/Payment");
 const User = require("../models/User");
 const moment = require("moment");
 const v = require("voca");
@@ -465,4 +466,20 @@ exports.postMentorBlock = (req, res, next) => {
       res.redirect("/admin/mentor/block");
     })
     .catch(err => console.log(err));
+};
+
+exports.getPayment = (req, res, next) => {
+  Payment.find({})
+    .populate({ path: "user", select: ["username", "email"] })
+    .populate({ path: "mentor", select: ["username", "email"] })
+    .exec()
+    .then(payment => {
+      console.log(payment);
+      res.render("back/admin/payment", {
+        payment: payment,
+        pageTitle: "All Payment",
+        moment: moment,
+        v: v
+      });
+    });
 };
