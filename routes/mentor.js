@@ -73,4 +73,6 @@ router.post(
   mentorController.postUpdateSchedule
 );
 
+router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
+
 module.exports = router;

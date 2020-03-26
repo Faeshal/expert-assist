@@ -394,7 +394,11 @@
         </div>
 
         <div class="job-detail border rounded mt-4">
-          <a href="/user/checkout/<%= mentor._id %>" class="btn btn-primary btn-block">Hire Mentor</a>
+          <a
+            href="/user/checkout/<%= mentor._id %>"
+            class="btn btn-primary btn-block"
+            >Hire Mentor</a
+          >
         </div>
       </div>
     </div>
@@ -446,6 +450,32 @@
 
 <!-- modals -->
 <!-- Modal -->
+
+<!-- Button -->
+<script type="text/javascript">
+  (function() {
+    var options = {
+      whatsapp: "<%=mentor.phone%>", // WhatsApp number
+      call: "<%=mentor.phone%>", // Call phone number
+      call_to_action: "Message us", // Call to action
+      button_color: "#666666", // Color of button
+      position: "right", // Position may be 'right' or 'left'
+      order: "whatsapp,call" // Order of buttons
+    };
+    var proto = document.location.protocol,
+      host = "getbutton.io",
+      url = proto + "//static." + host;
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = url + "/widget-send-button/js/init.js";
+    s.onload = function() {
+      WhWidgetSendButton.init(host, proto, options);
+    };
+    var x = document.getElementsByTagName("script")[0];
+    x.parentNode.insertBefore(s, x);
+  })();
+</script>
 
 <!-- footer start -->
 <%-include('../layouts/home/footer.ejs')%>

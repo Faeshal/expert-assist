@@ -216,3 +216,19 @@ exports.postSchedule = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getMentoring = (req, res, next) => {
+  const id = req.session.user._id;
+  Schedule.findOne({ user: id })
+    .then(schedule => {
+      if (!schedule) {
+        console.log("No User Found");
+      }
+      console.log(schedule);
+      res.render("back/user/mentoring", {
+        schedule: schedule,
+        user: req.session.user._id
+      });
+    })
+    .catch(err => console.log(err));
+};

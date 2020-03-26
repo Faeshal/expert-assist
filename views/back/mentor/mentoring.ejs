@@ -1,0 +1,93 @@
+<%-include('../../layouts/back/mentor/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/mentor/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/mentor/topNav.ejs')%>
+  <!-- Header -->
+  <div class="header bg-secondary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-primary d-inline-block mb-0">Mentoring</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-primary">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Components</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  Mentoring
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row justify-content-center">
+      <div class="col-lg-11">
+        <div class="card">
+          <div class="card-header bg-transparent">
+            <h3 class="mb-0 text-muted">Discussion Panel</h3>
+          </div>
+          <div class="card-body">
+            <div class="row icon-examples">
+              <div class="div mx-auto justify-content-center text-center">
+                <% if (!schedule) { %>
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/mentoring-fail.svg"
+                  alt=""
+                  style="width: 55%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Maaf anda belum melakukan pembayaran / jadwal belum di Approve
+                </h4>
+                <% } else { %>
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/mentoring-success.svg"
+                  alt=""
+                  style="width: 35%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Happy Mentoring - Hope Your Problem Solve Soon
+                </h4>
+                <div class="vcall mx-auto text-center mt-4">
+                  <!-- Begin Fresh Tilled Soil Video Chat Embed Code -->
+                  <div
+                    id="freshtilledsoil_embed_widget"
+                    class="video-chat-widget"
+                  ></div>
+                  <script
+                    id="fts"
+                    src="http://freshtilledsoil.com/embed/webrtc-v5.js?r=FTS0316-CZ6NqG97"
+                  ></script>
+                  <!-- End Fresh Tilled Soil Video Chat Embed Code -->
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <%-include('../../layouts/back/mentor/footer.ejs')%>
+  </div>
+</div>

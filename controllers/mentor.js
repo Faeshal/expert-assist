@@ -238,3 +238,19 @@ exports.postUpdateSchedule = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getMentoring = (req, res, next) => {
+  const id = req.session.mentor._id;
+  Schedule.findOne({ mentor: id })
+    .then(schedule => {
+      if (!schedule) {
+        console.log("No User Found");
+      }
+      console.log(schedule);
+      res.render("back/mentor/mentoring", {
+        schedule: schedule,
+        mentor: req.session.mentor._id
+      });
+    })
+    .catch(err => console.log(err));
+};

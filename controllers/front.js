@@ -14,7 +14,8 @@ exports.getIndex = (req, res, next) => {
           $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }]
         })
           .then(mentor => {
-            // console.log(mentor);
+            // console.log(session.mentor.email);
+            // console.log(session.mentor);
             res.render("front/index", {
               admin: admin,
               session: session,

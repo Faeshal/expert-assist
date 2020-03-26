@@ -29,6 +29,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
 
+// * Dashboard
 router.get("/user/dashboard", isAuth, userController.getDashboard);
 
 // * Profile
@@ -40,12 +41,15 @@ router.post(
   userController.updateProfile
 );
 
+// * Payment
 router.get("/user/checkout/:id", isAuth, userController.getCheckout);
 router.get("/checkout/success/:mentorId", userController.postCheckoutSuccess);
-// router.post("/user/checkout", isAuth, userController.postCheckout);
-// router.get("/user/checkout/cancel", isAuth, userController.getCheckout);
 
+// * Scheduling
 router.get("/user/schedule", isAuth, userController.getSchedule);
 router.post("/user/schedule", isAuth, userController.postSchedule);
+
+// * mentoring
+router.get("/user/mentoring", isAuth, userController.getMentoring);
 
 module.exports = router;
