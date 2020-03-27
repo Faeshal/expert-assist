@@ -6,6 +6,7 @@ const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const bcrypt = require("bcryptjs");
+const chalk = require("chalk");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -130,7 +131,6 @@ exports.postRegister = (req, res, next) => {
 };
 
 exports.getLogin = (req, res, next) => {
-  console.log(req.session);
   let message = req.flash("error");
   if (message.length > 0) {
     message = message[0];
@@ -323,7 +323,7 @@ exports.postLoginAdmin = (req, res, next) => {
         req.flash("error", "Invalid email or password.");
         return res.redirect("/loginAdmin");
       }
-      console.log(admin);
+      console.log(chalk.blue(admin));
       bcrypt
         .compare(password, admin.password)
         .then(doMatch => {

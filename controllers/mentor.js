@@ -4,9 +4,9 @@ const Schedule = require("../models/Schedule");
 const fileHelper = require("../util/file");
 const moment = require("moment");
 const axios = require("axios");
+const chalk = require("chalk");
 
 exports.getDashboard = (req, res, next) => {
-  console.log(req.session);
   Mentor.findOne({ _id: req.session.mentor._id })
     .then(mentor => {
       res.render("back/mentor/dashboard", {

@@ -2,7 +2,6 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const express = require("express");
 const app = express();
-
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -14,7 +13,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const csrf = require("csurf");
 const flash = require("connect-flash");
-const colors = require("colors");
+const chalk = require("chalk");
 const morgan = require("morgan");
 const frontRoutes = require("./routes/front");
 const authRoutes = require("./routes/auth");
@@ -61,7 +60,6 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
-  // res.locals.mentorPrice = 988;
   next();
 });
 
@@ -90,5 +88,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // * Server Listen
 app.listen(PORT, () => {
-  console.log(`Server is Running On Port : ${PORT}`.black.bgGreen);
+  console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
 });

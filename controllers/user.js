@@ -8,6 +8,7 @@ const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
 const voca = require("voca");
+const chalk = require("chalk");
 
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)

@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const fs = require("fs");
 const mongoose = require("mongoose");
-require("colors");
+const chalk = require("chalk");
 const Admin = require("./models/Admin");
 // const User = require("./models/User");
 
@@ -28,7 +28,7 @@ const importData = async () => {
   try {
     await Admin.create(admin);
     // await User.create(user);
-    console.log("Sucessfully Import Data...".green.inverse);
+    console.log(chalk.black.bgYellow("Sucessfully Import Data..."));
     process.exit();
   } catch (err) {
     console.error(err);
@@ -40,7 +40,7 @@ const deleteData = async () => {
   try {
     await Admin.deleteMany();
     // await User.deleteMany();
-    console.log("Succesfully Destroy Data ...".red.inverse);
+    console.log(chalk.white.bgRed("Succesfully Destroy Data ..."));
     process.exit();
   } catch (err) {
     console.error(err);
