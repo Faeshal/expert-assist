@@ -1,0 +1,219 @@
+<%-include('../../layouts/back/user/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/user/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/user/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-secondary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-primary d-inline-block mb-0">Mentor Review</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-lg-11 mx-auto">
+        <div class="card-wrapper">
+          <!-- CATEGORY TABLE -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">Feedback</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <a
+                    href="#"
+                    class="btn btn-sm btn-neutral btn-round btn-icon"
+                    data-toggle="tooltip"
+                    data-original-title="Your review is really helpful"
+                  >
+                    <span class="btn-inner--icon"
+                      ><i class="fas fa-user-edit"></i
+                    ></span>
+                    <span
+                      class="btn-inner--text btnReview"
+                      data-toggle="modal"
+                      data-target="#modal-form"
+                      >Create</span
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Light Table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush" id="mytable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Mentor</th>
+                    <th>Review</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Rating</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="table-user">
+                      <b>1</b>
+                    </td>
+                    <td>
+                      <span class="text-muted">2</span>
+                    </td>
+                    <td>
+                      <span class="text-muted">5</span>
+                    </td>
+                    <td>
+                      <span class="text-muted">23</span>
+                    </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold">3</a>
+                    </td>
+                    <td class="table-actions myTd">
+                      <form method="POST" action="/user/review">
+                        <a
+                          href="javascript:void(0);"
+                          class="table-action edit"
+                          data-original-title="Edit category"
+                          data-toggle="modal"
+                          data-target="#modal-form"
+                          data-id=""
+                          data-rating=""
+                          data-content=""
+                        >
+                          <i class="fas fa-user-edit"></i>
+                        </a>
+                        <input type="hidden" value="" name="id" />
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modals -->
+    <div class="col-md-6">
+      <div
+        class="modal fade"
+        id="modal-form"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-form"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal- modal-dialog-centered " role="document">
+          <div class="modal-content">
+            <div class="modal-body p-0">
+              <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                  <div class="text-center text-muted mb-4 mt-4">
+                    <h3 class="formModalLabel">Update Review</h3>
+                  </div>
+                  <form role="form" method="POST" action="/user/review/update">
+                    <div class="form-group mb-4">
+                      <label for="exampleFormControlTextarea1">Rating</label>
+                      <div
+                        class="input-group input-group-merge input-group-alternative"
+                      >
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="ni ni-email-83"></i
+                          ></span>
+                        </div>
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          value="<%= csrfToken %>"
+                        />
+                        <input type="hidden" name="id" class="id" />
+
+                        <input
+                          class="form-control question text-dark rating"
+                          type="text"
+                          name="rating"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Review</label>
+                      <textarea
+                        class="form-control content"
+                        id="exampleFormControlTextarea1"
+                        rows="3"
+                        name="content"
+                      ></textarea>
+                    </div>
+                    <div class="text-center button-dynamic">
+                      <button
+                        type="submit"
+                        class="btn btn-primary my-4 text-center button-dynamic"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+        $(".btnReview").on("click", function() {
+          $(".formModalLabel").html("Create Review");
+          $(".button-dynamic button[type=submit]").html("Submit");
+          $(".rating").val("");
+          $(".content").val("");
+
+          $(".modal-body form").attr("action", "/user/review/");
+        });
+
+        $(".myTd").on("click", ".edit", function() {
+          $(".formModalLabel").html("Update Review");
+          $(".button-dynamic button[type=submit]").html("Update");
+          var id = $(this).data("id");
+          console.log(id);
+          var rating = $(this).data("rating");
+          var content = $(this).data("content");
+          $(".rating").val(rating);
+          $(".content").val(content);
+          $(".id").val(id);
+        });
+      });
+    </script>
+    <!-- Footer -->
+    <%-include('../../layouts/back/user/footer.ejs')%>
+  </div>
+</div>

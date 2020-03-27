@@ -2,10 +2,12 @@ const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
 const Schedule = require("../models/Schedule");
+const Review = require("../models/Review");
 const fileHelper = require("../util/file");
 const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
+const voca = require("voca");
 
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)
@@ -244,6 +246,21 @@ exports.getLive = (req, res, next) => {
           user: req.session.user._id
         });
       }
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getReview = (req, res, next) => {
+  const id = req.session.user._id;
+  Review.find({ user: id })
+    .then(review => {
+      console.log(review);
+      res.render("back/user/review", {
+        user: id,
+        review: review,
+        moment: moment,
+        voca: voca
+      });
     })
     .catch(err => console.log(err));
 };

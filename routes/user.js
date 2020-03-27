@@ -53,4 +53,7 @@ router.post("/user/schedule", isAuth, userController.postSchedule);
 router.get("/user/mentoring", isAuth, userController.getMentoring);
 router.get("/user/mentoring/live", userController.getLive);
 
+// * Review
+router.get("/user/review", isAuth, userController.getReview);
+
 module.exports = router;
