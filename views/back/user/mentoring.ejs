@@ -46,7 +46,7 @@
           <div class="card-body">
             <div class="row icon-examples">
               <div class="div mx-auto justify-content-center text-center">
-                <% if (!schedule) { %>
+                <% if (!schedule || schedule.approve==false) { %>
                 <img
                   class="img-fluid"
                   alt="Responsive image"
@@ -69,16 +69,18 @@
                   Happy Mentoring - Hope Your Problem Solve Soon
                 </h4>
                 <div class="vcall mx-auto text-center mt-4">
-                  <!-- Begin Fresh Tilled Soil Video Chat Embed Code -->
-                  <div
-                    id="freshtilledsoil_embed_widget"
-                    class="video-chat-widget"
-                  ></div>
                   <script
-                    id="fts"
-                    src="http://freshtilledsoil.com/embed/webrtc-v5.js?r=FTS0316-CZ6NqG97"
+                    crossorigin
+                    src="https://unpkg.com/@daily-co/daily-js"
                   ></script>
-                  <!-- End Fresh Tilled Soil Video Chat Embed Code -->
+                  <script>
+                    if (schedule.approve == true) {
+                      callFrame = window.DailyIframe.createFrame();
+                      callFrame.join({
+                        url: "https://expert-assist.daily.co/<%=schedule.link%>"
+                      });
+                    }
+                  </script>
                 </div>
                 <% } %>
               </div>

@@ -77,6 +77,7 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th>Note</th>
+                    <th>Link</th>
                     <th class="text-center">Approval</th>
                     <th>Action</th>
                   </tr>
@@ -107,6 +108,11 @@
                         ><%= scheduleData.note %>
                       </a>
                     </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold"
+                        ><%= scheduleData.link %>
+                      </a>
+                    </td>
                     <td class="text-center">
                       <% if(scheduleData.approve==true) { %>
                       <a href="#!" class="font-weight-bold"
@@ -129,6 +135,7 @@
                           data-id="<%=scheduleData._id%>"
                           data-approve="<%=scheduleData.approve%>"
                           data-username="<%=scheduleData.user.username%>"
+                          data-link="<%=scheduleData.link%>"
                         >
                           <i class="fas fa-user-edit"></i>
                         </a>
@@ -198,6 +205,15 @@
                   readonly="true"
                 />
               </div>
+                <div class="form-group">
+                <label for="exampleInputPassword1">Link</label>
+                <input
+                  type="text"
+                  class="form-control link"
+                  id="exampleInputPassword1"
+                  name="link"
+                />
+              </div>
               <div class="form-group">
                 <label for="exampleFormControlSelect1">Approval</label>
                 <select
@@ -229,8 +245,10 @@
           console.log(id);
           var approve = $(this).data("approve");
           var username = $(this).data("username");
+          var link = $(this).data("link");
           $(".approve").val(approve);
           $(".username").val(username);
+          $(".link").val(link);
           $(".id").val(id);
         });
       });

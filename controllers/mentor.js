@@ -3,6 +3,7 @@ const Admin = require("../models/Admin");
 const Schedule = require("../models/Schedule");
 const fileHelper = require("../util/file");
 const moment = require("moment");
+const axios = require("axios");
 
 exports.getDashboard = (req, res, next) => {
   console.log(req.session);
@@ -227,9 +228,32 @@ exports.postDeleteSchedule = (req, res, next) => {
 exports.postUpdateSchedule = (req, res, next) => {
   const id = req.body.id;
   const approve = req.body.approve;
+  const link = req.body.link;
+
+  var data = {
+    name: link,
+    privacy: "public"
+  };
+
+  axios
+    .post("https://api.daily.co/v1/rooms", data, {
+      headers: {
+        Authorization:
+          "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13"
+      }
+    })
+    .then(function(response) {
+      console.log("-----------------");
+      console.log(response.data);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
   Schedule.findById(id)
     .then(schedule => {
       schedule.approve = approve;
+      schedule.link = link;
       return schedule.save();
     })
     .then(result => {
