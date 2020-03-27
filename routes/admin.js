@@ -49,6 +49,9 @@ router.post("/admin/user/all", adminContoller.postUserBlock);
 router.get("/admin/user/block", adminContoller.getBlockUser);
 
 // * Payment
-router.get("/admin/payment", adminContoller.getPayment);
+router.get("/admin/payment", isAuth, adminContoller.getPayment);
+
+// * Mentoring
+router.get("/admin/mentoring", adminContoller.getMentoring);
 
 module.exports = router;

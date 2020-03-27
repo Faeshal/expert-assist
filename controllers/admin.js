@@ -1,9 +1,20 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
+const Schedule = require("../models/Schedule");
 const User = require("../models/User");
 const moment = require("moment");
 const v = require("voca");
+const axios = require("axios");
+
+// * Get Request video Call API
+const base_url = "https://api.daily.co/v1/";
+const auth = {
+  headers: {
+    Authorization:
+      "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13"
+  }
+};
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
@@ -482,4 +493,21 @@ exports.getPayment = (req, res, next) => {
         v: v
       });
     });
+};
+
+exports.getMentoring = (req, res, next) => {
+  axios
+    .get(base_url + "rooms", auth)
+    .then(result => {
+      console.log("----------------");
+      console.log(result.data.data);
+      let data = result.data.data;
+      res.render("back/admin/mentoring", {
+        moment: moment,
+        pageTitle: "Welcome Admin",
+        v: v,
+        data: data
+      });
+    })
+    .catch(err => console.log(err));
 };
