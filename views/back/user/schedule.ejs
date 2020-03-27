@@ -52,6 +52,23 @@
             </div>
             <!-- Card body -->
             <div class="card-body">
+              <% if(!payment) { %>
+              <div class="row icon-examples">
+                <div class="div mx-auto justify-content-center text-center">
+                  <img
+                    class="img-fluid"
+                    alt="Responsive image"
+                    src="../../back/assets/img/custom/user-forbid-schedule.svg"
+                    alt=""
+                    style="width: 55%;"
+                  />
+                  <h4 class="text-center mb-4 text-primary pt-4">
+                    Anda belum bisa atur jadwal , segera lakukan pembayaran
+                    terlebih dahulu
+                  </h4>
+                </div>
+              </div>
+              <% } else if(payment){ %>
               <form action="/user/schedule" method="POST">
                 <!-- Input groups with icon -->
                 <div class="row">
@@ -135,6 +152,7 @@
                   </div>
                 </div>
               </form>
+              <% } %>
             </div>
           </div>
         </div>

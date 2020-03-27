@@ -74,5 +74,6 @@ router.post(
 );
 
 router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
+router.get("/mentor/mentoring/live", isAuth, mentorController.getLive);
 
 module.exports = router;

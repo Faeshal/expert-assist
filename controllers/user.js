@@ -8,26 +8,6 @@ const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
 
 exports.getDashboard = (req, res, next) => {
-  // axios
-  //   .get("https://api.daily.co/v1/rooms", {
-  //     headers: {
-  //       Authorization:
-  //         "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13"
-  //     }
-  //   })
-  //   .then(function(response) {
-  //     console.log("-----------------");
-  //     console.log(response.data.data);
-  //     var room = response.data.data;
-  //     room.forEach(roomData => {
-  //       console.log("*********************");
-  //       console.log(roomData);
-  //     });
-  //   })
-  //   .catch(function(error) {
-  //     console.log(error);
-  //   });
-
   User.findById(req.session.user)
     .then(user => {
       res.render("back/user/dashboard", {
@@ -71,7 +51,7 @@ exports.updateProfile = (req, res, next) => {
       user.linkedin = linkedin;
 
       if (profilepicture) {
-        fileHelper.deleteFile(mentor.profilepicture);
+        fileHelper.deleteFile(user.profilepicture);
         user.profilepicture = profilepicture.path.replace("\\", "/");
       }
 
@@ -111,14 +91,6 @@ exports.updateProfile = (req, res, next) => {
 //     })
 //     .catch(err => console.log(err));
 // };
-
-// review
-//   .populate({ path: "mentor", select: ["username", "email"] })
-//   .populate({ path: "user", select: ["username", "email"] })
-//   .execPopulate()
-//   .then(doc => {
-//     console.log(doc);
-//   });
 
 exports.getCheckout = (req, res, next) => {
   const id = req.params.id;
@@ -198,6 +170,7 @@ exports.getSchedule = (req, res, next) => {
     .exec()
     .then(payment => {
       console.log(payment);
+
       Schedule.find({ user: req.session.user._id })
         .populate("mentor", "username")
         .exec()
@@ -239,16 +212,38 @@ exports.postSchedule = (req, res, next) => {
 
 exports.getMentoring = (req, res, next) => {
   const id = req.session.user._id;
+  Payment.findOne({ user: id })
+    .then(payment => {
+      if (!payment) {
+        console.log("User Not Yet Pay");
+      }
+      Schedule.findOne({ user: id })
+        .then(schedule => {
+          res.render("back/user/mentoring", {
+            payment: payment,
+            schedule: schedule,
+            user: id
+          });
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getLive = (req, res, next) => {
+  const id = req.session.user._id;
   Schedule.findOne({ user: id })
     .then(schedule => {
-      if (!schedule) {
-        console.log("No User Found");
-      }
       console.log(schedule);
-      res.render("back/user/mentoring", {
-        schedule: schedule,
-        user: req.session.user._id
-      });
+      if (schedule.approve == false) {
+        res.render("layouts/404");
+        console.log("Not Auhtorize");
+      } else if (schedule.approve == true) {
+        res.render("back/user/live", {
+          schedule: schedule,
+          user: req.session.user._id
+        });
+      }
     })
     .catch(err => console.log(err));
 };

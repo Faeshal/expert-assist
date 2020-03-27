@@ -46,42 +46,58 @@
           <div class="card-body">
             <div class="row icon-examples">
               <div class="div mx-auto justify-content-center text-center">
-                <% if (!schedule || schedule.approve==false) { %>
+                <% if (!payment) { %>
                 <img
                   class="img-fluid"
                   alt="Responsive image"
-                  src="../../back/assets/img/custom/mentoring-fail.svg"
+                  src="../../back/assets/img/custom/user-notyet-pay.svg"
                   alt=""
-                  style="width: 55%;"
+                  style="width: 35%;"
                 />
                 <h4 class="text-center mb-4 text-primary pt-4">
-                  Maaf anda belum melakukan pembayaran / jadwal belum di Approve
+                  Anda belum membayar satupun mentor
+                </h4>
+                <% } else if (!schedule) { %>
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/user-notyet-booking.svg"
+                  alt=""
+                  style="width: 35%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Anda belum membuat jadwal , Segera request jadwal dengan
+                  mentor anda
+                </h4>
+                <% } else if(schedule.approve==false) { %>
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/user-notyet-approve.svg"
+                  alt=""
+                  style="width: 40%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Jadwal anda belum di Approve Mentor , Mohon Menunggu
                 </h4>
                 <% } else { %>
                 <img
                   class="img-fluid"
                   alt="Responsive image"
-                  src="../../back/assets/img/custom/mentoring-success.svg"
+                  src="../../back/assets/img/custom/user-mentoring.svg"
                   alt=""
                   style="width: 35%;"
                 />
+                <div class="mx-auto text-center mt-4 ">
+                  <button class="btn btn-primary">
+                    <a class="text-white" href="/user/mentoring/live"
+                      >Go Live</a
+                    >
+                  </button>
+                </div>
                 <h4 class="text-center mb-4 text-primary pt-4">
                   Happy Mentoring - Hope Your Problem Solve Soon
                 </h4>
-                <div class="vcall mx-auto text-center mt-4">
-                  <script
-                    crossorigin
-                    src="https://unpkg.com/@daily-co/daily-js"
-                  ></script>
-                  <script>
-                    if (schedule.approve == true) {
-                      callFrame = window.DailyIframe.createFrame();
-                      callFrame.join({
-                        url: "https://expert-assist.daily.co/<%=schedule.link%>"
-                      });
-                    }
-                  </script>
-                </div>
                 <% } %>
               </div>
             </div>

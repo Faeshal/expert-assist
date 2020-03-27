@@ -278,3 +278,21 @@ exports.getMentoring = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getLive = (req, res, next) => {
+  const id = req.session.mentor._id;
+  Schedule.findOne({ mentor: id })
+    .then(schedule => {
+      console.log(schedule);
+      if (schedule.approve == false) {
+        res.render("layouts/404");
+        console.log("Not Auhtorize");
+      } else if (schedule.approve == true) {
+        res.render("back/mentor/live", {
+          schedule: schedule,
+          mentor: req.session.mentor._id
+        });
+      }
+    })
+    .catch(err => console.log(err));
+};

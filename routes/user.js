@@ -51,5 +51,6 @@ router.post("/user/schedule", isAuth, userController.postSchedule);
 
 // * mentoring
 router.get("/user/mentoring", isAuth, userController.getMentoring);
+router.get("/user/mentoring/live", userController.getLive);
 
 module.exports = router;
