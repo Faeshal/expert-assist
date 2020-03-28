@@ -260,7 +260,7 @@ exports.getReview = (req, res, next) => {
       console.log(chalk.blueBright(review));
       Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
         .then(schedule => {
-          console.log(chalk.yellowBright(schedule));
+          console.log(chalk.yellowBright(schedule.user));
           res.render("back/user/review", {
             user: id,
             review: review,
@@ -296,20 +296,23 @@ exports.postReview = (req, res, next) => {
 };
 
 exports.postUpdateReview = (req, res, next) => {
-  const user = req.session.user_id;
   const id = req.body.id;
+  const mentor = req.body.mentor;
+  const user = req.session.user._id;
   const content = req.body.content;
   const rating = req.body.rating;
-  const mentor = req.body.mentor;
-  Review.find({ _id: id })
-    .then(review => {
-      // review.mentor = mentor;
-      // review.user = user;
 
-      review.save().then(result => {
-        console.log(result);
-        res.redirect("/user/review");
-      });
+  Review.findById(id)
+    .then(review => {
+      review.user = user;
+      review.mentor = mentor;
+      review.content = content;
+      review.rating = rating;
+      return review.save();
+    })
+    .then(result => {
+      console.log(chalk.yellow.inverse(result));
+      res.redirect("/user/review");
     })
     .catch(err => console.log(err));
 };
