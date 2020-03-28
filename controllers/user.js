@@ -254,13 +254,61 @@ exports.getLive = (req, res, next) => {
 exports.getReview = (req, res, next) => {
   const id = req.session.user._id;
   Review.find({ user: id })
+    .populate("mentor", "username")
+    .exec()
     .then(review => {
-      console.log(review);
-      res.render("back/user/review", {
-        user: id,
-        review: review,
-        moment: moment,
-        voca: voca
+      console.log(chalk.blueBright(review));
+      Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
+        .then(schedule => {
+          console.log(chalk.yellowBright(schedule));
+          res.render("back/user/review", {
+            user: id,
+            review: review,
+            moment: moment,
+            voca: voca,
+            schedule: schedule
+          });
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postReview = (req, res, next) => {
+  const content = req.body.content;
+  const rating = req.body.rating;
+  const user = req.session.user._id;
+  const mentor = req.body.mentor;
+
+  const review = new Review({
+    rating: rating,
+    content: content,
+    user: user,
+    mentor: mentor
+  });
+  review
+    .save()
+    .then(review => {
+      console.log(chalk.yellow.inverse(review));
+      res.redirect("/user/review");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postUpdateReview = (req, res, next) => {
+  const user = req.session.user_id;
+  const id = req.body.id;
+  const content = req.body.content;
+  const rating = req.body.rating;
+  const mentor = req.body.mentor;
+  Review.find({ _id: id })
+    .then(review => {
+      // review.mentor = mentor;
+      // review.user = user;
+
+      review.save().then(result => {
+        console.log(result);
+        res.redirect("/user/review");
       });
     })
     .catch(err => console.log(err));
