@@ -63,8 +63,8 @@
                   <tr>
                     <th>User</th>
                     <th>Review</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Time</th>
                     <th class="text-center">Rating</th>
                   </tr>
                 </thead>
@@ -77,13 +77,13 @@
                     <td>
                       <span class="text-muted"><%= reviewData.content %></span>
                     </td>
-                    <td>
-                      <span class="text-muted"
+                    <td class="text-center">
+                      <span class="text-muted "
                         ><%= moment(reviewData.datetime).format("LL") %></span
                       >
                     </td>
-                    <td>
-                      <span class="text-muted"
+                    <td class="text-center">
+                      <span class="text-muted "
                         ><%= moment(reviewData.datetime).format("LT") %></span
                       >
                     </td>
@@ -103,79 +103,6 @@
         </div>
       </div>
     </div>
-    <!-- Modals -->
-    <div class="col-md-6">
-      <div
-        class="modal fade"
-        id="modal-form"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="modal-form"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal- modal-dialog-centered " role="document">
-          <div class="modal-content">
-            <div class="modal-body p-0">
-              <div class="card bg-secondary border-0 mb-0">
-                <div class="card-body px-lg-5 py-lg-5">
-                  <div class="text-center text-muted mb-4 mt-4">
-                    <h3 id="formModalLabel">Update Review</h3>
-                  </div>
-                  <form role="form" method="POST" action="/user/review/update">
-                    <div class="form-group mb-4">
-                      <label for="exampleFormControlTextarea1">Rating</label>
-                      <div
-                        class="input-group input-group-merge input-group-alternative"
-                      >
-                        <input
-                          type="hidden"
-                          name="_csrf"
-                          value="<%= csrfToken %>"
-                        />
-                        <input type="hidden" name="id" class="id" />
-                        <input
-                          type="hidden"
-                          name="user"
-                          value="<%= schedule.user %>"
-                        />
-                        <input
-                          type="hidden"
-                          name="mentor"
-                          value="<%= schedule.mentor %>"
-                        />
-                        <input id="rating" type="hidden" name="rating" />
-                        <div
-                          style="font-size: 30px;color: orange;"
-                          class=" ratePost mx-auto justify-content-center"
-                        ></div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleFormControlTextarea1">Review</label>
-                      <textarea
-                        class="form-control content"
-                        id="exampleFormControlTextarea1"
-                        rows="3"
-                        name="content"
-                      ></textarea>
-                    </div>
-                    <div class="text-center button-dynamic">
-                      <button
-                        type="submit"
-                        class="btn btn-primary my-4 text-center button-dynamic"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
   </div>

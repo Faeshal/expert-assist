@@ -1,0 +1,19 @@
+const mongoose = require("mongoose");
+const WithdrawSchema = new mongoose.Schema({
+  total: Number,
+  mentor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Mentor"
+  },
+  note: String,
+  datetime: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: Boolean,
+    default: false
+  }
+});
+
+module.exports = mongoose.model("Withdraw", WithdrawSchema);

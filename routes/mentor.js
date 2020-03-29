@@ -29,7 +29,10 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
 
+// * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);
+
+// * Profile
 router.post(
   "/mentor/update/mentorstatus",
   isAuth,
@@ -53,14 +56,13 @@ router.post(
   mentorController.updateProfile
 );
 
+// * Exam
 router.get("/mentor/exam", isAuth, mentorController.getExam);
-
 router.post("/mentor/exam", isAuth, mentorController.postExam);
-
 router.get("/mentor/exam/begin", isAuth, mentorController.getBeginExam);
-
 router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
+// * Schedule
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
 router.post(
   "/mentor/schedule/delete",
@@ -73,8 +75,15 @@ router.post(
   mentorController.postUpdateSchedule
 );
 
+// * Mentoring
 router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
 router.get("/mentor/mentoring/live", isAuth, mentorController.getLive);
+
+// * Review
 router.get("/mentor/review", isAuth, mentorController.getReview);
+router.get("/mentor/review", isAuth, mentorController.getReview);
+
+// * withdraw
+router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
 
 module.exports = router;

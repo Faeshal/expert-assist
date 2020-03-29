@@ -1,7 +1,9 @@
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
 const Review = require("../models/Review");
+const Payment = require("../models/Payment");
 const Schedule = require("../models/Schedule");
+const Withdraw = require("../models/Withdraw");
 const fileHelper = require("../util/file");
 const moment = require("moment");
 const axios = require("axios");
@@ -11,8 +13,21 @@ const voca = require("voca");
 exports.getDashboard = (req, res, next) => {
   Mentor.findOne({ _id: req.session.mentor._id })
     .then(mentor => {
-      res.render("back/mentor/dashboard", {
-        mentor: mentor
+      console.log(chalk.yellow.inverse(mentor));
+      Payment.aggregate([
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$total" }
+          }
+        }
+      ]).then(payment => {
+        let income = payment[0].total;
+        res.render("back/mentor/dashboard", {
+          mentor: mentor,
+          payment: payment,
+          income: income
+        });
       });
     })
     .catch(err => console.log(err));
@@ -303,6 +318,7 @@ exports.getReview = (req, res, next) => {
   const id = req.session.mentor._id;
 
   Review.find({ mentor: id })
+    .sort({ _id: -1 })
     .populate("user", "username")
     .exec()
     .then(review => {
@@ -322,6 +338,20 @@ exports.getReview = (req, res, next) => {
           });
         })
         .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getWithdraw = (req, res, next) => {
+  const id = req.session.mentor_id;
+  Withdraw.find({ mentor: id })
+    .then(withdraw => {
+      console.log(chalk.yellowBright(withdraw));
+      res.render("back/mentor/withdraw", {
+        withdraw: withdraw,
+        moment: moment,
+        voca: voca
+      });
     })
     .catch(err => console.log(err));
 };
