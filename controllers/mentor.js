@@ -1,10 +1,12 @@
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
+const Review = require("../models/Review");
 const Schedule = require("../models/Schedule");
 const fileHelper = require("../util/file");
 const moment = require("moment");
 const axios = require("axios");
 const chalk = require("chalk");
+const voca = require("voca");
 
 exports.getDashboard = (req, res, next) => {
   Mentor.findOne({ _id: req.session.mentor._id })
@@ -293,6 +295,33 @@ exports.getLive = (req, res, next) => {
           mentor: req.session.mentor._id
         });
       }
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getReview = (req, res, next) => {
+  const id = req.session.mentor._id;
+
+  Review.find({ mentor: id })
+    .populate("user", "username")
+    .exec()
+    .then(review => {
+      console.log(chalk.blueBright(review));
+      console.log(review.user);
+      Schedule.findOne({
+        $and: [{ mentor: req.session.mentor._id }, { approve: true }]
+      })
+        .then(schedule => {
+          console.log(chalk.yellowBright(schedule.mentor));
+          res.render("back/mentor/review", {
+            mentor: id,
+            review: review,
+            moment: moment,
+            voca: voca,
+            schedule: schedule
+          });
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 };
