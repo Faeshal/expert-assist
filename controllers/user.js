@@ -253,11 +253,13 @@ exports.getLive = (req, res, next) => {
 
 exports.getReview = (req, res, next) => {
   const id = req.session.user._id;
+
   Review.find({ user: id })
     .populate("mentor", "username")
     .exec()
     .then(review => {
       console.log(chalk.blueBright(review));
+
       Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
         .then(schedule => {
           console.log(chalk.yellowBright(schedule.user));
@@ -312,6 +314,16 @@ exports.postUpdateReview = (req, res, next) => {
     })
     .then(result => {
       console.log(chalk.yellow.inverse(result));
+      res.redirect("/user/review");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.deleteReview = (req, res, next) => {
+  const id = req.body.id;
+  Review.findByIdAndDelete(id)
+    .then(result => {
+      console.log(chalk.yellow(result));
       res.redirect("/user/review");
     })
     .catch(err => console.log(err));

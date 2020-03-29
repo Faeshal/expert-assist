@@ -65,8 +65,8 @@
                     <th>Review</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Rating</th>
-                    <th>Action</th>
+                    <th class="text-center">Rating</th>
+                    <th class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -89,12 +89,14 @@
                       >
                     </td>
                     <td>
-                      <a href="#!" class="font-weight-bold"
-                        ><%= reviewData.rating%></a
-                      >
+                      <div
+                        style="font-size: 17px;color: orange;"
+                        class="rate mx-auto justify-content-center"
+                        data-rate-value="<%= reviewData.rating%>"
+                      ></div>
                     </td>
-                    <td class="table-actions myTd">
-                      <form method="POST" action="/user/review">
+                    <td class="table-actions myTd text-center">
+                      <form method="POST" action="/user/review/delete">
                         <a
                           href="javascript:void(0);"
                           class="table-action edit"
@@ -102,12 +104,30 @@
                           data-toggle="modal"
                           data-target="#modal-form"
                           data-id="<%=reviewData._id%>"
-                          data-rating="<%=reviewData.rating%>"
                           data-content="<%=reviewData.content%>"
+                          data-rate-value="<%=reviewData.rating%>"
                         >
                           <i class="fas fa-user-edit"></i>
                         </a>
-                        <input type="hidden" value="" name="id" />
+                        <input
+                          type="hidden"
+                          value="<%= reviewData._id %>"
+                          name="id"
+                        />
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          value="<%= csrfToken %>"
+                        />
+                        <button
+                          type="submit"
+                          onclick="return confirm('Are you sure you want to delete?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="Delete Review"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
                       </form>
                     </td>
                   </tr>
@@ -143,11 +163,6 @@
                       <div
                         class="input-group input-group-merge input-group-alternative"
                       >
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"
-                            ><i class="ni ni-email-83"></i
-                          ></span>
-                        </div>
                         <input
                           type="hidden"
                           name="_csrf"
@@ -164,11 +179,11 @@
                           name="mentor"
                           value="<%= schedule.mentor %>"
                         />
-                        <input
-                          class="form-control question text-dark rating"
-                          type="number"
-                          name="rating"
-                        />
+                        <input id="rating" type="hidden" name="rating" />
+                        <div
+                          style="font-size: 30px;color: orange;"
+                          class=" ratePost mx-auto justify-content-center"
+                        ></div>
                       </div>
                     </div>
                     <div class="form-group">
@@ -205,25 +220,55 @@
 <!-- Jqeury -->
 <script>
   $(document).ready(function() {
+    let options1 = {
+      max_value: 10,
+      readonly: true
+    };
+    $(".rate").rate(options1);
+
+    // ** Create Button
     $(".tombolTambahData").on("click", function() {
       $("#formModalLabel").html("Create review");
       $(".button-dynamic button[type=submit]").html("Submit");
       $(".content").val("");
       $(".rating").val("");
+      $(".rate-post").val("");
 
       $(".modal-body form").attr("action", "/user/review/");
+
+      $(".ratePost").rate({
+        max_value: 10,
+        step_size: 1,
+        initial_value: 0,
+        update_input_field_name: $("#rating")
+      });
     });
 
+    // ** Edit Button
     $(".myTd").on("click", ".edit", function() {
       $("#formModalLabel").html("Update review");
       $(".button-dynamic button[type=submit]").html("Update");
       var id = $(this).data("id");
       console.log(id);
       var content = $(this).data("content");
-      var rating = $(this).data("rating");
+      var ratePost = $(this).data("rate-value");
+      console.log(ratePost);
+
       $(".content").val(content);
-      $(".rating").val(rating);
+      $(".ratePost").val(ratePost);
       $(".id").val(id);
+
+      $(".ratePost").rate({
+        max_value: 10,
+        step_size: 1,
+        initial_value: ratePost,
+        update_input_field_name: $("#rating")
+      });
     });
   });
 </script>
+
+<!-- $(this).removeData("rate-value");
+      var attr = $(this).attr("data-rate-value");
+      $(this).removeData("rate-value");
+      console.log(attr); -->
