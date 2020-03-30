@@ -77,8 +77,8 @@
                     <th>Total</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Status</th>
-                    <th>Income</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Income</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -105,20 +105,49 @@
                       >
                     </td>
 
-                    <td class="table-user">
+                    <td class="table-user text-center">
+                      <% if(withdrawData.status==false){ %>
                       <span class="badge badge-warning text-dark"
                         ><%= withdrawData.status %></span
                       >
+                      <% } else { %>
+                      <span class="badge badge-success text-dark"
+                        ><%= withdrawData.status %></span
+                      >
+                      <% } %>
                     </td>
-                    <td class="table-user">
+                    <td class="table-user text-center">
                       <span class="badge badge-success text-dark"
                         ><%= withdrawData.adminincome %></span
                       >
                     </td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-danger">
-                        Del
-                      </button>
+                    <td class="text-center">
+                      <form action="/admin/withdraw/update" method="POST">
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          value="<%= csrfToken %>"
+                        />
+                        <input
+                          type="hidden"
+                          name="id"
+                          value="<%=withdrawData._id%>"
+                        />
+                        <input type="hidden" name="status" value="true" />
+                        <% if(withdrawData.status==false) { %>
+                        <button
+                          type="submit"
+                          onclick="return confirm('Confirm this withdraw ?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="confirm withdraw"
+                        >
+                          <i class="fas fa-check-circle"></i>
+                        </button>
+                        <% }else{ %>
+                        <i class="fas fa-check-circle text-success"></i>
+                        <% } %>
+                      </form>
                     </td>
                   </tr>
                   <% }) %>

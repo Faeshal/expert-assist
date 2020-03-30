@@ -528,3 +528,19 @@ exports.getwithdraw = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.postUpdateWithdraw = (req, res, next) => {
+  const id = req.body.id;
+  const status = req.body.status;
+  Withdraw.findById(id)
+    .then(withdraw => {
+      withdraw.status = status;
+      return withdraw.save();
+    })
+    .then(result => {
+      console.log(chalk.yellow.inverse(result));
+
+      res.redirect("/admin/withdraw");
+    })
+    .catch(err => console.log(err));
+};

@@ -357,6 +357,7 @@ exports.getWithdraw = (req, res, next) => {
               console.log("NO Payment found");
             } else if (payment) {
               console.log(chalk.blue(payment));
+              console.log(payment.total);
               Withdraw.find({ mentor: id })
                 .sort({ _id: -1 })
                 .then(withdraw => {
@@ -386,6 +387,7 @@ exports.postWithdraw = (req, res, next) => {
   const mentor = req.body.mentor;
   const total = req.body.total;
   const note = req.body.note;
+  const initialincome = req.body.initialincome;
 
   const tax = 0.05;
 
@@ -393,6 +395,7 @@ exports.postWithdraw = (req, res, next) => {
   const finalTotal = total - adminIncome;
 
   const withdraw = new Withdraw({
+    initialincome: initialincome,
     mentor: mentor,
     total: finalTotal,
     note: note,
@@ -402,6 +405,16 @@ exports.postWithdraw = (req, res, next) => {
     .save()
     .then(result => {
       console.log(chalk.yellow.inverse(result));
+      res.redirect("/mentor/withdraw");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.deleteWithdraw = (req, res, next) => {
+  const id = req.body.id;
+  Withdraw.findByIdAndDelete(id)
+    .then(withdraw => {
+      console.log(chalk.yellow.inverse(withdraw));
       res.redirect("/mentor/withdraw");
     })
     .catch(err => console.log(err));

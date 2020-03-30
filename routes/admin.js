@@ -56,5 +56,6 @@ router.get("/admin/mentoring", adminContoller.getMentoring);
 
 // *Withdraw
 router.get("/admin/withdraw", adminContoller.getwithdraw);
+router.post("/admin/withdraw/update", adminContoller.postUpdateWithdraw);
 
 module.exports = router;

@@ -36,6 +36,10 @@ const MentorSchema = new mongoose.Schema({
   portofolio: String,
   resetToken: String,
   resetTokenExpiration: Date,
+  income: {
+    type: Number,
+    default: 0
+  },
   examstatus: {
     type: Boolean,
     default: false
