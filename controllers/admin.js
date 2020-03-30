@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
 const Schedule = require("../models/Schedule");
+const Withdraw = require("../models/Withdraw");
 const User = require("../models/User");
 const moment = require("moment");
 const v = require("voca");
@@ -508,6 +509,21 @@ exports.getMentoring = (req, res, next) => {
         pageTitle: "Welcome Admin",
         v: v,
         data: data
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getwithdraw = (req, res, next) => {
+  Withdraw.find()
+    .populate({ path: "mentor", select: ["username", "email"] })
+    .exec()
+    .then(withdraw => {
+      console.log(chalk.yellow(withdraw));
+      res.render("back/admin/withdraw", {
+        moment: moment,
+        pageTitle: "Money Withdraw",
+        withdraw: withdraw
       });
     })
     .catch(err => console.log(err));

@@ -49,6 +49,7 @@ const AdminSchema = new mongoose.Schema({
   password: String,
   username: String,
   level: String,
+  income: Number,
   register: {
     type: Date,
     default: Date.now

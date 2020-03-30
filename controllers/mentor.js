@@ -358,6 +358,7 @@ exports.getWithdraw = (req, res, next) => {
             } else if (payment) {
               console.log(chalk.blue(payment));
               Withdraw.find({ mentor: id })
+                .sort({ _id: -1 })
                 .then(withdraw => {
                   if (!withdraw) {
                     console.log(chalk.grey("No Withdraw Found"));
@@ -386,10 +387,16 @@ exports.postWithdraw = (req, res, next) => {
   const total = req.body.total;
   const note = req.body.note;
 
+  const tax = 0.05;
+
+  const adminIncome = total * tax;
+  const finalTotal = total - adminIncome;
+
   const withdraw = new Withdraw({
     mentor: mentor,
-    total: total,
-    note: note
+    total: finalTotal,
+    note: note,
+    adminincome: adminIncome
   });
   withdraw
     .save()

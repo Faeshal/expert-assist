@@ -73,6 +73,11 @@
               <form action="/mentor/withdraw" method="POST">
                 <!-- Input groups with icon -->
                 <input type="hidden" name="mentor" value="<%=mentor._id%>" />
+                <input
+                  type="hidden"
+                  name="intialincome"
+                  value="<%=payment.total%>"
+                />
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
@@ -84,11 +89,14 @@
                         readonly="true"
                         value="<%=payment.total%>"
                       />
+                      <small class="form-text text-muted"
+                        >Real Income = Withdraw - Tax</small
+                      >
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="total">Withdraw</label>
                       <input
@@ -97,6 +105,16 @@
                         id="total"
                         name="total"
                         required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="total">Tax</label>
+                      <input
+                        class="form-control bg-secondary text-dark border-info"
+                        value="5%"
+                        readonly="true"
                       />
                     </div>
                   </div>
@@ -131,7 +149,7 @@
                 <div class="row">
                   <div class="col-lg-12 text-center mx-auto">
                     <button type="submit" class="btn btn-sm btn-primary">
-                      Book Mentor
+                      Submit
                     </button>
                   </div>
                 </div>

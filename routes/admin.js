@@ -54,4 +54,7 @@ router.get("/admin/payment", isAuth, adminContoller.getPayment);
 // * Mentoring
 router.get("/admin/mentoring", adminContoller.getMentoring);
 
+// *Withdraw
+router.get("/admin/withdraw", adminContoller.getwithdraw);
+
 module.exports = router;

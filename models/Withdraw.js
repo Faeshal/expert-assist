@@ -13,7 +13,10 @@ const WithdrawSchema = new mongoose.Schema({
   status: {
     type: Boolean,
     default: false
-  }
+  },
+  adminincome: Number,
+  mentorincome: Number,
+  adminincome: Number
 });
 
 module.exports = mongoose.model("Withdraw", WithdrawSchema);
