@@ -343,15 +343,59 @@ exports.getReview = (req, res, next) => {
 };
 
 exports.getWithdraw = (req, res, next) => {
-  const id = req.session.mentor_id;
-  Withdraw.find({ mentor: id })
-    .then(withdraw => {
-      console.log(chalk.yellowBright(withdraw));
-      res.render("back/mentor/withdraw", {
-        withdraw: withdraw,
-        moment: moment,
-        voca: voca
-      });
+  const id = req.session.mentor._id;
+
+  Mentor.findById(id)
+    .then(mentor => {
+      if (!mentor) {
+        console.log("No Mentor");
+      } else if (mentor) {
+        console.log(chalk.yellow(mentor));
+        Payment.findOne({ mentor: id })
+          .then(payment => {
+            if (!payment) {
+              console.log("NO Payment found");
+            } else if (payment) {
+              console.log(chalk.blue(payment));
+              Withdraw.find({ mentor: id })
+                .then(withdraw => {
+                  if (!withdraw) {
+                    console.log(chalk.grey("No Withdraw Found"));
+                  } else if (withdraw) {
+                    console.log(chalk.cyanBright(withdraw));
+                    res.render("back/mentor/withdraw", {
+                      moment: moment,
+                      voca: voca,
+                      mentor: mentor,
+                      payment: payment,
+                      withdraw: withdraw
+                    });
+                  }
+                })
+                .catch(err => console.log(err));
+            }
+          })
+          .catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postWithdraw = (req, res, next) => {
+  const mentor = req.body.mentor;
+  const total = req.body.total;
+  const note = req.body.note;
+
+  const withdraw = new Withdraw({
+    mentor: mentor,
+    total: total,
+    note: note
+  });
+  withdraw
+    .save()
+    .then(result => {
+      console.log(chalk.yellow.inverse(result));
+      res.redirect("/mentor/withdraw");
     })
     .catch(err => console.log(err));
 };

@@ -85,5 +85,6 @@ router.get("/mentor/review", isAuth, mentorController.getReview);
 
 // * withdraw
 router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
+router.post("/mentor/withdraw", isAuth, mentorController.postWithdraw);
 
 module.exports = router;
