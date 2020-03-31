@@ -54,7 +54,7 @@
             </div>
             <!-- Card body -->
             <div class="card-body">
-              <% if(!payment) { %>
+              <% if(!payment || payment.total==null) { %>
               <div class="row icon-examples">
                 <div class="div mx-auto justify-content-center text-center">
                   <img
@@ -87,7 +87,7 @@
                         class="form-control form-control-sm border-success bg-secondary font-weight-bold text-dark"
                         id="income"
                         readonly="true"
-                        value="<%=payment.total%>"
+                        value="<%=mentor.income%>"
                       />
                       <small class="form-text text-muted"
                         >Real Income = Withdraw - Tax</small

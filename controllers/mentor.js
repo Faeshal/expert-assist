@@ -11,10 +11,14 @@ const chalk = require("chalk");
 const voca = require("voca");
 
 exports.getDashboard = (req, res, next) => {
-  Mentor.findOne({ _id: req.session.mentor._id })
+  const id = req.session.mentor._id;
+  Mentor.findOne({ _id: id })
     .then(mentor => {
-      console.log(chalk.yellow.inverse(mentor));
+      // console.log(chalk.yellow.inverse(mentor));
       Payment.aggregate([
+        {
+          $match: { mentor: id }
+        },
         {
           $group: {
             _id: null,
@@ -22,7 +26,9 @@ exports.getDashboard = (req, res, next) => {
           }
         }
       ]).then(payment => {
+        console.log(chalk.yellow.inverse(JSON.stringify(payment)));
         let income = payment[0].total;
+        console.log(chalk.blue.inverse(income));
         res.render("back/mentor/dashboard", {
           mentor: mentor,
           payment: payment,
@@ -353,29 +359,24 @@ exports.getWithdraw = (req, res, next) => {
         console.log(chalk.yellow(mentor));
         Payment.findOne({ mentor: id })
           .then(payment => {
-            if (!payment) {
-              console.log("NO Payment found");
-            } else if (payment) {
-              console.log(chalk.blue(payment));
-              console.log(payment.total);
-              Withdraw.find({ mentor: id })
-                .sort({ _id: -1 })
-                .then(withdraw => {
-                  if (!withdraw) {
-                    console.log(chalk.grey("No Withdraw Found"));
-                  } else if (withdraw) {
-                    console.log(chalk.cyanBright(withdraw));
-                    res.render("back/mentor/withdraw", {
-                      moment: moment,
-                      voca: voca,
-                      mentor: mentor,
-                      payment: payment,
-                      withdraw: withdraw
-                    });
-                  }
-                })
-                .catch(err => console.log(err));
-            }
+            console.log(chalk.blue(payment));
+            Withdraw.find({ mentor: id })
+              .sort({ _id: -1 })
+              .then(withdraw => {
+                if (!withdraw) {
+                  console.log(chalk.grey("No Withdraw Found"));
+                } else if (withdraw) {
+                  console.log(chalk.cyanBright(withdraw));
+                  res.render("back/mentor/withdraw", {
+                    moment: moment,
+                    voca: voca,
+                    mentor: mentor,
+                    payment: payment,
+                    withdraw: withdraw
+                  });
+                }
+              })
+              .catch(err => console.log(err));
           })
           .catch(err => console.log(err));
       }

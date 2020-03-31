@@ -9,6 +9,7 @@ const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
 const voca = require("voca");
 const chalk = require("chalk");
+const mongoose = require("mongoose");
 
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)
@@ -149,6 +150,7 @@ exports.postCheckoutSuccess = (req, res, next) => {
   console.log("-------MENTOR_ID--------");
   console.log(mentorId);
   const userId = req.session.user._id;
+  // ** Save Payment From Stripe To Database
   Mentor.findOne({ _id: mentorId })
     .then(mentor => {
       const payment = new Payment({
@@ -160,7 +162,28 @@ exports.postCheckoutSuccess = (req, res, next) => {
     })
     .then(result => {
       console.log(result);
-      res.redirect("/");
+      const newMentorId = mongoose.Types.ObjectId(mentorId);
+      // ** get the last payment
+      Payment.findOne({ mentor: newMentorId })
+        .sort({ _id: -1 })
+        .limit(1)
+        .then(payment => {
+          console.log(chalk.yellowBright.inverse(payment));
+          let total = payment.total;
+          console.log("-----------------");
+          Mentor.findById(mentorId)
+            .then(mentor => {
+              // ** sum the last payment with intial income from mentor collection
+              let income = mentor.income + total;
+              mentor.income = income;
+              return mentor.save();
+            })
+            .then(mentorIncome => {
+              res.redirect("/");
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 };
