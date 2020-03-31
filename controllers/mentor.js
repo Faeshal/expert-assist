@@ -14,26 +14,8 @@ exports.getDashboard = (req, res, next) => {
   const id = req.session.mentor._id;
   Mentor.findOne({ _id: id })
     .then(mentor => {
-      // console.log(chalk.yellow.inverse(mentor));
-      Payment.aggregate([
-        {
-          $match: { mentor: id }
-        },
-        {
-          $group: {
-            _id: null,
-            total: { $sum: "$total" }
-          }
-        }
-      ]).then(payment => {
-        console.log(chalk.yellow.inverse(JSON.stringify(payment)));
-        let income = payment[0].total;
-        console.log(chalk.blue.inverse(income));
-        res.render("back/mentor/dashboard", {
-          mentor: mentor,
-          payment: payment,
-          income: income
-        });
+      res.render("back/mentor/dashboard", {
+        mentor: mentor
       });
     })
     .catch(err => console.log(err));

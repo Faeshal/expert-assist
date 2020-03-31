@@ -8,6 +8,7 @@ const moment = require("moment");
 const v = require("voca");
 const axios = require("axios");
 const chalk = require("chalk");
+const mongoose = require("mongoose");
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -532,15 +533,35 @@ exports.getwithdraw = (req, res, next) => {
 exports.postUpdateWithdraw = (req, res, next) => {
   const id = req.body.id;
   const status = req.body.status;
+  const mentorId = req.body.mentor;
   Withdraw.findById(id)
     .then(withdraw => {
       withdraw.status = status;
       return withdraw.save();
     })
     .then(result => {
-      console.log(chalk.yellow.inverse(result));
-
-      res.redirect("/admin/withdraw");
+      const newMentorId = mongoose.Types.ObjectId(mentorId);
+      Withdraw.findOne({ mentor: newMentorId })
+        .sort({ _id: -1 })
+        .limit(1)
+        .then(newWithdraw => {
+          console.log(chalk.red.inverse(newWithdraw));
+          let total = newWithdraw.total;
+          console.log("-----------------");
+          Mentor.findById(newMentorId)
+            .then(mentor => {
+              console.log(chalk.greenBright.italic(mentor));
+              let income = mentor.income - total;
+              mentor.income = income;
+              return mentor.save();
+            })
+            .then(result2 => {
+              console.log(result2);
+              res.redirect("/admin/withdraw");
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 };

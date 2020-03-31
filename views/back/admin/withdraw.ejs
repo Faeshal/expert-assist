@@ -96,12 +96,12 @@
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"
-                        ><%= moment(withdrawData.mentor).format("LL") %></a
+                        ><%= moment(withdrawData.datetime).format("LL") %></a
                       >
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold">
-                        <%= moment(withdrawData.mentor).format("LT") %></a
+                        <%= moment(withdrawData.datetime).format("LT") %></a
                       >
                     </td>
 
@@ -133,7 +133,13 @@
                           name="id"
                           value="<%=withdrawData._id%>"
                         />
+                        <input
+                          type="hidden"
+                          name="mentor"
+                          value="<%=withdrawData.mentor._id%>"
+                        />
                         <input type="hidden" name="status" value="true" />
+                       
                         <% if(withdrawData.status==false) { %>
                         <button
                           type="submit"
