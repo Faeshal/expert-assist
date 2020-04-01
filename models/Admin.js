@@ -45,8 +45,15 @@ const NewsSchema = new mongoose.Schema({
 });
 
 const AdminSchema = new mongoose.Schema({
-  email: String,
-  password: String,
+  email: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
   username: String,
   level: String,
   income: Number,
