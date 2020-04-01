@@ -316,7 +316,7 @@ exports.getReview = (req, res, next) => {
         $and: [{ mentor: req.session.mentor._id }, { approve: true }]
       })
         .then(schedule => {
-          console.log(chalk.yellowBright(schedule.mentor));
+          // console.log(chalk.yellowBright(schedule.mentor));
           res.render("back/mentor/review", {
             mentor: id,
             review: review,

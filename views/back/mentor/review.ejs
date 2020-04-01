@@ -56,6 +56,21 @@
                 </div>
               </div>
             </div>
+            <% if (!review || review == null || review == undefined ||
+            mentor==null) { %>
+            <div class="card">
+              <img
+                class="img-fluid"
+                alt="Responsive image"
+                src="../../back/assets/img/custom/mentoring-fail.svg"
+                alt=""
+                style="width: 55%;"
+              />
+              <h4 class="text-center mb-4 text-primary pt-4">
+                Maaf anda belum melakukan pembayaran / jadwal belum di Approve
+              </h4>
+            </div>
+            <% } else { %>
             <!-- Light Table -->
             <div class="table-responsive">
               <table class="table align-items-center table-flush" id="mytable">
@@ -103,6 +118,7 @@
         </div>
       </div>
     </div>
+    <% } %>
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
   </div>

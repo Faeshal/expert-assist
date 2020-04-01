@@ -2,27 +2,24 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
-const path = require("path");
 const PORT = process.env.PORT || 3000;
-const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const csrf = require("csurf");
-const flash = require("connect-flash");
-const chalk = require("chalk");
-const morgan = require("morgan");
 const frontRoutes = require("./routes/front");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
 const mentorRoutes = require("./routes/mentor");
-const Admin = require("./models/Admin");
-const User = require("./models/User");
-const Mentor = require("./models/Mentor");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const path = require("path");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const flash = require("connect-flash");
+const chalk = require("chalk");
+const morgan = require("morgan");
 
 // * Security
 app.use(helmet());
@@ -84,6 +81,16 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
+});
+
+mongoose.connection.on("connected", function() {
+  console.log(
+    chalk.blueBright("MongoDB connected to " + process.env.MONGO_URI)
+  );
+});
+
+mongoose.connection.on("error", function(err) {
+  console.log(chalk.redBright("MongoDB connection error: " + err));
 });
 
 // * Server Listen
