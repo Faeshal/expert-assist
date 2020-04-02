@@ -41,6 +41,12 @@ router.post(
   userController.updateProfile
 );
 
+router.post(
+  "/user/profile/changepassword",
+  isAuth,
+  userController.postChangePassword
+);
+
 // * Payment
 router.get("/user/checkout/:id", isAuth, userController.getCheckout);
 router.get("/checkout/success/:mentorId", userController.postCheckoutSuccess);

@@ -53,7 +53,11 @@
                 data-linkedin="<%=user.linkedin%>"
                 >Update</a
               >
-              <a href="#" class="btn btn-sm btn-default float-right"
+              <a
+                href="#"
+                class="btn btn-sm btn-default float-right"
+                data-toggle="modal"
+                data-target="#changepassword"
                 >Change Pass</a
               >
             </div>
@@ -112,7 +116,66 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
+    <!-- modals change password -->
+    <div
+      class="modal fade"
+      id="changepassword"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changepasswordLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changepasswordLabel">
+              Change Password
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/user/profile/changepassword" method="POST">
+              <div class="form-group">
+                <input type="hidden" name="id" value="<%=user._id%>" />
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <label for="exampleInputEmail1">Old Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  placeholder="Type old password"
+                  name="password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="exampleInputPassword1"
+                  placeholder="New Password"
+                  name="newPassword"
+                />
+              </div>
+              <div class="text-center justify-content-center">
+                <button type="submit" class="btn btn-primary mt-2 mx-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Profile -->
     <div
       class="modal fade"
       id="exampleModalCenter"
@@ -300,9 +363,8 @@
           });
         });
       </script>
-      
     </div>
     <!-- Footer -->
-      <%-include('../../layouts/back/user/footer.ejs')%>
+    <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
 </div>

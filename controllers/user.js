@@ -10,6 +10,7 @@ const axios = require("axios");
 const voca = require("voca");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)
@@ -339,6 +340,39 @@ exports.deleteReview = (req, res, next) => {
     .then(result => {
       console.log(chalk.yellow(result));
       res.redirect("/user/review");
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postChangePassword = (req, res, next) => {
+  const id = req.body.id;
+  const password = req.body.password;
+  const newPassword = req.body.newPassword;
+
+  User.findById(id)
+    .then(user => {
+      const oldPassword = user.password;
+      bcrypt.compare(password, oldPassword).then(doMatch => {
+        if (doMatch) {
+          return bcrypt.hash(newPassword, 12).then(hashedPassword => {
+            User.findById(id)
+              .then(users => {
+                users.password = hashedPassword;
+                return users.save();
+              })
+              .then((result, err) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(chalk.yellowBright(result));
+                  res.redirect("/user/profile");
+                }
+              });
+          });
+        } else {
+          console.log(chalk.redBright("password not match"));
+        }
+      });
     })
     .catch(err => console.log(err));
 };
