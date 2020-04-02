@@ -68,34 +68,6 @@ exports.updateProfile = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-// exports.postReview = (req, res, next) => {
-//   const content = req.body.content;
-//   const rating = req.body.rating;
-//   const mentor = req.body.mentor;
-//   const user = req.session.user._id;
-//   Mentor.findOne({ _id: mentor })
-//     .then(mentor => {
-//       if (!mentor) {
-//         console.log("No Mentor Found");
-//       }
-
-//       const review = new Review({
-//         user: user,
-//         mentor: mentor,
-//         content: content,
-//         rating: rating
-//       });
-
-//       return review.save();
-//     })
-//     .then(result => {
-//       console.log(result);
-//       console.log("Review Saved");
-//       res.redirect("/");
-//     })
-//     .catch(err => console.log(err));
-// };
-
 exports.getCheckout = (req, res, next) => {
   const id = req.params.id;
   let mentorUsername;
@@ -285,7 +257,6 @@ exports.getReview = (req, res, next) => {
 
       Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
         .then(schedule => {
-          console.log(chalk.yellowBright(schedule.user));
           res.render("back/user/review", {
             user: id,
             review: review,
@@ -315,7 +286,27 @@ exports.postReview = (req, res, next) => {
     .save()
     .then(review => {
       console.log(chalk.yellow.inverse(review));
-      res.redirect("/user/review");
+      const convertMentorId = mongoose.Types.ObjectId(mentor);
+      Review.aggregate([
+        {
+          $match: { mentor: convertMentorId }
+        },
+        {
+          $group: { _id: null, avgRating: { $avg: "$rating" } }
+        }
+      ]).then(resultReview => {
+        console.log(chalk.bgYellow(JSON.stringify(resultReview)));
+        let avgRating = resultReview[0].avgRating;
+        Mentor.findById(mentor)
+          .then(mentors => {
+            mentors.rating = avgRating;
+            return mentors.save();
+          })
+          .then(result => {
+            res.redirect("/user/review");
+          })
+          .catch(err => console.log(err));
+      });
     })
     .catch(err => console.log(err));
 };

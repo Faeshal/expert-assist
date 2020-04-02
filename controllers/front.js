@@ -1,5 +1,4 @@
 const Admin = require("../models/Admin");
-const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
 

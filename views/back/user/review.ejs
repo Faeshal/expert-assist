@@ -56,6 +56,7 @@
                 </div>
               </div>
             </div>
+
             <!-- Light Table -->
             <div class="table-responsive">
               <table class="table align-items-center table-flush" id="mytable">
@@ -139,6 +140,8 @@
         </div>
       </div>
     </div>
+
+    <% if (schedule) { %>
     <!-- Modals -->
     <div class="col-md-6">
       <div
@@ -169,6 +172,7 @@
                           value="<%= csrfToken %>"
                         />
                         <input type="hidden" name="id" class="id" />
+
                         <input
                           type="hidden"
                           name="user"
@@ -211,6 +215,9 @@
         </div>
       </div>
     </div>
+    <% }else{ %>
+    <h4 class="text-center">No Review Found</h4>
+    <% } %>
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
