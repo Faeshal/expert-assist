@@ -141,10 +141,9 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="/user/profile/changepassword" method="POST">
+            <form method="POST">
               <div class="form-group">
                 <input type="hidden" name="id" value="<%=user._id%>" />
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <label for="exampleInputEmail1">Old Password</label>
                 <input
                   type="password"
@@ -165,7 +164,11 @@
                 />
               </div>
               <div class="text-center justify-content-center">
-                <button type="submit" class="btn btn-primary mt-2 mx-auto">
+                <button
+                  id="changePassword"
+                  type="button"
+                  class="btn btn-primary mt-2 mx-auto"
+                >
                   Submit
                 </button>
               </div>
@@ -338,6 +341,7 @@
       </div>
       <!-- ? JQUERY -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
       <script>
         $(document).ready(function() {
           $("#user-card").on("click", ".update", function() {
@@ -360,6 +364,37 @@
             $(".twitter").val(twitter);
             $(".github").val(github);
             $(".linkedin").val(linkedin);
+          });
+
+          $("#changePassword").click(function(e) {
+            e.preventDefault();
+            let id = $("input[name=id]").val();
+            let password = $("input[name=password]").val();
+            let newPassword = $("input[name=newPassword]").val();
+            $.ajax({
+              method: "POST",
+              url: "/user/profile/changepassword?_csrf=<%=csrfToken%>",
+              data: {
+                id: id,
+                password: password,
+                newPassword: newPassword
+              },
+              success: function() {
+                Swal.fire("Good job!", "You clicked the button!", "success");
+              }
+            })
+              .done(function(data) {
+                Swal.fire("Good job!", "You clicked the button!", "success");
+                console.log(data);
+                location.reload(true);
+              })
+              .fail(function(data) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!"
+                });
+              });
           });
         });
       </script>

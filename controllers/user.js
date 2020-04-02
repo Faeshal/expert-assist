@@ -365,7 +365,6 @@ exports.postChangePassword = (req, res, next) => {
                   console.log(err);
                 } else {
                   console.log(chalk.yellowBright(result));
-                  res.redirect("/user/profile");
                 }
               });
           });
