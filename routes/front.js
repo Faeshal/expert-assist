@@ -12,4 +12,6 @@ router.get("/blog/:id", frontController.getDetailBlog);
 
 router.get("/mdetail/:id", frontController.getDetailMentor);
 
+router.get("/mlist", frontController.getMentorList);
+
 module.exports = router;

@@ -100,3 +100,14 @@ exports.getDetailMentor = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
+exports.getMentorList = (req, res, next) => {
+  Mentor.find()
+    .then(mentor => {
+      console.log(chalk.yellowBright(mentor));
+      res.render("front/mentorList", {
+        mentor: mentor
+      });
+    })
+    .catch(err => console.log(err));
+};
