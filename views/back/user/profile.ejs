@@ -9,7 +9,12 @@
   <!-- Header -->
   <div
     class="header pb-6 d-flex align-items-center"
-    style="min-height: 370px; background-image: url(https://images.pexels.com/photos/633566/pexels-photo-633566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); background-size: cover; background-position: center top;"
+    style="
+      min-height: 370px;
+      background-image: url(https://images.pexels.com/photos/633566/pexels-photo-633566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+      background-size: cover;
+      background-position: center top;
+    "
   >
     <!-- Mask -->
     <span class="mask bg-gradient-default opacity-2"></span>
@@ -18,7 +23,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6 justify-content-center mx-auto">
     <div class="row">
-      <div class="col-xl-11 order-xl-2 justify-content-center mx-auto  ">
+      <div class="col-xl-11 order-xl-2 justify-content-center mx-auto">
         <div class="card card-profile" id="user-card">
           <div class="row justify-content-center">
             <div class="col-lg-3 order-lg-2">
@@ -55,6 +60,7 @@
               >
               <a
                 href="#"
+                id="changepass"
                 class="btn btn-sm btn-default float-right"
                 data-toggle="modal"
                 data-target="#changepassword"
@@ -339,67 +345,59 @@
           </div>
         </div>
       </div>
-      <!-- ? JQUERY -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-      <script>
-        $(document).ready(function() {
-          $("#user-card").on("click", ".update", function() {
-            var id = $(this).data("id");
-            console.log(id);
-            var username = $(this).data("username");
-            var bio = $(this).data("bio");
-            var job = $(this).data("job");
-            var city = $(this).data("city");
-            var phone = $(this).data("phone");
-            var twitter = $(this).data("twitter");
-            var github = $(this).data("github");
-            var linkedin = $(this).data("linkedin");
-            $(".id").val(id);
-            $(".username").val(username);
-            $(".job").val(job);
-            $(".bio").val(bio);
-            $(".phone").val(phone);
-            $(".city").val(city);
-            $(".twitter").val(twitter);
-            $(".github").val(github);
-            $(".linkedin").val(linkedin);
-          });
-
-          $("#changePassword").click(function(e) {
-            e.preventDefault();
-            let id = $("input[name=id]").val();
-            let password = $("input[name=password]").val();
-            let newPassword = $("input[name=newPassword]").val();
-            $.ajax({
-              method: "POST",
-              url: "/user/profile/changepassword?_csrf=<%=csrfToken%>",
-              data: {
-                id: id,
-                password: password,
-                newPassword: newPassword
-              },
-              success: function() {
-                Swal.fire("Good job!", "You clicked the button!", "success");
-              }
-            })
-              .done(function(data) {
-                Swal.fire("Good job!", "You clicked the button!", "success");
-                console.log(data);
-                location.reload(true);
-              })
-              .fail(function(data) {
-                Swal.fire({
-                  icon: "error",
-                  title: "Oops...",
-                  text: "Something went wrong!"
-                });
-              });
-          });
-        });
-      </script>
     </div>
     <!-- Footer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script>
+      $(document).ready(function () {
+        $("#user-card").on("click", ".update", function () {
+          var id = $(this).data("id");
+          console.log(id);
+          var username = $(this).data("username");
+          var bio = $(this).data("bio");
+          var job = $(this).data("job");
+          var city = $(this).data("city");
+          var phone = $(this).data("phone");
+          var twitter = $(this).data("twitter");
+          var github = $(this).data("github");
+          var linkedin = $(this).data("linkedin");
+          $(".id").val(id);
+          $(".username").val(username);
+          $(".job").val(job);
+          $(".bio").val(bio);
+          $(".phone").val(phone);
+          $(".city").val(city);
+          $(".twitter").val(twitter);
+          $(".github").val(github);
+          $(".linkedin").val(linkedin);
+        });
+
+        // besok eksekusi sudah dapat
+        $("#changePassword").click(function (e) {
+          e.preventDefault();
+          let id = $("input[name=id]").val();
+          let password = $("input[name=password]").val();
+          let newPassword = $("input[name=newPassword]").val();
+          $.ajax({
+            type: "POST",
+            url: "/user/profile/changepassword?_csrf=<%=csrfToken%>",
+            data: {
+              id: id,
+              password: password,
+              newPassword: newPassword,
+            },
+            dataType: "json",
+            success: function (data) {
+              var myResult = $.parseJSON(data);
+            },
+            error: function (err) {
+              alert(err);
+            },
+          });
+        });
+      });
+    </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
 </div>
