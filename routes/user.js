@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const userController = require("../controllers/user");
 const isAuth = require("../middleware/is-auth");
+const { body } = require("express-validator");
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
@@ -12,7 +13,7 @@ const fileStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
     cb(null, Date.now() + "_" + file.originalname);
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -43,6 +44,10 @@ router.post(
 
 router.post(
   "/user/profile/changepassword",
+  [
+    body("password", "Password wajib di isi").not().isEmpty().trim(),
+    body("newPassword", "Password baru wajib di isi").not().isEmpty().trim(),
+  ],
   isAuth,
   userController.postChangePassword
 );

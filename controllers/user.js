@@ -4,6 +4,7 @@ const Payment = require("../models/Payment");
 const Schedule = require("../models/Schedule");
 const Review = require("../models/Review");
 const fileHelper = require("../util/file");
+const { validationResult } = require("express-validator");
 const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
@@ -14,19 +15,19 @@ const bcrypt = require("bcryptjs");
 
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)
-    .then(user => {
+    .then((user) => {
       res.render("back/user/dashboard", {
-        user: user
+        user: user,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getProfile = (req, res, next) => {
   User.findById(req.session.user._id)
-    .then(user => {
+    .then((user) => {
       res.render("back/user/profile", {
-        user: user
+        user: user,
       });
     })
     .catch();
@@ -45,7 +46,7 @@ exports.updateProfile = (req, res, next) => {
   const profilepicture = req.file;
 
   User.findOne({ _id: id })
-    .then(user => {
+    .then((user) => {
       user.username = username;
       user.job = job;
       user.bio = bio;
@@ -62,11 +63,11 @@ exports.updateProfile = (req, res, next) => {
 
       return user.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log("Profile Updated");
       res.redirect("/user/profile");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getCheckout = (req, res, next) => {
@@ -76,7 +77,7 @@ exports.getCheckout = (req, res, next) => {
   let mentorId;
   res.locals.mentorPrice = mentorPrice;
   Mentor.findById(id)
-    .then(mentor => {
+    .then((mentor) => {
       mentorUsername = mentor.username;
       mentorPrice = mentor.price;
       mentorId = mentor._id;
@@ -94,8 +95,8 @@ exports.getCheckout = (req, res, next) => {
             description: "User Payment",
             amount: mentor.price,
             currency: "usd",
-            quantity: 1
-          }
+            quantity: 1,
+          },
         ],
         success_url:
           req.protocol +
@@ -103,19 +104,19 @@ exports.getCheckout = (req, res, next) => {
           req.get("host") +
           "/checkout/success/" +
           mentorId,
-        cancel_url: "https://stripe.com/docs/payments/accept-a-payment"
+        cancel_url: "https://stripe.com/docs/payments/accept-a-payment",
       });
     })
-    .then(session => {
+    .then((session) => {
       console.log(session.id);
       res.render("back/user/checkout", {
         mentorUsername: mentorUsername,
         mentorPrice: mentorPrice,
         user: req.session.user,
-        sessionId: session.id
+        sessionId: session.id,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postCheckoutSuccess = (req, res, next) => {
@@ -125,40 +126,40 @@ exports.postCheckoutSuccess = (req, res, next) => {
   const userId = req.session.user._id;
   // ** Save Payment From Stripe To Database
   Mentor.findOne({ _id: mentorId })
-    .then(mentor => {
+    .then((mentor) => {
       const payment = new Payment({
         user: userId,
         mentor: mentor._id,
-        total: mentor.price
+        total: mentor.price,
       });
       return payment.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       const newMentorId = mongoose.Types.ObjectId(mentorId);
       // ** get the last payment
       Payment.findOne({ mentor: newMentorId })
         .sort({ _id: -1 })
         .limit(1)
-        .then(payment => {
+        .then((payment) => {
           console.log(chalk.yellowBright.inverse(payment));
           let total = payment.total;
           console.log("-----------------");
           Mentor.findById(mentorId)
-            .then(mentor => {
+            .then((mentor) => {
               // ** sum the last payment with intial income from mentor collection
               let income = mentor.income + total;
               mentor.income = income;
               return mentor.save();
             })
-            .then(mentorIncome => {
+            .then((mentorIncome) => {
               res.redirect("/");
             })
-            .catch(err => console.log(err));
+            .catch((err) => console.log(err));
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getSchedule = (req, res, next) => {
@@ -167,24 +168,24 @@ exports.getSchedule = (req, res, next) => {
     .populate("user", "username")
     .populate("mentor", "username")
     .exec()
-    .then(payment => {
+    .then((payment) => {
       console.log(payment);
 
       Schedule.find({ user: req.session.user._id })
         .populate("mentor", "username")
         .exec()
-        .then(schedule => {
+        .then((schedule) => {
           console.log(schedule);
           res.render("back/user/schedule", {
             user: req.session.user,
             payment: payment,
             schedule: schedule,
-            moment: moment
+            moment: moment,
           });
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 };
@@ -198,41 +199,41 @@ exports.postSchedule = (req, res, next) => {
     user: user,
     mentor: mentor,
     datetime: datetime,
-    note: note
+    note: note,
   });
   return schedule
     .save()
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/user/schedule");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getMentoring = (req, res, next) => {
   const id = req.session.user._id;
   Payment.findOne({ user: id })
-    .then(payment => {
+    .then((payment) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
       Schedule.findOne({ user: id })
-        .then(schedule => {
+        .then((schedule) => {
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
-            user: id
+            user: id,
           });
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getLive = (req, res, next) => {
   const id = req.session.user._id;
   Schedule.findOne({ user: id })
-    .then(schedule => {
+    .then((schedule) => {
       console.log(schedule);
       if (schedule.approve == false) {
         res.render("layouts/404");
@@ -240,11 +241,11 @@ exports.getLive = (req, res, next) => {
       } else if (schedule.approve == true) {
         res.render("back/user/live", {
           schedule: schedule,
-          user: req.session.user._id
+          user: req.session.user._id,
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getReview = (req, res, next) => {
@@ -253,22 +254,22 @@ exports.getReview = (req, res, next) => {
   Review.find({ user: id })
     .populate("mentor", "username")
     .exec()
-    .then(review => {
+    .then((review) => {
       console.log(chalk.blueBright(review));
 
       Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
-        .then(schedule => {
+        .then((schedule) => {
           res.render("back/user/review", {
             user: id,
             review: review,
             moment: moment,
             voca: voca,
-            schedule: schedule
+            schedule: schedule,
           });
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postReview = (req, res, next) => {
@@ -281,35 +282,35 @@ exports.postReview = (req, res, next) => {
     rating: rating,
     content: content,
     user: user,
-    mentor: mentor
+    mentor: mentor,
   });
   review
     .save()
-    .then(review => {
+    .then((review) => {
       console.log(chalk.yellow.inverse(review));
       const convertMentorId = mongoose.Types.ObjectId(mentor);
       Review.aggregate([
         {
-          $match: { mentor: convertMentorId }
+          $match: { mentor: convertMentorId },
         },
         {
-          $group: { _id: null, avgRating: { $avg: "$rating" } }
-        }
-      ]).then(resultReview => {
+          $group: { _id: null, avgRating: { $avg: "$rating" } },
+        },
+      ]).then((resultReview) => {
         console.log(chalk.bgYellow(JSON.stringify(resultReview)));
         let avgRating = resultReview[0].avgRating;
         Mentor.findById(mentor)
-          .then(mentors => {
+          .then((mentors) => {
             mentors.rating = avgRating;
             return mentors.save();
           })
-          .then(result => {
+          .then((result) => {
             res.redirect("/user/review");
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postUpdateReview = (req, res, next) => {
@@ -320,28 +321,28 @@ exports.postUpdateReview = (req, res, next) => {
   const rating = req.body.rating;
 
   Review.findById(id)
-    .then(review => {
+    .then((review) => {
       review.user = user;
       review.mentor = mentor;
       review.content = content;
       review.rating = rating;
       return review.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(chalk.yellow.inverse(result));
       res.redirect("/user/review");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteReview = (req, res, next) => {
   const id = req.body.id;
   Review.findByIdAndDelete(id)
-    .then(result => {
+    .then((result) => {
       console.log(chalk.yellow(result));
       res.redirect("/user/review");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postChangePassword = (req, res, next) => {
@@ -349,29 +350,39 @@ exports.postChangePassword = (req, res, next) => {
   const password = req.body.password;
   const newPassword = req.body.newPassword;
 
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).jsonp(errors.array());
+  } else {
+    console.log(chalk.green.inverse("lulus uji express-validator"));
+  }
+
   User.findById(id)
-    .then(user => {
+    .then((user) => {
       const oldPassword = user.password;
-      bcrypt.compare(password, oldPassword).then(doMatch => {
+      bcrypt.compare(password, oldPassword).then((doMatch) => {
         if (doMatch) {
-          return bcrypt.hash(newPassword, 12).then(hashedPassword => {
+          return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
             User.findById(id)
-              .then(users => {
+              .then((users) => {
                 users.password = hashedPassword;
-                return users.save();
+                return users.save().then((result, err) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    res.json(result);
+                    console.log(chalk.yellowBright(result));
+                  }
+                });
               })
-              .then((result, err) => {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log(chalk.yellowBright(result));
-                }
-              });
+              .catch((err) => console.log(err));
           });
         } else {
           console.log(chalk.redBright("password not match"));
+          res.status(422).json({ error: "password not match" });
         }
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };

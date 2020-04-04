@@ -147,6 +147,14 @@
             </button>
           </div>
           <div class="modal-body">
+            <div
+              class="alert alert-danger"
+              role="alert"
+              id="error-group"
+              style="display: none;"
+            >
+              <ul id="errors"></ul>
+            </div>
             <form method="POST">
               <div class="form-group">
                 <input type="hidden" name="id" value="<%=user._id%>" />
@@ -164,10 +172,15 @@
                 <input
                   type="password"
                   class="form-control"
-                  id="exampleInputPassword1"
+                  id="myInput"
                   placeholder="New Password"
                   name="newPassword"
                 />
+                <input
+                  class="mt-2 ml-1 mr-1"
+                  type="checkbox"
+                  onclick="myFunction()"
+                /><small class="text-muted">Show Password</small>
               </div>
               <div class="text-center justify-content-center">
                 <button
@@ -373,7 +386,12 @@
           $(".linkedin").val(linkedin);
         });
 
-        // besok eksekusi sudah dapat
+        $("#changepass").click(function () {
+          $("input[name=password]").val("");
+          $("input[name=newPassword]").val("");
+        });
+
+        // ** POST AJAX
         $("#changePassword").click(function (e) {
           e.preventDefault();
           let id = $("input[name=id]").val();
@@ -382,21 +400,51 @@
           $.ajax({
             type: "POST",
             url: "/user/profile/changepassword?_csrf=<%=csrfToken%>",
+            dataType: "json",
             data: {
               id: id,
               password: password,
               newPassword: newPassword,
             },
-            dataType: "json",
-            success: function (data) {
-              var myResult = $.parseJSON(data);
-            },
-            error: function (err) {
-              alert(err);
-            },
-          });
+          })
+            .done(function (data) {
+              let newData = JSON.stringify(data);
+              console.log(newData);
+              $("input[name=password]").val("");
+              $("input[name=newPassword]").val("");
+              $("#error-group").css("display", "none");
+              Swal.fire("Good job!", "You clicked the button!", "success");
+            })
+            .fail(function (data) {
+              $("#error-group").css("display", "block");
+              var errors = JSON.parse(data.responseText);
+              console.log(errors);
+              console.log(data.responseText);
+
+              var errorsContainer = $("#errors");
+              errorsContainer.innerHTML = "";
+              var errorsList = "Password incorect";
+
+              for (var i = 0; i < errors.length; i++) {
+                errorsList += "<li>" + errors[i].msg + "</li>";
+              }
+
+              errorsContainer.html(errorsList);
+
+              Swal.fire("Something wrong!", "Error Occured", "error");
+            });
         });
       });
+    </script>
+    <script>
+      function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";
+        }
+      }
     </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
