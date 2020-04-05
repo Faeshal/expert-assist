@@ -9,7 +9,12 @@
   <!-- Header -->
   <div
     class="header pb-6 d-flex align-items-center"
-    style="min-height: 370px; background-image: url(/<%=mentor.coverpicture%>); background-size: cover; background-position: center top;"
+    style="
+      min-height: 370px;
+      background-image: url(/<%=mentor.coverpicture%>);
+      background-size: cover;
+      background-position: center top;
+    "
   >
     <!-- Mask -->
     <span class="mask bg-gradient-default opacity-2"></span>
@@ -18,7 +23,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6 justify-content-center mx-auto">
     <div class="row">
-      <div class="col-xl-11 order-xl-2 justify-content-center mx-auto  ">
+      <div class="col-xl-11 order-xl-2 justify-content-center mx-auto">
         <div class="card card-profile" id="user-card">
           <div class="row justify-content-center">
             <div class="col-lg-3 order-lg-2">
@@ -55,7 +60,12 @@
                 >Update</a
               >
               <%} %>
-              <a href="#" class="btn btn-sm btn-default float-right"
+              <a
+                href="#"
+                id="changepass"
+                class="btn btn-sm btn-default float-right"
+                data-toggle="modal"
+                data-target="#changepassword"
                 >Change Pass</a
               >
             </div>
@@ -73,7 +83,7 @@
                 </div>
                 <div class="card-profile-stats d-flex justify-content-center">
                   <div>
-                    <span class="heading "
+                    <span class="heading"
                       ><%= mentor.city == null ? "Not Set" : mentor.city %>
                     </span>
                     <span class="description">city</span>
@@ -89,7 +99,7 @@
             </div>
             <% if (mentor.mentorstatus == "false") { %>
             <div class="text-center mt-4">
-              <b class="text-dark ">Status</b><br />
+              <b class="text-dark">Status</b><br />
               <span class="badge badge-pill badge-warning"
                 >Waiting For Exam Assesment</span
               >
@@ -112,7 +122,7 @@
             </div>
             <div class="row mt-3 text-center mx-auto justify-content-center">
               <div class="col-md-4">
-                <i class="fas fa-hourglass-half mr-2 fa-lg "></i><%=
+                <i class="fas fa-hourglass-half mr-2 fa-lg"></i><%=
                 mentor.experience %>
               </div>
               <div class="col-md-4">
@@ -135,7 +145,82 @@
         </div>
       </div>
     </div>
-    <!--  Modal -->
+    <!-- modals change password -->
+    <div
+      class="modal fade"
+      id="changepassword"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changepasswordLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changepasswordLabel">
+              Change Password
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div
+              class="alert alert-danger"
+              role="alert"
+              id="error-group"
+              style="display: none;"
+            >
+              <ul id="errors"></ul>
+            </div>
+            <form method="POST">
+              <div class="form-group">
+                <input type="hidden" name="id" value="<%=mentor._id%>" />
+                <label for="exampleInputEmail1">Old Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  placeholder="Type old password"
+                  name="password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="myInput"
+                  placeholder="New Password"
+                  name="newPassword"
+                />
+                <input
+                  class="mt-2 ml-1 mr-1"
+                  type="checkbox"
+                  onclick="myFunction()"
+                /><small class="text-muted">Show Password</small>
+              </div>
+              <div class="text-center justify-content-center">
+                <button
+                  id="changePassword"
+                  type="button"
+                  class="btn btn-primary mt-2 mx-auto"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Modals update profile -->
     <div
       class="modal fade"
       id="exampleModalCenter"
@@ -263,8 +348,8 @@
       <!-- ? JQUERY -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script>
-        $(document).ready(function() {
-          $("#user-card").on("click", ".update", function() {
+        $(document).ready(function () {
+          $("#user-card").on("click", ".update", function () {
             var id = $(this).data("id");
             console.log(id);
             var username = $(this).data("username");
@@ -277,9 +362,68 @@
             $(".phone").val(phone);
             $(".city").val(city);
           });
+
+          $("#changepass").click(function () {
+            $("input[name=password]").val("");
+            $("input[name=newPassword]").val("");
+          });
+
+          // ** POST AJAX
+          $("#changePassword").click(function (e) {
+            e.preventDefault();
+            let id = $("input[name=id]").val();
+            let password = $("input[name=password]").val();
+            let newPassword = $("input[name=newPassword]").val();
+            $.ajax({
+              type: "POST",
+              url: "/mentor/profile/changepassword?_csrf=<%=csrfToken%>",
+              dataType: "json",
+              data: {
+                id: id,
+                password: password,
+                newPassword: newPassword,
+              },
+            })
+              .done(function (data) {
+                let newData = JSON.stringify(data);
+                console.log(newData);
+                $("input[name=password]").val("");
+                $("input[name=newPassword]").val("");
+                $("#error-group").css("display", "none");
+                Swal.fire("Good job!", "You change the password!", "success");
+              })
+              .fail(function (data) {
+                $("#error-group").css("display", "block");
+                var errors = JSON.parse(data.responseText);
+                console.log(errors);
+                console.log(data.responseText);
+
+                var errorsContainer = $("#errors");
+                errorsContainer.innerHTML = "";
+                var errorsList = "Password Incorect";
+
+                for (var i = 0; i < errors.length; i++) {
+                  errorsList += "<li>" + errors[i].msg + "</li>";
+                }
+
+                errorsContainer.html(errorsList);
+
+                Swal.fire("Something wrong!", "Error Occured", "error");
+              });
+          });
         });
       </script>
     </div>
+    <script>
+      function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";
+        }
+      }
+    </script>
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
   </div>

@@ -3,6 +3,7 @@ const router = express.Router();
 const mentorController = require("../controllers/mentor");
 const multer = require("multer");
 const isAuth = require("../middleware/is-auth");
+const { body } = require("express-validator");
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
@@ -12,7 +13,7 @@ const fileStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
     cb(null, Date.now() + "_" + file.originalname);
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -46,14 +47,24 @@ router.post(
   upload.fields([
     {
       name: "profilepicture",
-      maxCount: 1
+      maxCount: 1,
     },
     {
       name: "coverpicture",
-      maxCount: 1
-    }
+      maxCount: 1,
+    },
   ]),
   mentorController.updateProfile
+);
+
+router.post(
+  "/mentor/profile/changepassword",
+  [
+    body("password", "Password wajib di isi").not().isEmpty().trim(),
+    body("newPassword", "Password baru wajib di isi").not().isEmpty().trim(),
+  ],
+  isAuth,
+  mentorController.postChangePassword
 );
 
 // * Exam

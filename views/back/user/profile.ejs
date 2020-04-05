@@ -413,7 +413,7 @@
               $("input[name=password]").val("");
               $("input[name=newPassword]").val("");
               $("#error-group").css("display", "none");
-              Swal.fire("Good job!", "You clicked the button!", "success");
+              Swal.fire("Good job!", "You change the password!", "success");
             })
             .fail(function (data) {
               $("#error-group").css("display", "block");
@@ -423,7 +423,7 @@
 
               var errorsContainer = $("#errors");
               errorsContainer.innerHTML = "";
-              var errorsList = "Password incorect";
+              var errorsList = "Password Incorect";
 
               for (var i = 0; i < errors.length; i++) {
                 errorsList += "<li>" + errors[i].msg + "</li>";

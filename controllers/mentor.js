@@ -8,36 +8,38 @@ const fileHelper = require("../util/file");
 const moment = require("moment");
 const axios = require("axios");
 const chalk = require("chalk");
+const bcrypt = require("bcryptjs");
 const voca = require("voca");
+const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
   const id = req.session.mentor._id;
   Mentor.findOne({ _id: id })
-    .then(mentor => {
+    .then((mentor) => {
       res.render("back/mentor/dashboard", {
-        mentor: mentor
+        mentor: mentor,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postMentorStatus = (req, res, next) => {
   const mentorstatus = req.body.mentorstatus;
   Mentor.findById(req.session.mentor._id)
-    .then(mentor => {
+    .then((mentor) => {
       mentor.mentorstatus = mentorstatus;
-      return mentor.save().then(result => {
+      return mentor.save().then((result) => {
         res.redirect("/mentor/profile");
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getProfile = (req, res, next) => {
   Mentor.findById(req.session.mentor._id)
-    .then(mentor => {
+    .then((mentor) => {
       res.render("back/mentor/profile", {
-        mentor: mentor
+        mentor: mentor,
       });
     })
     .catch();
@@ -45,12 +47,12 @@ exports.getProfile = (req, res, next) => {
 
 exports.getUpdateProfile = (req, res, next) => {
   Mentor.findById(req.session.mentor._id)
-    .then(mentor => {
+    .then((mentor) => {
       res.render("back/mentor/profileUpdate", {
-        mentor: mentor
+        mentor: mentor,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateProfile = (req, res, next) => {
@@ -78,7 +80,7 @@ exports.updateProfile = (req, res, next) => {
   console.log("================");
   console.log(req.files);
   Mentor.findOne({ _id: id })
-    .then(mentor => {
+    .then((mentor) => {
       mentor.username = username;
       mentor.price = price;
       mentor.city = city;
@@ -114,31 +116,31 @@ exports.updateProfile = (req, res, next) => {
 
       return mentor.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       console.log("Profile Updated");
       res.redirect("/mentor/profile");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getExam = (req, res, next) => {
   console.log(req.session.mentor);
   Admin.findOne({ level: "admin" })
-    .then(admin => {
+    .then((admin) => {
       console.log(admin.category[0].name);
       if (!admin) {
         console.log("Admin not found");
         res.render("layouts/500");
       } else {
         Mentor.findById(req.session.mentor._id)
-          .then(mentor => {
+          .then((mentor) => {
             res.render("back/mentor/exam", {
               mentor: mentor,
-              admin: admin
+              admin: admin,
             });
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       }
     })
     .catch();
@@ -148,33 +150,33 @@ exports.postExam = (req, res, next) => {
   const expertise = req.body.expertise;
   const id = req.session.mentor._id;
   Mentor.findById(id)
-    .then(mentor => {
+    .then((mentor) => {
       mentor.expertise = expertise;
       return mentor.save();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/mentor/exam/begin");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postBeginExam = (req, res, next) => {
   const examstatus = req.body.examstatus;
   Mentor.findById(req.session.mentor._id)
-    .then(mentor => {
+    .then((mentor) => {
       mentor.examstatus = examstatus;
       return mentor.save();
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getBeginExam = (req, res, next) => {
-  Admin.findOne({ level: "admin" }).then(admin => {
+  Admin.findOne({ level: "admin" }).then((admin) => {
     if (!admin) {
       console.log("Admin not found");
     } else {
       Mentor.findById(req.session.mentor._id)
-        .then(mentor => {
+        .then((mentor) => {
           console.log(req.session.mentor);
           console.log("------");
           // * Compare
@@ -196,11 +198,11 @@ exports.getBeginExam = (req, res, next) => {
             res.render("back/mentor/begin", {
               mentor: mentor,
               admin: admin,
-              testlink: testlink
+              testlink: testlink,
             });
           }
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   });
 };
@@ -209,25 +211,25 @@ exports.getSchedule = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.find({ mentor: id })
     .populate({ path: "user", select: ["username", "email"] })
-    .then(schedule => {
+    .then((schedule) => {
       console.log(schedule);
       res.render("back/mentor/schedule", {
         mentor: req.session.mentor._id,
         schedule: schedule,
-        moment: moment
+        moment: moment,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postDeleteSchedule = (req, res, next) => {
   const id = req.body.id;
   Schedule.findByIdAndDelete(id)
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/mentor/schedule");
     })
-    .catch(er => console.log(err));
+    .catch((er) => console.log(err));
 };
 
 exports.postUpdateSchedule = (req, res, next) => {
@@ -237,57 +239,57 @@ exports.postUpdateSchedule = (req, res, next) => {
 
   var data = {
     name: link,
-    privacy: "public"
+    privacy: "public",
   };
 
   axios
     .post("https://api.daily.co/v1/rooms", data, {
       headers: {
         Authorization:
-          "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13"
-      }
+          "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13",
+      },
     })
-    .then(function(response) {
+    .then(function (response) {
       console.log("-----------------");
       console.log(response.data);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 
   Schedule.findById(id)
-    .then(schedule => {
+    .then((schedule) => {
       schedule.approve = approve;
       schedule.link = link;
       return schedule.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/mentor/schedule");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getMentoring = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.findOne({ mentor: id })
-    .then(schedule => {
+    .then((schedule) => {
       if (!schedule) {
         console.log("No User Found");
       }
       console.log(schedule);
       res.render("back/mentor/mentoring", {
         schedule: schedule,
-        mentor: req.session.mentor._id
+        mentor: req.session.mentor._id,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getLive = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.findOne({ mentor: id })
-    .then(schedule => {
+    .then((schedule) => {
       console.log(schedule);
       if (schedule.approve == false) {
         res.render("layouts/404");
@@ -295,11 +297,11 @@ exports.getLive = (req, res, next) => {
       } else if (schedule.approve == true) {
         res.render("back/mentor/live", {
           schedule: schedule,
-          mentor: req.session.mentor._id
+          mentor: req.session.mentor._id,
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getReview = (req, res, next) => {
@@ -309,42 +311,42 @@ exports.getReview = (req, res, next) => {
     .sort({ _id: -1 })
     .populate("user", "username")
     .exec()
-    .then(review => {
+    .then((review) => {
       console.log(chalk.blueBright(review));
       console.log(review.user);
       Schedule.findOne({
-        $and: [{ mentor: req.session.mentor._id }, { approve: true }]
+        $and: [{ mentor: req.session.mentor._id }, { approve: true }],
       })
-        .then(schedule => {
+        .then((schedule) => {
           // console.log(chalk.yellowBright(schedule.mentor));
           res.render("back/mentor/review", {
             mentor: id,
             review: review,
             moment: moment,
             voca: voca,
-            schedule: schedule
+            schedule: schedule,
           });
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getWithdraw = (req, res, next) => {
   const id = req.session.mentor._id;
 
   Mentor.findById(id)
-    .then(mentor => {
+    .then((mentor) => {
       if (!mentor) {
         console.log("No Mentor");
       } else if (mentor) {
         console.log(chalk.yellow(mentor));
         Payment.findOne({ mentor: id })
-          .then(payment => {
+          .then((payment) => {
             console.log(chalk.blue(payment));
             Withdraw.find({ mentor: id })
               .sort({ _id: -1 })
-              .then(withdraw => {
+              .then((withdraw) => {
                 if (!withdraw) {
                   console.log(chalk.grey("No Withdraw Found"));
                 } else if (withdraw) {
@@ -354,16 +356,16 @@ exports.getWithdraw = (req, res, next) => {
                     voca: voca,
                     mentor: mentor,
                     payment: payment,
-                    withdraw: withdraw
+                    withdraw: withdraw,
                   });
                 }
               })
-              .catch(err => console.log(err));
+              .catch((err) => console.log(err));
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postWithdraw = (req, res, next) => {
@@ -382,23 +384,65 @@ exports.postWithdraw = (req, res, next) => {
     mentor: mentor,
     total: finalTotal,
     note: note,
-    adminincome: adminIncome
+    adminincome: adminIncome,
   });
   withdraw
     .save()
-    .then(result => {
+    .then((result) => {
       console.log(chalk.yellow.inverse(result));
       res.redirect("/mentor/withdraw");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteWithdraw = (req, res, next) => {
   const id = req.body.id;
   Withdraw.findByIdAndDelete(id)
-    .then(withdraw => {
+    .then((withdraw) => {
       console.log(chalk.yellow.inverse(withdraw));
       res.redirect("/mentor/withdraw");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
+};
+
+exports.postChangePassword = (req, res, next) => {
+  const id = req.body.id;
+  const password = req.body.password;
+  const newPassword = req.body.newPassword;
+
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).jsonp(errors.array());
+  } else {
+    console.log(chalk.green.inverse("lulus uji express-validator"));
+  }
+
+  Mentor.findById(id)
+    .then((mentor) => {
+      const oldPassword = mentor.password;
+      bcrypt.compare(password, oldPassword).then((doMatch) => {
+        if (doMatch) {
+          return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            Mentor.findById(id)
+              .then((mentors) => {
+                mentors.password = hashedPassword;
+                return mentors.save().then((result, err) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    res.json(result);
+                    console.log(chalk.yellowBright(result));
+                  }
+                });
+              })
+              .catch((err) => console.log(err));
+          });
+        } else {
+          console.log(chalk.redBright("password not match"));
+          res.status(422).json({ error: "password not match" });
+        }
+      });
+    })
+    .catch((err) => console.log(err));
 };
