@@ -386,3 +386,20 @@ exports.postChangePassword = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.getPayment = (req, res, next) => {
+  const id = req.session.user._id;
+  Payment.find({ user: id })
+    .populate("mentor", "username email")
+    .exec()
+    .then((payment) => {
+      console.log(chalk.yellowBright(payment));
+      res.render("back/user/payment", {
+        moment: moment,
+        voca: voca,
+        payment: payment,
+        user: id,
+      });
+    })
+    .catch((err) => console.log(err));
+};

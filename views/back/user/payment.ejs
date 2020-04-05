@@ -1,0 +1,131 @@
+<%-include('../../layouts/back/user/header.ejs')%>
+<!-- Sidenav -->
+<%-include('../../layouts/back/user/sideNav.ejs')%>
+<!-- Main content -->
+<div class="main-content" id="panel">
+  <!-- Topnav -->
+  <%-include('../../layouts/back/user/topNav.ejs')%>
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header bg-secondary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-primary d-inline-block mb-0">User Payment</h6>
+            <nav
+              aria-label="breadcrumb"
+              class="d-none d-md-inline-block ml-md-4"
+            >
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="#"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-lg-11 mx-auto">
+        <div class="card-wrapper">
+          <!-- CATEGORY TABLE -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">Payment</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <a
+                    href="javascript:void(0);"
+                    class="btn btn-sm btn-neutral tombolTambahData"
+                    data-toggle="modal"
+                    data-target="#modal-form"
+                    >Create</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Light Table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush" id="mytable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Mentor</th>
+                    <th>Email</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <% payment.forEach(paymentData=>{ %>
+                    <td class="table-user">
+                      <b><%= paymentData.mentor.username %> </b>
+                    </td>
+                    <td>
+                      <span class="text-muted"
+                        ><%= paymentData.mentor.email %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-muted"><%= paymentData.total %></span>
+                    </td>
+                    <td>
+                      <span class="text-muted"
+                        ><%= moment(paymentData.datetime).format("LL") %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-muted"
+                        ><%= moment(paymentData.datetime).format("LT") %></span
+                      >
+                    </td>
+                    <td class="text-center">
+                      <span
+                        class="badge badge-success text-dark font-weight-bold"
+                        >SUCCESS</span
+                      >
+                    </td>
+
+                    <td class="table-actions myTd text-center">
+                      <form method="POST" action="/user/review/delete">
+                        <button
+                          type="submit"
+                          onclick="return confirm('Are you sure you want to delete?');"
+                          class="table-action btn btn-sm"
+                          data-toggle="tooltip"
+                          data-original-title="Download Struk"
+                        >
+                          <i class="fas fa-download text-dark"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <%-include('../../layouts/back/user/footer.ejs')%>
+  </div>
+</div>

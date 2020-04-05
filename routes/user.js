@@ -55,6 +55,7 @@ router.post(
 // * Payment
 router.get("/user/checkout/:id", isAuth, userController.getCheckout);
 router.get("/checkout/success/:mentorId", userController.postCheckoutSuccess);
+router.get("/user/payment", isAuth, userController.getPayment);
 
 // * Scheduling
 router.get("/user/schedule", isAuth, userController.getSchedule);
