@@ -210,6 +210,16 @@ exports.postSchedule = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.postDeleteSchedule = (req, res, next) => {
+  const id = req.body.id;
+  Schedule.findByIdAndDelete(id)
+    .then((schedule) => {
+      console.log(chalk.redBright(schedule));
+      res.redirect("/user/schedule");
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getMentoring = (req, res, next) => {
   const id = req.session.user._id;
   Payment.findOne({ user: id })

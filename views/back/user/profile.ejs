@@ -172,14 +172,14 @@
                 <input
                   type="password"
                   class="form-control"
-                  id="myInput"
+                  id="newPassword"
                   placeholder="New Password"
                   name="newPassword"
                 />
                 <input
+                  id="showPass"
                   class="mt-2 ml-1 mr-1"
                   type="checkbox"
-                  onclick="myFunction()"
                 /><small class="text-muted">Show Password</small>
               </div>
               <div class="text-center justify-content-center">
@@ -224,6 +224,7 @@
           <div class="modal-body">
             <div class="container-fluid">
               <form
+                id="formUpdateProfile"
                 action="/user/profile/update?_csrf=<%=csrfToken%>"
                 method="POST"
                 enctype="multipart/form-data"
@@ -349,7 +350,11 @@
                   </div>
                 </div>
                 <div class="modal-footer justify-content-center mx-auto">
-                  <button type="submit" class="btn btn-primary">
+                  <button
+                    id="buttonAlert"
+                    type="submit"
+                    class="btn btn-primary"
+                  >
                     Save changes
                   </button>
                 </div>
@@ -364,6 +369,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
       $(document).ready(function () {
+        $("#buttonAlert").click(function (e) {
+          e.preventDefault();
+          Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "Data Successfully Submit",
+          }).then(function () {
+            $("#formUpdateProfile").submit();
+          });
+        });
+
         $("#user-card").on("click", ".update", function () {
           var id = $(this).data("id");
           console.log(id);
@@ -434,17 +450,15 @@
               Swal.fire("Something wrong!", "Error Occured", "error");
             });
         });
+
+        $("#showPass").change(function () {
+          if ($(this).is(":checked")) {
+            $("#newPassword").attr("type", "text");
+          } else {
+            $("#newPassword").attr("type", "password");
+          }
+        });
       });
-    </script>
-    <script>
-      function myFunction() {
-        var x = document.getElementById("myInput");
-        if (x.type === "password") {
-          x.type = "text";
-        } else {
-          x.type = "password";
-        }
-      }
     </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
