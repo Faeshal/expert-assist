@@ -2,21 +2,21 @@ const mongoose = require("mongoose");
 const MentorSchema = new mongoose.Schema({
   email: {
     type: String,
-    unique: true
+    unique: true,
   },
   password: {
-    type: String
+    type: String,
   },
   title: String,
   username: String,
   level: String,
   profilepicture: {
     type: String,
-    default: "images/default_avatar.png"
+    default: "images/default_avatar.png",
   },
   coverpicture: {
     type: String,
-    default: "images/default_cover.jpg"
+    default: "images/default_cover.jpg",
   },
   bio: String,
   price: String,
@@ -28,8 +28,6 @@ const MentorSchema = new mongoose.Schema({
   job: String,
   expertise: String,
   desc: String,
-  cv: String,
-  sertifikat: String,
   skill: String,
   experience: String,
   portofolio: String,
@@ -37,25 +35,25 @@ const MentorSchema = new mongoose.Schema({
   resetTokenExpiration: Date,
   income: {
     type: Number,
-    default: 0
+    default: 0,
   },
   rating: {
     type: Number,
-    default: 0
+    default: 0,
   },
   examstatus: {
     type: Boolean,
-    default: false
+    default: false,
   },
   mentorstatus: {
     type: String,
-    default: "false"
+    default: "false",
   },
   register: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }]
+  review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

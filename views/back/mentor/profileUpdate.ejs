@@ -33,6 +33,7 @@
       <div class="col-lg-11 card-wrapper">
         <!-- Headings -->
         <form
+          id="formProfile"
           action="/mentor/profile/update?_csrf=<%=csrfToken%>"
           method="POST"
           enctype="multipart/form-data"
@@ -48,7 +49,7 @@
               />
             </div>
             <div class="card-body">
-              <h4 class="text-primary mt-b  border-primary border-bottom">
+              <h4 class="text-primary mt-b border-primary border-bottom">
                 Personal Stuff
               </h4>
               <div class="row py-3 align-items-center">
@@ -113,7 +114,7 @@
                 </div>
               </div>
 
-              <h4 class="text-primary mt-4  border-primary border-bottom">
+              <h4 class="text-primary mt-4 border-primary border-bottom">
                 Contact & Social Media
               </h4>
 
@@ -155,13 +156,13 @@
                   />
                 </div>
               </div>
-              <h4 class="text-primary mt-4  border-primary border-bottom">
+              <h4 class="text-primary mt-4 border-primary border-bottom">
                 Skill & Expertise
               </h4>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-4">
                   <select
-                    class="form-control experience "
+                    class="form-control experience"
                     name="experience"
                     value="<%=mentor.experience%>"
                   >
@@ -211,11 +212,13 @@
                     class="form-control"
                     id="summernote"
                     name="desc"
-                  ><%=mentor.desc%></textarea>
+                  >
+<%=mentor.desc%></textarea
+                  >
                 </div>
               </div>
               <div class="col-sm-12 text-center pt-2 pb-2">
-                <button type="submit" class="btn btn-primary">
+                <button id="buttonAlert" type="button" class="btn btn-primary">
                   Update Profiles
                 </button>
               </div>
@@ -224,6 +227,21 @@
         </form>
       </div>
     </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#buttonAlert").click(function (e) {
+          e.preventDefault();
+          Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "Data Successfully Submit",
+          }).then(function () {
+            $("#formProfile").submit();
+          });
+        });
+      });
+    </script>
 
     <script>
       $("#summernote").summernote({
@@ -239,8 +257,8 @@
           ["table", ["table"]],
           ["insert", ["link", "picture", "video"]],
           ["view", ["fullscreen", "codeview", "help"]],
-          ["height", ["height"]]
-        ]
+          ["height", ["height"]],
+        ],
       });
     </script>
 
