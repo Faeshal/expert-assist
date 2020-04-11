@@ -24,9 +24,9 @@ exports.getRegister = (req, res, next) => {
       email: "",
       password: "",
       username: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
-    validationErrors: []
+    validationErrors: [],
   });
 };
 
@@ -47,15 +47,15 @@ exports.postRegister = (req, res, next) => {
         email: email,
         password: password,
         username: username,
-        confirmPassword: req.body.confirmPassword
+        confirmPassword: req.body.confirmPassword,
       },
-      validationErrors: errors.array()
+      validationErrors: errors.array(),
     });
   }
 
   if (level == "user") {
     User.findOne({ $or: [{ email: email }, { username: username }] })
-      .then(userDoc => {
+      .then((userDoc) => {
         if (userDoc) {
           req.flash(
             "error",
@@ -65,16 +65,16 @@ exports.postRegister = (req, res, next) => {
         } else {
           return bcrypt
             .hash(password, 12)
-            .then(hashedPassword => {
+            .then((hashedPassword) => {
               const user = new User({
                 email: email,
                 password: hashedPassword,
                 username: username,
-                level: level
+                level: level,
               });
               return user.save();
             })
-            .then(result => {
+            .then((result) => {
               res.redirect("/login");
               // const msg = {
               //   to: email,
@@ -87,12 +87,12 @@ exports.postRegister = (req, res, next) => {
             });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   } else if (level == "mentor") {
     Mentor.findOne({ $or: [{ email: email }, { username: username }] })
-      .then(mentorDoc => {
+      .then((mentorDoc) => {
         if (mentorDoc) {
           req.flash(
             "error",
@@ -102,16 +102,16 @@ exports.postRegister = (req, res, next) => {
         } else {
           return bcrypt
             .hash(password, 12)
-            .then(hashedPassword => {
+            .then((hashedPassword) => {
               const mentor = new Mentor({
                 email: email,
                 password: hashedPassword,
                 username: username,
-                level: level
+                level: level,
               });
               return mentor.save();
             })
-            .then(result => {
+            .then((result) => {
               res.redirect("/login");
               // const msg = {
               //   to: email,
@@ -124,7 +124,7 @@ exports.postRegister = (req, res, next) => {
             });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -142,9 +142,9 @@ exports.getLogin = (req, res, next) => {
     errorMessage: message,
     oldInput: {
       email: "",
-      password: ""
+      password: "",
     },
-    validationErrors: []
+    validationErrors: [],
   });
 };
 
@@ -161,32 +161,32 @@ exports.postLogin = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
       oldInput: {
         email: email,
-        password: password
+        password: password,
       },
-      validationErrors: errors.array()
+      validationErrors: errors.array(),
     });
   }
   if (level == "user") {
     User.findOne({ email: email })
-      .then(user => {
+      .then((user) => {
         if (!user) {
           return res.status(422).render("front/login", {
             pageTitle: "login",
             errorMessage: "Invalid email or password",
             oldInput: {
               email: email,
-              password: password
+              password: password,
             },
-            validationErrors: []
+            validationErrors: [],
           });
         }
         bcrypt
           .compare(password, user.password)
-          .then(doMatch => {
+          .then((doMatch) => {
             if (doMatch) {
               req.session.isLoggedIn = true;
               req.session.user = user;
-              return req.session.save(err => {
+              return req.session.save((err) => {
                 console.log(err);
                 res.redirect("/user/dashboard");
               });
@@ -196,38 +196,38 @@ exports.postLogin = (req, res, next) => {
               errorMessage: "Invalid email or password",
               oldInput: {
                 email: email,
-                password: password
+                password: password,
               },
-              validationErrors: []
+              validationErrors: [],
             });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
             res.redirect("/login");
           });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   } else if (level == "mentor") {
     Mentor.findOne({ email: email })
-      .then(mentor => {
+      .then((mentor) => {
         if (!mentor) {
           return res.status(422).render("front/login", {
             pageTitle: "login",
             errorMessage: "Invalid email or password",
             oldInput: {
               email: email,
-              password: password
+              password: password,
             },
-            validationErrors: []
+            validationErrors: [],
           });
         }
         bcrypt
           .compare(password, mentor.password)
-          .then(doMatch => {
+          .then((doMatch) => {
             if (doMatch) {
               req.session.isLoggedIn = true;
               req.session.mentor = mentor;
-              return req.session.save(err => {
+              return req.session.save((err) => {
                 console.log(err);
                 res.redirect("/mentor/dashboard");
               });
@@ -237,17 +237,17 @@ exports.postLogin = (req, res, next) => {
               errorMessage: "Invalid email or password",
               oldInput: {
                 email: email,
-                password: password
+                password: password,
               },
-              validationErrors: []
+              validationErrors: [],
             });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
             res.redirect("/login");
           });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 };
 
@@ -260,7 +260,8 @@ exports.getRegisterAdmin = (req, res, next) => {
   }
   res.render("front/registerAdmin", {
     path: "front/registerAdmin",
-    errorMessage: message
+    errorMessage: message,
+    pageTitle: "Register Admin",
   });
 };
 
@@ -273,7 +274,7 @@ exports.postRegisterAdmin = (req, res, next) => {
     res.redirect("/register");
   } else if (securityCode == "1997") {
     Admin.findOne({ email: email })
-      .then(adminDoc => {
+      .then((adminDoc) => {
         if (adminDoc) {
           req.flash(
             "error",
@@ -283,19 +284,19 @@ exports.postRegisterAdmin = (req, res, next) => {
         }
         return bcrypt
           .hash(password, 12)
-          .then(hashedPassword => {
+          .then((hashedPassword) => {
             const admin = new Admin({
               email: email,
               password: hashedPassword,
-              level: level
+              level: level,
             });
             return admin.save();
           })
-          .then(result => {
+          .then((result) => {
             res.redirect("/loginAdmin");
           });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -310,7 +311,7 @@ exports.getLoginAdmin = (req, res, next) => {
   }
   res.render("front/loginAdmin", {
     errorMessage: message,
-    pageTitle: "Login"
+    pageTitle: "Login",
   });
 };
 
@@ -318,7 +319,7 @@ exports.postLoginAdmin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   Admin.findOne({ email: email })
-    .then(admin => {
+    .then((admin) => {
       if (!admin) {
         req.flash("error", "Invalid email or password.");
         return res.redirect("/loginAdmin");
@@ -326,11 +327,11 @@ exports.postLoginAdmin = (req, res, next) => {
       console.log(chalk.blue(admin));
       bcrypt
         .compare(password, admin.password)
-        .then(doMatch => {
+        .then((doMatch) => {
           if (doMatch) {
             req.session.isLoggedIn = true;
             req.session.admin = admin;
-            return req.session.save(err => {
+            return req.session.save((err) => {
               console.log(err);
               res.redirect("/admin/dashboard");
             });
@@ -338,16 +339,16 @@ exports.postLoginAdmin = (req, res, next) => {
           req.flash("error", "Invalid email or password.");
           res.redirect("/loginAdmin");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           res.redirect("/loginAdmin");
         });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postLogout = (req, res, next) => {
-  req.session.destroy(err => {
+  req.session.destroy((err) => {
     console.log(err);
     res.redirect("/");
   });
@@ -362,7 +363,7 @@ exports.getReset = (req, res, next) => {
   }
   res.render("front/reset", {
     errorMessage: message,
-    pageTitle: "Reset Password"
+    pageTitle: "Reset Password",
   });
 };
 
@@ -374,7 +375,7 @@ exports.postReset = (req, res, next) => {
     }
     const token = buffer.toString("hex");
     User.findOne({ email: req.body.email })
-      .then(user => {
+      .then((user) => {
         if (!user) {
           req.flash("error", "No account with that email found.");
           return res.redirect("/reset");
@@ -383,7 +384,7 @@ exports.postReset = (req, res, next) => {
         user.resetTokenExpiration = Date.now() + 3600000;
         return user.save();
       })
-      .then(result => {
+      .then((result) => {
         res.redirect("/");
         const msg = {
           to: req.body.email,
@@ -391,11 +392,11 @@ exports.postReset = (req, res, next) => {
           subject: "Password reset",
           text: "Congratulation & Welcome to the Club",
           html: ` <p>You requested a password reset</p>
-          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`
+          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`,
         };
         return sgMail.send(msg);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   });
@@ -405,9 +406,9 @@ exports.getNewPassword = (req, res, next) => {
   const token = req.params.token;
   User.findOne({
     resetToken: token,
-    resetTokenExpiration: { $gt: Date.now() }
+    resetTokenExpiration: { $gt: Date.now() },
   })
-    .then(user => {
+    .then((user) => {
       let message = req.flash("error");
       if (message.length > 0) {
         message = message[0];
@@ -418,10 +419,10 @@ exports.getNewPassword = (req, res, next) => {
         errorMessage: message,
         userId: user._id.toString(),
         passwordToken: token,
-        pageTitle: "Reset Password"
+        pageTitle: "Reset Password",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postNewPassword = (req, res, next) => {
@@ -433,22 +434,22 @@ exports.postNewPassword = (req, res, next) => {
   User.findOne({
     resetToken: passwordToken,
     resetTokenExpiration: { $gt: Date.now() },
-    _id: userId
+    _id: userId,
   })
-    .then(user => {
+    .then((user) => {
       resetUser = user;
       return bcrypt.hash(newPassword, 12);
     })
-    .then(hashedPassword => {
+    .then((hashedPassword) => {
       resetUser.password = hashedPassword;
       resetUser.resetToken = undefined;
       resetUser.resetTokenExpiration = undefined;
       return resetUser.save();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/login");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 };
