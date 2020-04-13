@@ -57,6 +57,24 @@
               </div>
             </div>
 
+            <% if (review=="" || !review) { %>
+            <div class="row text-center justify-content-center">
+              <div class="col">
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/no-review.svg"
+                  alt=""
+                  style="width: 30%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Anda belum memberi review apapun , karena belum melakukan
+                  transaksi
+                </h4>
+              </div>
+            </div>
+            <% }else{ %>
+
             <!-- Light Table -->
             <div class="table-responsive">
               <table class="table align-items-center table-flush" id="mytable">
@@ -91,7 +109,7 @@
                     </td>
                     <td>
                       <div
-                        style="font-size: 17px;color: orange;"
+                        style="font-size: 17px; color: orange;"
                         class="rate mx-auto justify-content-center"
                         data-rate-value="<%= reviewData.rating%>"
                       ></div>
@@ -136,6 +154,7 @@
                 </tbody>
               </table>
             </div>
+            <% } %>
           </div>
         </div>
       </div>
@@ -152,7 +171,7 @@
         aria-labelledby="modal-form"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal- modal-dialog-centered " role="document">
+        <div class="modal-dialog modal- modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-body p-0">
               <div class="card bg-secondary border-0 mb-0">
@@ -185,8 +204,8 @@
                         />
                         <input id="rating" type="hidden" name="rating" />
                         <div
-                          style="font-size: 30px;color: orange;"
-                          class=" ratePost mx-auto justify-content-center"
+                          style="font-size: 30px; color: orange;"
+                          class="ratePost mx-auto justify-content-center"
                         ></div>
                       </div>
                     </div>
@@ -215,8 +234,6 @@
         </div>
       </div>
     </div>
-    <% }else{ %>
-    <h4 class="text-center">No Review Found</h4>
     <% } %>
 
     <!-- Footer -->
@@ -226,15 +243,15 @@
 
 <!-- Jqeury -->
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     let options1 = {
       max_value: 10,
-      readonly: true
+      readonly: true,
     };
     $(".rate").rate(options1);
 
     // ** Create Button
-    $(".tombolTambahData").on("click", function() {
+    $(".tombolTambahData").on("click", function () {
       $("#formModalLabel").html("Create review");
       $(".button-dynamic button[type=submit]").html("Submit");
       $(".content").val("");
@@ -247,12 +264,12 @@
         max_value: 10,
         step_size: 1,
         initial_value: 0,
-        update_input_field_name: $("#rating")
+        update_input_field_name: $("#rating"),
       });
     });
 
     // ** Edit Button
-    $(".myTd").on("click", ".edit", function() {
+    $(".myTd").on("click", ".edit", function () {
       $("#formModalLabel").html("Update review");
       $(".button-dynamic button[type=submit]").html("Update");
       var id = $(this).data("id");
@@ -269,7 +286,7 @@
         max_value: 10,
         step_size: 1,
         initial_value: 0,
-        update_input_field_name: $("#rating")
+        update_input_field_name: $("#rating"),
       });
     });
   });
