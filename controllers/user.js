@@ -16,8 +16,12 @@ const bcrypt = require("bcryptjs");
 exports.getDashboard = (req, res, next) => {
   User.findById(req.session.user)
     .then((user) => {
+      const message = req.flash("message", "Flash is back!");
+      console.log(chalk.yellow(message));
+
       res.render("back/user/dashboard", {
         user: user,
+        message: message,
       });
     })
     .catch((err) => console.log(err));
