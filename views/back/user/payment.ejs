@@ -120,11 +120,11 @@
                     </td>
 
                     <td class="table-actions myTd text-center">
-                      <form method="POST" action="/user/review/delete">
+                      <form>
                         <button
-                          type="submit"
-                          onclick="return confirm('Are you sure you want to delete?');"
-                          class="table-action btn btn-sm"
+                          id="<%=paymentData._id%>"
+                          type="button"
+                          class="pdfButton table-action btn btn-sm"
                           data-toggle="tooltip"
                           data-original-title="Download Struk"
                         >
@@ -145,5 +145,19 @@
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
+    <!-- PDF Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+    <script type="text/javascript">
+      var doc = new jsPDF();
+
+      $(".pdfButton").click(function () {
+        alert(this.id);
+        doc.text(20, 20, "Hello Dunia");
+        doc.text();
+        doc.line(35, 30, 100, 30);
+        doc.text(20, 30, "This is client-side PDF");
+        doc.output("dataurlnewwindow");
+      });
+    </script>
   </div>
 </div>
