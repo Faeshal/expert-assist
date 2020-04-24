@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // * Session & Cookie
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
-  collection: "sessions"
+  collection: "sessions",
 });
 
 const csrfProtection = csrf();
@@ -46,7 +46,7 @@ app.use(
     secret: "my secret",
     resave: false,
     saveUninitialized: false,
-    store: store
+    store: store,
   })
 );
 
@@ -80,20 +80,54 @@ app.get("*", (req, res, next) => {
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
 });
 
-mongoose.connection.on("connected", function() {
+mongoose.connection.on("connected", function () {
   console.log(
     chalk.blueBright("MongoDB connected to " + process.env.MONGO_URI)
   );
 });
 
-mongoose.connection.on("error", function(err) {
+mongoose.connection.on("error", function (err) {
   console.log(chalk.redBright("MongoDB connection error: " + err));
 });
 
 // * Server Listen
-app.listen(PORT, () => {
-  console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(chalk.red.inverse(`Error occured : ${err}`));
+  } else {
+    console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
+  }
 });
+
+// * Heathcheck TINI
+// quit on ctrl-c when running docker in terminal
+process.on("SIGINT", function onSigint() {
+  console.info(
+    "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// quit properly on docker stop
+process.on("SIGTERM", function onSigterm() {
+  console.info(
+    "Got SIGTERM (docker container stop). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// shut down server
+function shutdown() {
+  server.close(function onServerClosed(err) {
+    if (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+    process.exit();
+  });
+}
