@@ -4,28 +4,28 @@ const chalk = require("chalk");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })
-    .then(admin => {
+    .then((admin) => {
       let session = req.session;
       if (!admin) {
         console.log("Admin Not Found");
         res.render("layouts/500");
       } else {
         Mentor.find({
-          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }]
+          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
         })
-          .then(mentor => {
+          .then((mentor) => {
             // console.log(session.mentor.email);
             // console.log(session.mentor);
             res.render("front/index", {
               admin: admin,
               session: session,
-              mentor: mentor
+              mentor: mentor,
             });
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getAllBlog = (req, res, next) => {
@@ -40,14 +40,14 @@ exports.getAllBlog = (req, res, next) => {
             input: "$blog",
             as: "blog",
             cond: {
-              $eq: ["$$blog.status", true]
-            }
-          }
-        }
-      }
-    }
+              $eq: ["$$blog.status", true],
+            },
+          },
+        },
+      },
+    },
   ])
-    .then(admins => {
+    .then((admins) => {
       if (!admins) {
         console.log("No Admins Data");
         res.redirect("/");
@@ -55,10 +55,10 @@ exports.getAllBlog = (req, res, next) => {
         console.log(admins);
         console.log("===========Convert To Object Below=============");
         var after = {};
-        admins.forEach(function(obj) {
+        admins.forEach(function (obj) {
           // obj here is the element of the array, i.e. object
           // Looping over all the keys of the object
-          Object.keys(obj).forEach(function(key) {
+          Object.keys(obj).forEach(function (key) {
             // key here is the key of the object
             after[key] = obj[key];
           });
@@ -69,44 +69,44 @@ exports.getAllBlog = (req, res, next) => {
         var blog = after.blog;
         res.render("front/blog", {
           admin: admins,
-          blog: blog
+          blog: blog,
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getDetailBlog = (req, res, next) => {
   id = req.params.id;
   Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
-    .then(admins => {
+    .then((admins) => {
       var blog = admins.blog[0];
       res.render("front/blogdetail", {
-        blog: blog
+        blog: blog,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
   console.log(id);
   Mentor.findOne({ _id: id })
-    .then(mentor => {
+    .then((mentor) => {
       res.render("front/mentorDetail", {
-        mentor: mentor
+        mentor: mentor,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getMentorList = (req, res, next) => {
   Mentor.find()
-    .then(mentor => {
+    .then((mentor) => {
       console.log(chalk.yellowBright(mentor));
       res.render("front/mentorList", {
-        mentor: mentor
+        mentor: mentor,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
