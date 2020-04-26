@@ -42,7 +42,9 @@ exports.getProfile = (req, res, next) => {
         mentor: mentor,
       });
     })
-    .catch();
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getUpdateProfile = (req, res, next) => {
@@ -128,7 +130,9 @@ exports.getExam = (req, res, next) => {
   console.log(req.session.mentor);
   Admin.findOne({ level: "admin" })
     .then((admin) => {
+      // ! Bug - Handle eror , kalau category exam belum di set admin
       console.log(admin.category[0].name);
+
       if (!admin) {
         console.log("Admin not found");
         res.render("layouts/500");
@@ -140,10 +144,14 @@ exports.getExam = (req, res, next) => {
               admin: admin,
             });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+          });
       }
     })
-    .catch();
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postExam = (req, res, next) => {

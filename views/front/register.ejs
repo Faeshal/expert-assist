@@ -11,7 +11,7 @@
           <div class="col-md-6">
             <div class="login_page bg-white shadow rounded p-4">
               <div class="text-center">
-                <h4 class="mb-4">Register</h4>
+                <h4 class="mb-4">REGISTER</h4>
               </div>
               <% if (errorMessage) { %>
               <div class="alert alert-danger text-center mb-3" role="alert">
@@ -28,10 +28,10 @@
                   <div class="col-md-6">
                     <div class="form-group position-relative">
                       <label
-                        >Your Email <span class="text-danger">*</span></label
+                        >Email <span class="text-danger">*</span></label
                       >
                       <input type="email" 
-                       class="<%= validationErrors.find(e => e.param === "email") ? "form-control border border-danger" : "form-control" %>" placeholder="Email"
+                       class="<%= validationErrors.find(e => e.param === "email") ? "form-control border border-danger" : "form-control" %>" 
                       name="email" value="<%= oldInput.email %>" />
                     </div>
                   </div>
@@ -41,7 +41,7 @@
                       <input
                         type="text"
                         class="<%= validationErrors.find(e => e.param === "username") ? "form-control border border-danger" : "form-control" %>" 
-                        placeholder="Mr.xxx"
+                       
                         name="username"
                         value="<%= oldInput.username %>"
                       />
@@ -52,7 +52,7 @@
                       <label>Password <span class="text-danger">*</span></label>
                       <input type="password" 
                       class="<%= validationErrors.find(e => e.param === "password") ? "form-control border border-danger" : "form-control" %>" 
-                      placeholder="Password"
+                     
                       name="password" value="<%= oldInput.password %>" />
                     </div>
                   </div>
@@ -65,7 +65,7 @@
                       <input
                         type="password"
                         class="<%= validationErrors.find(e => e.param === "confirmPassword") ? "form-control border border-danger" : "form-control" %>" 
-                        placeholder="Confirm Password"
+                     
                         name="confirmPassword"
                         value="<%= oldInput.confirmPassword %>"
                       />
