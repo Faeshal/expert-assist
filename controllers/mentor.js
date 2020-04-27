@@ -6,6 +6,7 @@ const Schedule = require("../models/Schedule");
 const Withdraw = require("../models/Withdraw");
 const fileHelper = require("../util/file");
 const moment = require("moment");
+const currency = require("currency.js");
 const axios = require("axios");
 const chalk = require("chalk");
 const bcrypt = require("bcryptjs");
@@ -18,6 +19,7 @@ exports.getDashboard = (req, res, next) => {
     .then((mentor) => {
       res.render("back/mentor/dashboard", {
         mentor: mentor,
+        currency:currency
       });
     })
     .catch((err) => console.log(err));
@@ -45,6 +47,23 @@ exports.getProfile = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.getPayment = (req, res, next) => {
+  const id = req.session.mentor._id;
+  Payment.find({ mentor: id })
+    .populate("user", "username email")
+    .then((payment) => {
+      console.log(chalk.greenBright.inverse(payment));
+      res.render("back/mentor/payment", {
+        mentor: id,
+        payment: payment,
+        voca: voca,
+        moment: moment,
+        currency: currency,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getUpdateProfile = (req, res, next) => {

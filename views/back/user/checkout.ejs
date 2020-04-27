@@ -7,8 +7,8 @@
       <div class="header-body text-center mb-7">
         <div class="row justify-content-center">
           <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-            <h1 class="text-white">Lock screen</h1>
-            <p class="text-lead text-white">Better to be safe than sorry.</p>
+            <h1 class="text-white">Payment System</h1>
+            <p class="text-lead text-white">Secure is the first choice</p>
           </div>
         </div>
       </div>
@@ -45,7 +45,8 @@
             <div class="text-center mb-4">
               <h3>Payment</h3>
             </div>
-            <form>
+            <form method="GET">
+             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <div class="form-group">
                 <div
                   class="input-group input-group-merge input-group-alternative"
@@ -80,10 +81,27 @@
                   />
                 </div>
               </div>
+              <div class="form-group">
+                <div
+                  class="input-group input-group-merge input-group-alternative"
+                >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"
+                      ><i class="ni ni-lock-circle-open"></i
+                    ></span>
+                  </div>
+                  <input
+                    class="form-control text-dark"
+                    type="number"
+                    name="duration"
+                    placeholder="duration"
+                  />
+                </div>
+              </div>
               <div class="text-center">
                 <button
                   id="order-btn"
-                  type="button"
+                  type="submit"
                   class="btn btn-primary mt-2"
                 >
                   Pay

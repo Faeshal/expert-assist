@@ -67,6 +67,9 @@ router.post(
   mentorController.postChangePassword
 );
 
+// * Payment
+router.get("/mentor/payment", isAuth, mentorController.getPayment);
+
 // * Exam
 router.get("/mentor/exam", isAuth, mentorController.getExam);
 router.post("/mentor/exam", isAuth, mentorController.postExam);

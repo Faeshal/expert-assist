@@ -76,14 +76,19 @@ exports.updateProfile = (req, res, next) => {
 
 exports.getCheckout = (req, res, next) => {
   const id = req.params.id;
+  const duration = req.body.duration;
+  console.log("===============");
+  console.log(duration);
   let mentorUsername;
   let mentorPrice = 0;
+  let priceConvert = 0;
   let mentorId;
   res.locals.mentorPrice = mentorPrice;
   Mentor.findById(id)
     .then((mentor) => {
-      mentorUsername = mentor.username;
       mentorPrice = mentor.price;
+      priceConvert = mentorPrice * 100;
+      mentorUsername = mentor.username;
       mentorId = mentor._id;
       console.log("------------------");
       console.log(mentorId);
@@ -95,11 +100,11 @@ exports.getCheckout = (req, res, next) => {
         payment_method_types: ["card"],
         line_items: [
           {
-            name: mentor.username,
-            description: "User Payment",
-            amount: mentor.price,
-            currency: "usd",
-            quantity: 1,
+            name: "Mentor Payment",
+            description: "Expert-Assist Payment System",
+            amount: priceConvert,
+            currency: "idr",
+            quantity: 2,
           },
         ],
         success_url:
@@ -125,8 +130,8 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postCheckoutSuccess = (req, res, next) => {
   const mentorId = req.params.mentorId;
-  console.log("-------MENTOR_ID--------");
-  console.log(mentorId);
+  // console.log("-------MENTOR_ID--------");
+  // console.log(mentorId);
   const userId = req.session.user._id;
   // ** Save Payment From Stripe To Database
   Mentor.findOne({ _id: mentorId })
@@ -146,9 +151,9 @@ exports.postCheckoutSuccess = (req, res, next) => {
         .sort({ _id: -1 })
         .limit(1)
         .then((payment) => {
-          console.log(chalk.yellowBright.inverse(payment));
+          // console.log(chalk.yellowBright.inverse(payment));
           let total = payment.total;
-          console.log("-----------------");
+          // console.log("-----------------");
           Mentor.findById(mentorId)
             .then((mentor) => {
               // ** sum the last payment with intial income from mentor collection
@@ -157,7 +162,7 @@ exports.postCheckoutSuccess = (req, res, next) => {
               return mentor.save();
             })
             .then((mentorIncome) => {
-              res.redirect("/");
+              res.redirect("/user/schedule");
             })
             .catch((err) => console.log(err));
         })
