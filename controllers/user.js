@@ -104,7 +104,7 @@ exports.getCheckout = (req, res, next) => {
             description: "Expert-Assist Payment System",
             amount: priceConvert,
             currency: "idr",
-            quantity: 2,
+            quantity: 1,
           },
         ],
         success_url:

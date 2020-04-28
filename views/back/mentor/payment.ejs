@@ -81,7 +81,8 @@
                   <tr>
                     <th>User</th>
                     <th>Email</th>
-                    <th>Total</th>
+                    <th class="text-center">Hour</th>
+                    <th class="text-center">Total</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th class="text-center">Status</th>
@@ -98,7 +99,10 @@
                         ><%= paymentData.user.email %></span
                       >
                     </td>
-                    <td>
+                    <td class="text-center">
+                      <span><%= paymentData.duration %></span>
+                    </td>
+                    <td class="text-center">
                       <span class="text-muted"
                         >Rp.<%= currency(paymentData.total, { separator: ','
                         ,precision: 0 }).format()%></span
