@@ -19,7 +19,7 @@ exports.getDashboard = (req, res, next) => {
     .then((mentor) => {
       res.render("back/mentor/dashboard", {
         mentor: mentor,
-        currency:currency
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));
@@ -55,12 +55,14 @@ exports.getPayment = (req, res, next) => {
     .populate("user", "username email")
     .then((payment) => {
       console.log(chalk.greenBright.inverse(payment));
-      res.render("back/mentor/payment", {
-        mentor: id,
-        payment: payment,
-        voca: voca,
-        moment: moment,
-        currency: currency,
+      Mentor.findById(id).then((mentor) => {
+        res.render("back/mentor/payment", {
+          mentor: mentor,
+          payment: payment,
+          voca: voca,
+          moment: moment,
+          currency: currency,
+        });
       });
     })
     .catch((err) => console.log(err));
@@ -240,10 +242,12 @@ exports.getSchedule = (req, res, next) => {
     .populate({ path: "user", select: ["username", "email"] })
     .then((schedule) => {
       console.log(schedule);
-      res.render("back/mentor/schedule", {
-        mentor: req.session.mentor._id,
-        schedule: schedule,
-        moment: moment,
+      Mentor.findById(id).then((mentor) => {
+        res.render("back/mentor/schedule", {
+          mentor: mentor,
+          schedule: schedule,
+          moment: moment,
+        });
       });
     })
     .catch((err) => console.log(err));
@@ -345,13 +349,14 @@ exports.getReview = (req, res, next) => {
         $and: [{ mentor: req.session.mentor._id }, { approve: true }],
       })
         .then((schedule) => {
-          // console.log(chalk.yellowBright(schedule.mentor));
-          res.render("back/mentor/review", {
-            mentor: id,
-            review: review,
-            moment: moment,
-            voca: voca,
-            schedule: schedule,
+          Mentor.findById(id).then((mentor) => {
+            res.render("back/mentor/review", {
+              mentor: mentor,
+              review: review,
+              moment: moment,
+              voca: voca,
+              schedule: schedule,
+            });
           });
         })
         .catch((err) => console.log(err));
@@ -384,6 +389,7 @@ exports.getWithdraw = (req, res, next) => {
                     mentor: mentor,
                     payment: payment,
                     withdraw: withdraw,
+                    currency: currency,
                   });
                 }
               })

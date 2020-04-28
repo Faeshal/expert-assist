@@ -50,7 +50,7 @@
           <div class="card">
             <!-- Card header -->
             <div class="card-header">
-              <h3 class="mb-0">Input groups</h3>
+              <h3 class="mb-0">Input Request</h3>
             </div>
             <!-- Card body -->
             <div class="card-body">
@@ -82,12 +82,13 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="income">Your Income</label>
+                      
                       <input
-                        type="number"
+                        type="text"
                         class="form-control form-control-sm border-success bg-secondary font-weight-bold text-dark"
                         id="income"
                         readonly="true"
-                        value="<%=mentor.income%>"
+                        value="Rp.<%=currency(mentor.income,{separator:",",precision:0}).format()  %>"
                       />
                       <small class="form-text text-muted"
                         >Real Income = Withdraw - Tax</small
@@ -207,7 +208,7 @@
                     class="<%= withdrawData.status == true ? 'bg-white' : 'bg-white' %>"
                   >
                     <td class="table-user">
-                      <b><%= withdrawData.total %> </b>
+                      <b><%=currency(withdrawData.total,{separator:",",precision:0}).format() %> </b>
                     </td>
                     <td>
                       <span class="text-muted"
@@ -222,11 +223,11 @@
                     <td class="table-status text-center">
                       <% if (withdrawData.status==false) { %>
                       <span class="badge badge-danger text-dark pl-2 pr-2"
-                        ><%= withdrawData.status %>
+                        >Waiting
                       </span>
                       <% } else { %>
                       <span class="badge badge-success text-dark pl-2 pr-2"
-                        ><%= withdrawData.status %>
+                        >Finish
                       </span>
                       <% } %>
                     </td>
