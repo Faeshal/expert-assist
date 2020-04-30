@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
+const currency = require("currency.js");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })
@@ -95,6 +96,7 @@ exports.getDetailMentor = (req, res, next) => {
     .then((mentor) => {
       res.render("front/mentorDetail", {
         mentor: mentor,
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));
@@ -106,6 +108,7 @@ exports.getMentorList = (req, res, next) => {
       console.log(chalk.yellowBright(mentor));
       res.render("front/mentorList", {
         mentor: mentor,
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));

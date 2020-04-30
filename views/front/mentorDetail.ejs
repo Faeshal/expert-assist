@@ -7,22 +7,14 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
-          <h4 class="text-uppercase title mb-4"><%= mentor.username %></h4>
-          <ul class="page-next d-inline-block mb-0">
-            <li>
-              <a href="index.html" class="text-uppercase font-weight-bold"
-                >Home</a
-              >
-            </li>
-            <li>
-              <a href="#" class="text-uppercase font-weight-bold">Jobs</a>
-            </li>
-            <li>
-              <span class="text-uppercase text-white font-weight-bold"
-                >Job Detail</span
-              >
-            </li>
-          </ul>
+          <h3 class="text-uppercase title mb-4"><%= mentor.username %></h3>
+          <button
+            class="btn btn-sm btn-light"
+            data-toggle="modal"
+            data-target="#paymentModal"
+          >
+            Hire Mentor
+          </button>
         </div>
       </div>
     </div>
@@ -47,7 +39,7 @@
               src="/"
               alt=""
               class="img-fluid float-left mr-md-3 mr-2 mx-auto d-block"
-              style="width:70%;"
+              style="width: 70%;"
             />
             <div class="job-detail-com-desc overflow-hidden d-block">
               <h4 class="mb-2">
@@ -406,9 +398,89 @@
 </section>
 <!-- JOB DETAILS END -->
 
-
-<!-- modals -->
-<!-- Modal -->
+<!-- Payment Modals -->
+<div
+  class="modal fade"
+  id="paymentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="paymentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header mx-auto">
+        <h5 class="modal-title" id="paymentModalLabel">
+          PAYMENT BOX
+        </h5>
+        <hr />
+      </div>
+      <div class="modal-body">
+        <div class="mx-auto justify-content-center text-center">
+          <img
+            class="img-fluid mt-1 mb-3"
+            alt="Responsive image"
+            src="../../front/images/paymentbox.svg"
+            alt=""
+            style="width: 75%;"
+          />
+        </div>
+        <div
+          class="alert alert-danger"
+          role="alert"
+          id="error-group"
+          style="display: none;"
+        >
+          <ul id="errors"></ul>
+        </div>
+        <form method="POST" action="/checkout">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Mentor</label>
+              <input
+                type="text"
+                class="form-control font-weight-bold"
+                value="<%=mentor.username%>"
+                readonly
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword4">Price/hour</label>
+              <input
+                type="text"
+                class="form-control font-weight-bold"
+                value="<%=mentor.price%>"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1"
+              >Input Mentoring Duration in hours</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              name="duration"
+              min="1"
+              max="10"
+              required
+            />
+          </div>
+          <div class="text-center justify-content-center">
+            <button
+              id="paymentModal"
+              type="submit"
+              class="btn btn-primary mt-2 mx-auto"
+            >
+              CHECKOUT
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Button -->
 <!-- <script type="text/javascript">
