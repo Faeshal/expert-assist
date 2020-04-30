@@ -93,7 +93,6 @@ exports.getCheckout = (req, res, next) => {
       console.log("------------------");
       console.log(mentorId);
       console.log("------------------");
-      // res.locals.mentorId = mentorId;
 
       // *Stripe
       return stripe.checkout.sessions.create({
@@ -130,8 +129,6 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postCheckoutSuccess = (req, res, next) => {
   const mentorId = req.params.mentorId;
-  // console.log("-------MENTOR_ID--------");
-  // console.log(mentorId);
   const userId = req.session.user._id;
   // ** Save Payment From Stripe To Database
   Mentor.findOne({ _id: mentorId })
