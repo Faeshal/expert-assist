@@ -81,9 +81,9 @@
                   <tr>
                     <th>Mentor</th>
                     <th>Email</th>
-                    <th>Price</th>
-                    <th>Duration</th>
-                    <th>Total</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Duration</th>
+                    <th class="text-center">Total</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th class="text-center">Status</th>
@@ -102,7 +102,10 @@
                       >
                     </td>
                     <td>
-                      <span class="text-muted"><%= paymentData.price %></span>
+                      <span class="text-dark"
+                        >Rp.<%=currency
+                        (paymentData.price,{precision:0}).format() %></span
+                      >
                     </td>
                     <td class="text-center">
                       <span class="text-dark font-weight-bold"
@@ -110,7 +113,11 @@
                       >
                     </td>
                     <td>
-                      <span class="text-muted"><%= paymentData.total %></span>
+                      <span class="text-dark"
+                        >Rp.<%=
+                        currency(paymentData.total,{precision:0}).format()
+                        %></span
+                      >
                     </td>
                     <td>
                       <span class="text-muted"

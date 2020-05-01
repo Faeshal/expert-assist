@@ -9,6 +9,7 @@ const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const axios = require("axios");
 const voca = require("voca");
+const currency = require("currency.js");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
@@ -431,6 +432,7 @@ exports.getPayment = (req, res, next) => {
         voca: voca,
         payment: payment,
         user: id,
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));

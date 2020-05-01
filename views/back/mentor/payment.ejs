@@ -35,7 +35,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-11 mx-auto">
+      <div class="col-lg-12 mx-auto">
         <div class="card-wrapper">
           <!-- CATEGORY TABLE -->
           <div class="card">
@@ -81,6 +81,7 @@
                   <tr>
                     <th>User</th>
                     <th>Email</th>
+                    <th class="text-center">Our Price</th>
                     <th class="text-center">Hour</th>
                     <th class="text-center">Total</th>
                     <th>Date</th>
@@ -100,12 +101,18 @@
                       >
                     </td>
                     <td class="text-center">
+                      <span class="text-dark"
+                        >Rp.<%= currency(paymentData.price, { precision: 0
+                        }).format()%></span
+                      >
+                    </td>
+                    <td class="text-center font-weight-bold">
                       <span><%= paymentData.duration %></span>
                     </td>
                     <td class="text-center">
-                      <span class="text-muted"
-                        >Rp.<%= currency(paymentData.total, { separator: ','
-                        ,precision: 0 }).format()%></span
+                      <span class="text-dark"
+                        >Rp.<%= currency(paymentData.total, { precision: 0
+                        }).format()%></span
                       >
                     </td>
                     <td>
