@@ -51,7 +51,7 @@ exports.getProfile = (req, res, next) => {
 
 exports.getPayment = (req, res, next) => {
   const id = req.session.mentor._id;
-  Payment.find({ mentor: id })
+  Payment.find({ $and: [{ mentor: id }, { status: true }] })
     .populate("user", "username email")
     .then((payment) => {
       console.log(chalk.greenBright.inverse(payment));
