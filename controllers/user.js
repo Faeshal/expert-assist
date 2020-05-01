@@ -89,30 +89,19 @@ exports.postPayment = (req, res, next) => {
     .save()
     .then((result) => {
       console.log(chalk.yellow.inverse(result));
-      res.redirect("/stripe");
+      res.redirect("/stripe/" + payment._id);
     })
     .catch((err) => console.log(err));
 };
 
-exports.getCheckout = (req, res, next) => {
+exports.getStripe = (req, res, next) => {
   const id = req.params.id;
-  const duration = req.body.duration;
-  console.log("===============");
-  console.log(duration);
-  let mentorUsername;
-  let mentorPrice = 0;
-  let priceConvert = 0;
-  let mentorId;
-  res.locals.mentorPrice = mentorPrice;
-  Mentor.findById(id)
-    .then((mentor) => {
-      mentorPrice = mentor.price;
-      priceConvert = mentorPrice * 100;
-      mentorUsername = mentor.username;
-      mentorId = mentor._id;
-      console.log("------------------");
-      console.log(mentorId);
-      console.log("------------------");
+  Payment.findById(id)
+    .then((payment) => {
+      console.log(chalk.blueBright.inverse(payment));
+      const price = payment.total;
+      const priceConvert = price * 100;
+      const duration = payment.duration;
 
       // *Stripe
       return stripe.checkout.sessions.create({
@@ -123,25 +112,51 @@ exports.getCheckout = (req, res, next) => {
             description: "Expert-Assist Payment System",
             amount: priceConvert,
             currency: "idr",
-            quantity: 1,
+            quantity: duration,
           },
         ],
         success_url:
-          req.protocol +
-          "://" +
-          req.get("host") +
-          "/checkout/success/" +
-          mentorId,
+          req.protocol + "://" + req.get("host") + "/payment/success/" + id,
         cancel_url: "https://stripe.com/docs/payments/accept-a-payment",
       });
     })
     .then((session) => {
       console.log(session.id);
-      res.render("back/user/checkout", {
-        mentorUsername: mentorUsername,
-        mentorPrice: mentorPrice,
-        user: req.session.user,
+      res.render("front/stripe", {
         sessionId: session.id,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postStripeSuccess = (req, res, next) => {
+  const id = req.params.id;
+  Payment.findById(id)
+    .then((payment) => {
+      payment.status = true;
+      return payment.save().then((result) => {
+        const newMentorId = mongoose.Types.ObjectId(mentorId);
+        // ** get the last payment
+        Payment.findOne({ mentor: newMentorId })
+          .sort({ _id: -1 })
+          .limit(1)
+          .then((payment) => {
+            // console.log(chalk.yellowBright.inverse(payment));
+            let total = payment.total;
+            // console.log("-----------------");
+            Mentor.findById(mentorId)
+              .then((mentor) => {
+                // ** sum the last payment with intial income from mentor collection
+                let income = mentor.income + total;
+                mentor.income = income;
+                return mentor.save();
+              })
+              .then((mentorIncome) => {
+                res.redirect("/user/schedule");
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
       });
     })
     .catch((err) => console.log(err));
@@ -426,6 +441,7 @@ exports.postChangePassword = (req, res, next) => {
 exports.getPayment = (req, res, next) => {
   const id = req.session.user._id;
   Payment.find({ user: id })
+    .sort({ _id: -1 })
     .populate("mentor", "username email")
     .exec()
     .then((payment) => {

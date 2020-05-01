@@ -113,10 +113,16 @@
                       >
                     </td>
                     <td class="text-center">
+                      <% if (paymentData.status==true) { %>
                       <span
                         class="badge badge-success text-dark font-weight-bold"
                         >SUCCESS</span
                       >
+                      <% } else{ %>
+                      <span
+                        class="badge badge-danger text-dark font-weight-bold"
+                        >FAILED</span
+                      ><% } %>
                     </td>
 
                     <td class="table-actions myTd text-center">
