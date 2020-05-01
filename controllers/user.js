@@ -77,11 +77,14 @@ exports.updateProfile = (req, res, next) => {
 exports.postPayment = (req, res, next) => {
   const user = req.body.user;
   const mentor = req.body.mentor;
-  const total = req.body.total;
+  const price = req.body.price;
   const duration = req.body.duration;
+  const total = price * duration;
+
   const payment = new Payment({
     user: user,
     mentor: mentor,
+    price: price,
     total: total,
     duration: duration,
   });
@@ -99,7 +102,7 @@ exports.getStripe = (req, res, next) => {
   Payment.findById(id)
     .then((payment) => {
       console.log(chalk.blueBright.inverse(payment));
-      const price = payment.total;
+      const price = payment.price;
       const priceConvert = price * 100;
       const duration = payment.duration;
 
@@ -134,69 +137,34 @@ exports.postStripeSuccess = (req, res, next) => {
   Payment.findById(id)
     .then((payment) => {
       payment.status = true;
-      return payment.save().then((result) => {
-        const newMentorId = mongoose.Types.ObjectId(mentorId);
-        // ** get the last payment
-        Payment.findOne({ mentor: newMentorId })
-          .sort({ _id: -1 })
-          .limit(1)
-          .then((payment) => {
-            // console.log(chalk.yellowBright.inverse(payment));
-            let total = payment.total;
-            // console.log("-----------------");
-            Mentor.findById(mentorId)
-              .then((mentor) => {
-                // ** sum the last payment with intial income from mentor collection
-                let income = mentor.income + total;
-                mentor.income = income;
-                return mentor.save();
-              })
-              .then((mentorIncome) => {
-                res.redirect("/user/schedule");
+      return payment
+        .save()
+        .then((result) => {
+          console.log(chalk.red(result));
+          Payment.findOne({ status: true }).then((payment) => {
+            const mentorId = payment.mentor;
+            // ** get the last payment
+            Payment.findOne({ mentor: mentorId })
+              .sort({ _id: -1 })
+              .limit(1)
+              .then((payment) => {
+                // console.log(chalk.yellowBright.inverse(payment));
+                let total = payment.total;
+                // console.log("-----------------");
+                Mentor.findById(mentorId)
+                  .then((mentor) => {
+                    // ** sum the last payment with intial income from mentor collection
+                    let income = mentor.income + total;
+                    mentor.income = income;
+                    return mentor.save();
+                  })
+                  .then((mentorIncome) => {
+                    res.redirect("/user/schedule");
+                  })
+                  .catch((err) => console.log(err));
               })
               .catch((err) => console.log(err));
-          })
-          .catch((err) => console.log(err));
-      });
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.postCheckoutSuccess = (req, res, next) => {
-  const mentorId = req.params.mentorId;
-  const userId = req.session.user._id;
-  // ** Save Payment From Stripe To Database
-  Mentor.findOne({ _id: mentorId })
-    .then((mentor) => {
-      const payment = new Payment({
-        user: userId,
-        mentor: mentor._id,
-        total: mentor.price,
-      });
-      return payment.save();
-    })
-    .then((result) => {
-      console.log(result);
-      const newMentorId = mongoose.Types.ObjectId(mentorId);
-      // ** get the last payment
-      Payment.findOne({ mentor: newMentorId })
-        .sort({ _id: -1 })
-        .limit(1)
-        .then((payment) => {
-          // console.log(chalk.yellowBright.inverse(payment));
-          let total = payment.total;
-          // console.log("-----------------");
-          Mentor.findById(mentorId)
-            .then((mentor) => {
-              // ** sum the last payment with intial income from mentor collection
-              let income = mentor.income + total;
-              mentor.income = income;
-              return mentor.save();
-            })
-            .then((mentorIncome) => {
-              res.redirect("/user/schedule");
-            })
-            .catch((err) => console.log(err));
+          });
         })
         .catch((err) => console.log(err));
     })

@@ -35,7 +35,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-11 mx-auto">
+      <div class="col-lg-12 mx-auto">
         <div class="card-wrapper">
           <!-- CATEGORY TABLE -->
           <div class="card">
@@ -81,6 +81,8 @@
                   <tr>
                     <th>Mentor</th>
                     <th>Email</th>
+                    <th>Price</th>
+                    <th>Duration</th>
                     <th>Total</th>
                     <th>Date</th>
                     <th>Time</th>
@@ -97,6 +99,14 @@
                     <td>
                       <span class="text-muted"
                         ><%= paymentData.mentor.email %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-muted"><%= paymentData.price %></span>
+                    </td>
+                    <td class="text-center">
+                      <span class="text-dark font-weight-bold"
+                        ><%= paymentData.duration %></span
                       >
                     </td>
                     <td>

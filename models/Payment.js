@@ -13,6 +13,7 @@ const PaymentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  price: Number,
   total: Number,
   datetime: {
     type: Date,

@@ -53,12 +53,12 @@ router.post(
 );
 
 // * Payment
-router.get("/checkout/success/:mentorId", userController.postCheckoutSuccess);
-router.get("/user/payment", isAuth, userController.getPayment);
-
 router.post("/pay", userController.postPayment);
 router.get("/stripe/:id", userController.getStripe);
 router.get("/payment/success/:id", userController.postStripeSuccess);
+
+// User Dashboard
+router.get("/user/payment", isAuth, userController.getPayment);
 
 // * Scheduling
 router.get("/user/schedule", isAuth, userController.getSchedule);
