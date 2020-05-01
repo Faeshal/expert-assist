@@ -56,6 +56,7 @@ router.post(
 router.post("/pay", userController.postPayment);
 router.get("/stripe/:id", userController.getStripe);
 router.get("/payment/success/:id", userController.postStripeSuccess);
+router.get("/payment/cancel/:id", userController.postStripeCancel);
 
 // User Dashboard
 router.get("/user/payment", isAuth, userController.getPayment);

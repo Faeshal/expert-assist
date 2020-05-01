@@ -120,7 +120,8 @@ exports.getStripe = (req, res, next) => {
         ],
         success_url:
           req.protocol + "://" + req.get("host") + "/payment/success/" + id,
-        cancel_url: "https://stripe.com/docs/payments/accept-a-payment",
+        cancel_url:
+          req.protocol + "://" + req.get("host") + "/payment/cancel/" + id,
       });
     })
     .then((session) => {
@@ -167,6 +168,16 @@ exports.postStripeSuccess = (req, res, next) => {
           });
         })
         .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postStripeCancel = (req, res, next) => {
+  const id = req.params.id;
+  Payment.findByIdAndDelete(id)
+    .then((result) => {
+      console.log(chalk.red.inverse(`Deleted : ${result}`));
+      res.redirect("/");
     })
     .catch((err) => console.log(err));
 };
