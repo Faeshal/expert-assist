@@ -15,6 +15,7 @@ exports.getIndex = (req, res, next) => {
         Mentor.find({
           $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
         })
+          .sort({ _id: -1 })
           .then((mentor) => {
             // console.log(session.mentor.email);
             // console.log(session.mentor);
@@ -22,6 +23,7 @@ exports.getIndex = (req, res, next) => {
               admin: admin,
               session: session,
               mentor: mentor,
+              currency: currency,
             });
           })
           .catch((err) => console.log(err));

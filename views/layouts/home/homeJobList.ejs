@@ -132,8 +132,9 @@
                       <div class="col-md-2">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">$</span><%=
-                            mentorData.price %>
+                            <span class="text-primary">Rp.<%=
+                            currency(mentorData.price,{precision:0}).format() %>
+                            </span>
                           </p>
                         </div>
                       </div>

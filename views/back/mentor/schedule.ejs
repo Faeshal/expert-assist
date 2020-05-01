@@ -135,7 +135,6 @@
                           data-id="<%=scheduleData._id%>"
                           data-approve="<%=scheduleData.approve%>"
                           data-username="<%=scheduleData.user.username%>"
-                          data-link="<%=scheduleData.link%>"
                         >
                           <i class="fas fa-user-edit"></i>
                         </a>
@@ -198,6 +197,7 @@
                 <label for="exampleInputPassword1">Username</label>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="id" class="id" />
+                <input type="hidden" name="link" value="<%=mentor.username%>" />
                 <input
                   type="text"
                   class="form-control username"
@@ -205,19 +205,11 @@
                   readonly="true"
                 />
               </div>
-                <div class="form-group">
-                <label for="exampleInputPassword1">Link</label>
-                <input
-                  type="text"
-                  class="form-control link"
-                  id="exampleInputPassword1"
-                  name="link"
-                />
-              </div>
+
               <div class="form-group">
                 <label for="exampleFormControlSelect1">Approval</label>
                 <select
-                  class="form-control "
+                  class="form-control"
                   id="exampleFormControlSelect1"
                   required
                   name="approve"
@@ -239,8 +231,8 @@
 
     <!-- Jquery -->
     <script>
-      $(document).ready(function() {
-        $(".myTd").on("click", ".edit", function() {
+      $(document).ready(function () {
+        $(".myTd").on("click", ".edit", function () {
           var id = $(this).data("id");
           console.log(id);
           var approve = $(this).data("approve");

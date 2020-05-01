@@ -185,6 +185,7 @@ exports.postStripeCancel = (req, res, next) => {
 exports.getSchedule = (req, res, next) => {
   const id = req.session.user._id;
   Payment.findOne({ user: id })
+    .sort({ _id: -1 })
     .populate("user", "username")
     .populate("mentor", "username")
     .exec()
