@@ -7,7 +7,14 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
-          <h3 class="text-uppercase title mb-4"><%= mentor.username %></h3>
+          <h3 class="text-uppercase title mb-4"><%=mentor.username %></h3>
+          <% if (userId=="xxx") { %>
+          <a href="/login">
+            <button class="btn btn-sm btn-outline-primary">
+              Hire Mentor
+            </button>
+          </a>
+          <% } else { %>
           <button
             class="btn btn-sm btn-light"
             data-toggle="modal"
@@ -15,6 +22,7 @@
           >
             Hire Mentor
           </button>
+          <% } %>
         </div>
       </div>
     </div>
@@ -46,7 +54,7 @@
                 <a href="#" class="text-dark"><%= mentor.username %> </a>
               </h4>
               <p class="text-muted mb-0">
-                <i class="mdi mdi-link-variant mr-2"></i><%= mentor.job %>
+                <i class="mdi mdi-link-variant mr-2"></i><%=mentor.job %>
               </p>
               <p class="text-muted mb-0">
                 <i class="mdi mdi-map-marker mr-2"></i><%= mentor.city %>
@@ -56,7 +64,7 @@
 
           <div class="job-detail-desc mt-4">
             <p class="text-muted mb-3">
-              <%- mentor.desc %>
+              <%= mentor.desc %>
             </p>
 
             <p class="text-muted mb-0">
@@ -250,7 +258,7 @@
       <div class="col-lg-4 col-md-5 mt-4 mt-sm-0">
         <div class="job-detail border rounded p-4">
           <h5 class="text-muted text-center pb-2">
-            <i class="mdi mdi-map-marker mr-2"></i><%= mentor.city %>
+            <i class="mdi mdi-map-marker mr-2"></i>Jakarta
           </h5>
 
           <div class="job-detail-location pt-4 border-top">
@@ -386,9 +394,7 @@
         </div>
 
         <div class="job-detail border rounded mt-4">
-          <a
-            href="/user/checkout/<%= mentor._id %>"
-            class="btn btn-primary btn-block"
+          <a href="/user/checkout/" class="btn btn-primary btn-block"
             >Hire Mentor</a
           >
         </div>
@@ -433,10 +439,13 @@
         >
           <ul id="errors"></ul>
         </div>
-        <form method="POST" action="/checkout">
+        <form method="POST" action="/pay">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputEmail4">Mentor</label>
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <input type="hidden" name="mentor" value="<%=mentor._id%>" />
+              <input type="hidden" name="user" value="<%=userId%>" />
               <input
                 type="text"
                 class="form-control font-weight-bold"
@@ -448,6 +457,7 @@
               <label for="inputPassword4">Price/hour</label>
               <input
                 type="text"
+                name="total"
                 class="form-control font-weight-bold"
                 value="<%=mentor.price%>"
                 readonly
@@ -469,7 +479,7 @@
           </div>
           <div class="text-center justify-content-center">
             <button
-              id="paymentModal"
+              id="order-btn"
               type="submit"
               class="btn btn-primary mt-2 mx-auto"
             >

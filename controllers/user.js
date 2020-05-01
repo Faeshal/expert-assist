@@ -74,6 +74,26 @@ exports.updateProfile = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.postPayment = (req, res, next) => {
+  const user = req.body.user;
+  const mentor = req.body.mentor;
+  const total = req.body.total;
+  const duration = req.body.duration;
+  const payment = new Payment({
+    user: user,
+    mentor: mentor,
+    total: total,
+    duration: duration,
+  });
+  return payment
+    .save()
+    .then((result) => {
+      console.log(chalk.yellow.inverse(result));
+      res.redirect("/stripe");
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getCheckout = (req, res, next) => {
   const id = req.params.id;
   const duration = req.body.duration;

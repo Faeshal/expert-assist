@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stripe - Payment</title>
+  </head>
+  <body>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      var stripe = Stripe("pk_test_aizyuZSfxUWtBIVVV7EwUJds00wLmc4Zpw");
+
+      window.onload = function () {
+        stripe.redirectToCheckout({
+          sessionId: "<%= sessionId %>",
+        });
+      };
+
+      //   orderBtn.addEventListener("click", function () {
+      //     stripe.redirectToCheckout({
+      //       sessionId: "sessionid",
+      //     });
+      //   });
+    </script>
+  </body>
+</html>

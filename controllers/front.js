@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
 const currency = require("currency.js");
+const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })
@@ -91,12 +92,24 @@ exports.getDetailBlog = (req, res, next) => {
 
 exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
+  let userId = req.session;
+  console.log(userId);
+
+  if (!userId.user) {
+    console.log(chalk.blue.inverse("No User Session"));
+    console.log(chalk.redBright.inverse(userId));
+    userId = "xxx";
+  } else if (userId) {
+    console.log(chalk.blue.inverse("User Session Found"));
+    userId = req.session.user._id;
+    console.log(chalk.yellow.inverse(userId));
+  }
+
   Mentor.findOne({ _id: id })
     .then((mentor) => {
       res.render("front/mentorDetail", {
         mentor: mentor,
-        currency: currency,
+        userId: userId,
       });
     })
     .catch((err) => console.log(err));

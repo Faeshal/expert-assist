@@ -9,6 +9,10 @@ const PaymentSchema = new mongoose.Schema({
     ref: "Mentor",
   },
   duration: Number,
+  status: {
+    type: Boolean,
+    default: false,
+  },
   total: Number,
   datetime: {
     type: Date,
