@@ -77,7 +77,7 @@
 
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="mytable">
+              <table class="table align-items-center table-flush" id="table_id">
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
@@ -244,6 +244,21 @@
 <!-- Jqeury -->
 <script>
   $(document).ready(function () {
+    $("#table_id").DataTable({
+      ordering: false,
+      stateSave: true,
+      pagingType: "simple_numbers",
+      language: {
+        paginate: {
+          first: "«",
+          previous: "‹",
+          next: "›",
+          last: "»",
+        },
+      },
+      responsive: true,
+    });
+
     let options1 = {
       max_value: 10,
       readonly: true,

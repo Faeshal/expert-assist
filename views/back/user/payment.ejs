@@ -76,7 +76,7 @@
 
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="mytable">
+              <table class="table align-items-center table-flush" id="table_id">
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
@@ -87,7 +87,6 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th class="text-center">Status</th>
-                    <th class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -141,20 +140,6 @@
                         >FAILED</span
                       ><% } %>
                     </td>
-
-                    <td class="table-actions myTd text-center">
-                      <form>
-                        <button
-                          id="<%=paymentData._id%>"
-                          type="button"
-                          class="pdfButton table-action btn btn-sm"
-                          data-toggle="tooltip"
-                          data-original-title="Download Struk"
-                        >
-                          <i class="fas fa-download text-dark"></i>
-                        </button>
-                      </form>
-                    </td>
                   </tr>
                   <% }) %>
                 </tbody>
@@ -165,6 +150,17 @@
         </div>
       </div>
     </div>
+
+    <style>
+      .pdf {
+        font-size: 10px;
+        border: 1px solid blue;
+        text-align: right;
+      }
+      .dt-buttons {
+        float: left;
+      }
+    </style>
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
@@ -180,6 +176,42 @@
         doc.line(35, 30, 100, 30);
         doc.text(20, 30, "This is client-side PDF");
         doc.output("dataurlnewwindow");
+      });
+    </script>
+    <!-- Data Table Initialization -->
+    <script>
+      $(document).ready(function () {
+        $("#table_id").DataTable({
+          ordering: false,
+          stateSave: true,
+          pagingType: "simple_numbers",
+          language: {
+            paginate: {
+              first: "«",
+              previous: "‹",
+              next: "›",
+              last: "»",
+            },
+          },
+          responsive: true,
+          dom: "Bfrtip",
+          buttons: {
+            buttons: [
+              {
+                extend: "pdfHtml5",
+                className: "pdf",
+                download: "open",
+                filename: "payment",
+                title: "- USER PAYMENT REPORT -",
+                exportOptions: {
+                  modifier: {
+                    page: "current",
+                  },
+                },
+              },
+            ],
+          },
+        });
       });
     </script>
   </div>
