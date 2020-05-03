@@ -82,14 +82,12 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="income">Your Income</label>
-                      
-                      <input
-                        type="text"
-                        class="form-control form-control-sm border-success bg-secondary font-weight-bold text-dark"
-                        id="income"
-                        readonly="true"
-                        value="Rp.<%=currency(mentor.income,{separator:",",precision:0}).format()  %>"
-                      />
+
+                      <input type="text" class="form-control form-control-sm
+                      border-success bg-secondary font-weight-bold text-dark"
+                      id="income" readonly="true"
+                      value="Rp.<%=currency(mentor.income,{separator:",",precision:0}).format()
+                      %>" />
                       <small class="form-text text-muted"
                         >Real Income = Withdraw - Tax</small
                       >
@@ -105,7 +103,6 @@
                         class="form-control"
                         id="total"
                         name="total"
-                        required
                       />
                     </div>
                   </div>
@@ -208,7 +205,10 @@
                     class="<%= withdrawData.status == true ? 'bg-white' : 'bg-white' %>"
                   >
                     <td class="table-user">
-                      <b><%=currency(withdrawData.total,{separator:",",precision:0}).format() %> </b>
+                      <b
+                        ><%=currency(withdrawData.total,{separator:",",precision:0}).format()
+                        %>
+                      </b>
                     </td>
                     <td>
                       <span class="text-muted"
@@ -275,16 +275,41 @@
     <%-include('../../layouts/back/mentor/footer.ejs')%>
 
     <script>
+
       $(document).ready(function () {
         $("#buttonAlert").click(function (e) {
+          let total = $("#total").val();
+          let income = <%-mentor.income%>;
           e.preventDefault();
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Request Successfully Send",
-          }).then(function () {
-            $("#formWithdraw").submit();
-          });
+          if (total == null || total == "") {
+            Swal.fire(
+              "Input Kosong",
+              "Silahkan isi nilai dana terlebih dahulu",
+              "warning"
+            );
+          } else if (total <= 10000) {
+            Swal.fire(
+              "Dana Terlalu Kecil",
+              "Minimal Pencairan Dana Rp. 10.000",
+              "warning"
+            );
+            $("#total").val("");
+          } else if (total > income) {
+            Swal.fire(
+              "Dana Tidak Cukup",
+              "Perhatikan Total Nilai Income Anda Sebelum Submit",
+              "warning"
+            );
+            $("#total").val("");
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Success!",
+              text: "Request Successfully Send",
+            }).then(function () {
+              $("#formWithdraw").submit();
+            });
+          }
         });
 
         $("#deleteAlert").click(function (e) {
