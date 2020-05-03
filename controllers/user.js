@@ -421,6 +421,7 @@ exports.postChangePassword = (req, res, next) => {
 
 exports.getPayment = (req, res, next) => {
   const id = req.session.user._id;
+  const username = req.session.user.username;
   Payment.find({ user: id })
     .sort({ _id: -1 })
     .populate("mentor", "username email")
@@ -432,6 +433,7 @@ exports.getPayment = (req, res, next) => {
         voca: voca,
         payment: payment,
         user: id,
+        username: username,
         currency: currency,
       });
     })

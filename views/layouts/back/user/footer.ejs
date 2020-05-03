@@ -68,27 +68,28 @@
 <script src="../../back/assets/js/demo.min.js"></script>
 <!-- Rate Yo Star -->
 <script src="../../back/assets/js/rater.js"></script>
+<!-- JSPDF & Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+<script src="https://unpkg.com/jspdf@1.5.3/dist/jspdf.min.js"></script>
 <!-- Data Table -->
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-<!-- Data Table Button -->
-<script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.bootstrap4.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"
-></script>
+<!-- Data Table Setup -->
+<script>
+  $(document).ready(function () {
+    $("#table_id").DataTable({
+      ordering: false,
+      stateSave: true,
+      pagingType: "simple_numbers",
+      language: {
+        paginate: {
+          first: "«",
+          previous: "‹",
+          next: "›",
+          last: "»",
+        },
+      },
+      responsive: true,
+    });
+  });
+</script>

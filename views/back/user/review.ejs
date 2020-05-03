@@ -244,21 +244,6 @@
 <!-- Jqeury -->
 <script>
   $(document).ready(function () {
-    $("#table_id").DataTable({
-      ordering: false,
-      stateSave: true,
-      pagingType: "simple_numbers",
-      language: {
-        paginate: {
-          first: "«",
-          previous: "‹",
-          next: "›",
-          last: "»",
-        },
-      },
-      responsive: true,
-    });
-
     let options1 = {
       max_value: 10,
       readonly: true,
