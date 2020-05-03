@@ -15,7 +15,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 exports.getDashboard = (req, res, next) => {
-  User.findById(req.session.user)
+  const session = req.session.user;
+  User.findById(session._id)
     .then((user) => {
       const message = req.flash("message", "Flash is back!");
       console.log(chalk.yellow(message));
@@ -23,16 +24,19 @@ exports.getDashboard = (req, res, next) => {
       res.render("back/user/dashboard", {
         user: user,
         message: message,
+        session: session,
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getProfile = (req, res, next) => {
-  User.findById(req.session.user._id)
+  const session = req.session.user;
+  User.findById(session._id)
     .then((user) => {
       res.render("back/user/profile", {
         user: user,
+        session: session,
       });
     })
     .catch();
@@ -184,8 +188,8 @@ exports.postStripeCancel = (req, res, next) => {
 };
 
 exports.getSchedule = (req, res, next) => {
-  const id = req.session.user._id;
-  Payment.findOne({ user: id })
+  const session = req.session.user;
+  Payment.findOne({ user: session._id })
     .sort({ _id: -1 })
     .populate("user", "username")
     .populate("mentor", "username")
@@ -193,16 +197,16 @@ exports.getSchedule = (req, res, next) => {
     .then((payment) => {
       console.log(payment);
 
-      Schedule.find({ user: req.session.user._id })
+      Schedule.find({ user: session._id })
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
           console.log(schedule);
           res.render("back/user/schedule", {
-            user: req.session.user,
             payment: payment,
             schedule: schedule,
             moment: moment,
+            session: session,
           });
         })
         .catch((err) => console.log(err));
@@ -243,18 +247,18 @@ exports.postDeleteSchedule = (req, res, next) => {
 };
 
 exports.getMentoring = (req, res, next) => {
-  const id = req.session.user._id;
-  Payment.findOne({ user: id })
+  const session = req.session.user;
+  Payment.findOne({ user: session._id })
     .then((payment) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ user: id })
+      Schedule.findOne({ user: session._id })
         .then((schedule) => {
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
-            user: id,
+            session: session,
           });
         })
         .catch((err) => console.log(err));
@@ -281,18 +285,18 @@ exports.getLive = (req, res, next) => {
 };
 
 exports.getReview = (req, res, next) => {
-  const id = req.session.user._id;
+  const session = req.session.user;
 
-  Review.find({ user: id })
+  Review.find({ user: session._id })
     .populate("mentor", "username")
     .exec()
     .then((review) => {
       console.log(chalk.blueBright(review));
 
-      Schedule.findOne({ $and: [{ user: id }, { approve: true }] })
+      Schedule.findOne({ $and: [{ user: session._id }, { approve: true }] })
         .then((schedule) => {
           res.render("back/user/review", {
-            user: id,
+            session: session,
             review: review,
             moment: moment,
             voca: voca,
@@ -421,6 +425,7 @@ exports.postChangePassword = (req, res, next) => {
 
 exports.getPayment = (req, res, next) => {
   const id = req.session.user._id;
+  const session = req.session.user;
   const username = req.session.user.username;
   Payment.find({ user: id })
     .sort({ _id: -1 })
@@ -433,7 +438,7 @@ exports.getPayment = (req, res, next) => {
         voca: voca,
         payment: payment,
         user: id,
-        username: username,
+        session: session,
         currency: currency,
       });
     })
