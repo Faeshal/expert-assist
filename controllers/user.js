@@ -198,6 +198,7 @@ exports.getSchedule = (req, res, next) => {
       console.log(payment);
 
       Schedule.find({ user: session._id })
+        .sort({ _id: -1 })
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
@@ -219,11 +220,13 @@ exports.getSchedule = (req, res, next) => {
 exports.postSchedule = (req, res, next) => {
   const user = req.body.user;
   const mentor = req.body.mentor;
+  const duration = req.body.duration;
   const datetime = req.body.datetime;
   const note = req.body.note;
   const schedule = new Schedule({
     user: user,
     mentor: mentor,
+    duration: duration,
     datetime: datetime,
     note: note,
   });
@@ -248,6 +251,8 @@ exports.postDeleteSchedule = (req, res, next) => {
 
 exports.getMentoring = (req, res, next) => {
   const session = req.session.user;
+  const dateTimeNow = new Date();
+
   Payment.findOne({ user: session._id })
     .then((payment) => {
       if (!payment) {
@@ -255,10 +260,25 @@ exports.getMentoring = (req, res, next) => {
       }
       Schedule.findOne({ user: session._id })
         .then((schedule) => {
+          const dateTimeSchedule = schedule.datetime;
+          console.log(
+            chalk.yellow.inverse(`${dateTimeSchedule} = ${dateTimeNow}`)
+          );
+
+          // if (dateTimeNow > dateTimeNow2) {
+          //   console.log(chalk.blue.inverse("Waktu sudah lewat , Kadaluarsa"));
+          // } else if (dateTimeNow < dateTimeNow2) {
+          //   console.log(chalk.blue.inverse("waktu mentoring belum tiba"));
+          // } else if (dateTimeNow2.getTime() == dateTimeNow.getTime()) {
+          //   console.log(chalk.blue.inverse("waktu mentoring Telah tiba"));
+          // }
+
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
             session: session,
+            dateTimeNow: dateTimeNow,
+            dateTimeSchedule: dateTimeSchedule,
           });
         })
         .catch((err) => console.log(err));

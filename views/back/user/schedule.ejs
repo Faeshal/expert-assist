@@ -42,7 +42,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-5">
+      <div class="col-lg-4">
         <div class="card-wrapper">
           <!-- Input groups -->
           <div class="card">
@@ -90,6 +90,7 @@
                           name="mentor"
                           value="<%=payment.mentor._id%>"
                         />
+                        <input type="hidden" name="duration" value="<%= payment.duration %>">
                         <input
                           class="pl-2 form-control"
                           placeholder="User"
@@ -162,7 +163,7 @@
         </div>
       </div>
 
-      <div class="col-lg-7 mx-auto">
+      <div class="col-lg-8 mx-auto">
         <div class="card-wrapper">
           <!-- CATEGORY TABLE -->
           <div class="card">
@@ -193,8 +194,9 @@
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
+                    <th class="text-center">Hours</th>
                     <th>Date</th>
-                    <th>Time</th>
+                    <th>Start</th>
                     <th>Approve</th>
                     <th>Action</th>
                   </tr>
@@ -205,6 +207,9 @@
                   <tr>
                     <td class="table-user">
                       <b><%= scheduleData.mentor.username %> </b>
+                    </td>
+                    <td class="table-user text-muted text-center">
+                      <b><%= scheduleData.duration %> </b>
                     </td>
                     <td>
                       <span class="text-muted"

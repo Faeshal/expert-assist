@@ -347,7 +347,12 @@
 
           var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
           var columns = [res.columns[0], res.columns[1],res.columns[2],res.columns[3]];
-          doc.autoTable(columns, res.data, {startY: 65});
+          doc.autoTable(columns, res.data, {
+            startY: 65,
+            styles: {
+              halign: "center"
+            }
+          });
 
           window.open(doc.output("bloburl"));
         });

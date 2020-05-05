@@ -2,29 +2,30 @@ const mongoose = require("mongoose");
 const ScheduleSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   mentor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Mentor"
+    ref: "Mentor",
   },
+  duration: Number,
   datetime: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   note: String,
   approve: {
     type: Boolean,
-    default: false
+    default: false,
   },
   link: {
     type: String,
-    default: "not set"
+    default: "not set",
   },
   status: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Schedule", ScheduleSchema);
