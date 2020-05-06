@@ -196,7 +196,6 @@ exports.getSchedule = (req, res, next) => {
     .exec()
     .then((payment) => {
       console.log(payment);
-
       Schedule.find({ user: session._id })
         .sort({ _id: -1 })
         .populate("mentor", "username")
@@ -295,7 +294,7 @@ exports.getLive = (req, res, next) => {
         res.render("layouts/404");
         console.log("Not Auhtorize");
       } else if (schedule.approve == true) {
-        res.render("back/user/live", {
+        res.render("back/mentor/live", {
           schedule: schedule,
           user: req.session.user._id,
         });

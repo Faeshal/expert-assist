@@ -27,13 +27,31 @@
             position: "fixed",
             width: "100%",
             height: "100%",
-            border: "none"
-          }
+            border: "none",
+          },
         });
         callFrame.join({
-          url: "https://expert-assist.daily.co/<%=schedule.link%>"
+          url: "https://expert-assist.daily.co/<%=schedule.link%>",
         });
       </script>
+      <div class="fixed-bottom text-center mx-auto justify-content-center">
+        <div class="btn-group mb-3" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-sm btn-outline-dark">
+            Pause
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-dark font-weight-bold text-white"
+            id="time"
+            disabled
+          >
+            Waiting ...
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark">
+            Finish
+          </button>
+        </div>
+      </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -52,5 +70,40 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function startTimer(duration, display) {
+        let alert;
+        let timer = duration,
+          minutes,
+          seconds;
+        setInterval(function () {
+          minutes = parseInt(timer / 60, 10);
+          seconds = parseInt(timer % 60, 10);
+
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          display.textContent = minutes + ":" + seconds;
+
+          // if (--timer < 0) {
+          //   timer = duration;
+          // }
+
+          if (--timer < 0) {
+            // alert = true;
+            document.getElementById("time").innerHTML = "EXPIRED";
+            window.location.href = "http://localhost:3000/mentor/dashboard";
+            window.alert("Time is Up");
+          }
+        }, 1000);
+      }
+
+      function timer() {
+        let duration= <%=schedule.duration%> * 60;
+        let fiveMinutes = 60 * duration,
+          display = document.getElementById("time");
+        startTimer(fiveMinutes, display);
+      }
+    </script>
   </body>
 </html>
