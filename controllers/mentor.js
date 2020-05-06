@@ -323,6 +323,7 @@ exports.getLive = (req, res, next) => {
   Schedule.findOne({ mentor: id })
     .then((schedule) => {
       console.log(schedule);
+      const dateTimeSchedule = schedule.datetime;
       if (schedule.approve == false) {
         res.render("layouts/404");
         console.log("Not Auhtorize");

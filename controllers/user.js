@@ -278,6 +278,7 @@ exports.getMentoring = (req, res, next) => {
             session: session,
             dateTimeNow: dateTimeNow,
             dateTimeSchedule: dateTimeSchedule,
+            moment: moment,
           });
         })
         .catch((err) => console.log(err));
@@ -289,14 +290,17 @@ exports.getLive = (req, res, next) => {
   const id = req.session.user._id;
   Schedule.findOne({ user: id })
     .then((schedule) => {
+      const dateTimeSchedule = schedule.datetime;
       console.log(schedule);
       if (schedule.approve == false) {
         res.render("layouts/404");
         console.log("Not Auhtorize");
       } else if (schedule.approve == true) {
-        res.render("back/mentor/live", {
+        res.render("back/user/live", {
           schedule: schedule,
           user: req.session.user._id,
+          dateTimeSchedule: dateTimeSchedule,
+          moment: moment,
         });
       }
     })

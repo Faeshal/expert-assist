@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Expert Assist</title>
+    <title>Live - Mentoring</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -30,19 +30,17 @@
             border: "none",
           },
         });
-        callFrame.join({
-          url: "https://expert-assist.daily.co/<%=schedule.link%>",
-        });
+        callFrame
+          .join({
+            url: "https://expert-assist.daily.co/<%=schedule.link%>",
+          })
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((err) => console.log(err));
       </script>
       <div class="fixed-bottom text-center mx-auto justify-content-center">
         <div class="btn-group mb-3" role="group" aria-label="Basic example">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-dark"
-            onclick="timer()"
-          >
-            Start
-          </button>
           <button
             type="button"
             class="btn btn-sm btn-dark font-weight-bold text-white"
@@ -75,7 +73,15 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      // window.onload = timer();
+      window.onload = timer();
+
+      function timer() {
+        let duration = "<%-schedule.duration%>" * 60;
+        let fiveMinutes = 60 * duration,
+          display = document.getElementById("time");
+        startTimer(fiveMinutes, display);
+      }
+
       function startTimer(duration, display) {
         let alert;
         let timer = duration,
@@ -84,30 +90,16 @@
         setInterval(function () {
           minutes = parseInt(timer / 60, 10);
           seconds = parseInt(timer % 60, 10);
-
           minutes = minutes < 10 ? "0" + minutes : minutes;
           seconds = seconds < 10 ? "0" + seconds : seconds;
-
           display.textContent = minutes + ":" + seconds;
 
-          // if (--timer < 0) {
-          //   timer = duration;
-          // }
-
           if (--timer < 0) {
-            // alert = true;
             document.getElementById("time").innerHTML = "EXPIRED";
             window.location.href = "http://localhost:3000/mentor/dashboard";
             window.alert("Time is Up");
           }
         }, 1000);
-      }
-
-      function timer() {
-        let duration= <%=schedule.duration%> * 60;
-        let fiveMinutes = 60 * duration,
-          display = document.getElementById("time");
-        startTimer(fiveMinutes, display);
       }
     </script>
   </body>

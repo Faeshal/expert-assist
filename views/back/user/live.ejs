@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Title</title>
+    <title>Live - Mentoring</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -71,6 +71,22 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      window.onload = timer();
+
+      function timer() {
+        let timeNow = "<%-moment.duration()%>";
+        let timeSchedule = "<%-moment.duration(dateTimeSchedule)%>";
+
+        let remainingTime = timeNow.subtract(timeSchedule).minutes();
+
+        console.log(remainingTime);
+
+        let duration = "<%-schedule.duration%>" * 60;
+        let fiveMinutes = 60 * duration,
+          display = document.getElementById("time");
+        startTimer(fiveMinutes, display);
+      }
+
       function startTimer(duration, display) {
         let alert;
         let timer = duration,
@@ -96,13 +112,6 @@
             window.alert("Time is Up");
           }
         }, 1000);
-      }
-
-      function timer() {
-        let duration= <%=schedule.duration%> * 60;
-        let fiveMinutes = 60 * duration,
-          display = document.getElementById("time");
-        startTimer(fiveMinutes, display);
       }
     </script>
   </body>
