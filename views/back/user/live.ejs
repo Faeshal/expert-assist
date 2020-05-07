@@ -18,6 +18,7 @@
     />
   </head>
   <body>
+
     <div>
       <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
       <script>
@@ -34,23 +35,14 @@
           url: "https://expert-assist.daily.co/<%=schedule.link%>",
         });
       </script>
-      <div class="fixed-bottom text-center mx-auto justify-content-center">
-        <div class="btn-group mb-3" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-sm btn-outline-dark">
-            Pause
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-dark font-weight-bold text-white"
-            id="time"
-            disabled
-          >
-            Waiting ...
-          </button>
-          <button type="button" class="btn btn-sm btn-outline-dark" id="time">
-            ......
-          </button>
-        </div>
+      <div
+        class="fixed-top mb-2 text-center mx-auto justify-content-center"
+        style="width: 100%;"
+      >
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center" style="height:35px;padding-top: 5px;padding-bottom: 5px;">
+          <h5 class="font-weight-bold text-danger mr-1">Duration : <h5>
+          <h5 class="font-weight-bold text-danger" id="time">.......<h5>
+        </nav>
       </div>
     </div>
     <!-- Optional JavaScript -->
@@ -120,14 +112,9 @@
 
           display.textContent = minutes + ":" + seconds;
 
-          // if (--timer < 0) {
-          //   timer = duration;
-          // }
-
           if (--timer < 0) {
             // alert = true;
             document.getElementById("time").innerHTML = "TIMES UP";
-            window.location.href = "http://localhost:3000/mentor/dashboard";
             window.alert("Time is Up");
           }
         }, 1000);
