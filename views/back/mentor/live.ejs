@@ -39,29 +39,47 @@
           })
           .catch((err) => console.log(err));
       </script>
-      <div class="fixed-bottom text-center mx-auto justify-content-center">
-        <div class="btn-group mb-3" role="group" aria-label="Basic example">
-          <button
-            type="button"
-            class="btn btn-sm btn-dark font-weight-bold text-white"
-            id="time"
-            disabled
-          >
-            Select Start If Ready ...
-          </button>
-          <form action="/mentor/mentoring/finish" method="POST" id="liveForm">
-            <input type="hidden" name="id" value="<%=schedule._id%>" />
-            <input type="hidden" name="status" value="true" />
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-dark"
-              id="btnFinish"
-            >
-              Finish
-            </button>
-          </form>
-        </div>
+
+      <div
+        class="fixed-top mb-2 text-center mx-auto justify-content-center"
+        style="width: 100%;"
+      >
+        <nav
+          class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center"
+          style="height: 35px; padding-top: 5px; padding-bottom: 5px;"
+        >
+          <div class="container mx-auto text-center justify-content-center">
+            <div class="row mx-auto text-center justify-content-center">
+              <div class="col-sm">
+                <span class="badge badge-primary">Summary</span>
+              </div>
+              <div class="col-sm">
+                <h5
+                  class="text-danger font-weight-bold mr-4 ml-4"
+                  id="time"
+                ></h5>
+              </div>
+              <div class="col-sm">
+                <form
+                  action="/mentor/mentoring/finish"
+                  method="POST"
+                  id="liveForm"
+                >
+                  <input type="hidden" name="id" value="<%=schedule._id%>" />
+                  <input type="hidden" name="status" value="true" />
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <button
+                    type="button"
+                    class="badge badge-success btn-outline-dark"
+                    id="btnFinish"
+                  >
+                    Finish
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
     </div>
     <!-- Optional JavaScript -->
