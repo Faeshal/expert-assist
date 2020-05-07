@@ -75,22 +75,32 @@
       window.onload = timer();
 
       function timer() {
-        let timeNow = "<%-moment().format('LT')%>";
+        let timeNow = moment().format("LT");
+
         let timeSchedule = "<%-moment(dateTimeSchedule).format('LT')%>";
+
         let timeDuration = "<%-schedule.duration%>" * 60;
 
         // * waktuSelesai = timeSchedule + durasiBooking
-        let endTime = moment("12:00").add(timeDuration, "m");
+        let endTime = moment(timeSchedule, "LT")
+          .add(timeDuration, "m")
+          .format("LT");
 
         // * durasiAkhir = waktuSelesai - waktuMulai
-        // let result = timeSchedule.add(timeDuration).minutes();
+        let result = moment
+          .utc(moment(endTime, "LT").diff(moment(timeNow, "LT")))
+          .format("LT");
 
-        console.log("Waktu Selesai : " + endTime);
+        // * TERAKHIR : Convert Durasi (result) dari format jam ke menit saja
+        let duration = moment(result, "LT").diff(moment().startOf("day"), "m");
+
         // console.log(result);
-        // console.log(`Waktu Sekarang : ${timeNow}`);
-        // console.log(`Waktu Mulai : ${timeSchedule}`);
+        console.log(`Waktu diJadwal : ${timeSchedule}`);
+        console.log(`Waktu Sekarang : ${timeNow}`);
+        console.log("Waktu Selesai : " + endTime);
+        console.log("W.Selesai - W.Sekarang : " + result);
+        console.log("HASIL : " + duration);
 
-        let duration = "<%-schedule.duration%>" * 60;
         let fiveMinutes = 60 * duration,
           display = document.getElementById("time");
         startTimer(fiveMinutes, display);
@@ -116,7 +126,7 @@
 
           if (--timer < 0) {
             // alert = true;
-            document.getElementById("time").innerHTML = "EXPIRED";
+            document.getElementById("time").innerHTML = "TIMES UP";
             window.location.href = "http://localhost:3000/mentor/dashboard";
             window.alert("Time is Up");
           }

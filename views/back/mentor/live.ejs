@@ -82,11 +82,37 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
     <script>
       window.onload = timer();
 
       function timer() {
-        let duration = "<%-schedule.duration%>" * 60;
+        let timeNow = moment().format("LT");
+
+        let timeSchedule = moment("<%=dateTimeSchedule%>").format("LT");
+
+        let timeDuration = "<%-schedule.duration%>" * 60;
+
+        // * waktuSelesai = timeSchedule + durasiBooking
+        let endTime = moment(timeSchedule, "LT")
+          .add(timeDuration, "m")
+          .format("LT");
+
+        // * durasiAkhir = waktuSelesai - waktuMulai
+        let result = moment
+          .utc(moment(endTime, "LT").diff(moment(timeNow, "LT")))
+          .format("LT");
+
+        // * TERAKHIR : Convert Durasi (result) dari format jam ke menit saja
+        let duration = moment(result, "LT").diff(moment().startOf("day"), "m");
+
+        // console.log(result);
+        console.log(`Waktu diJadwal : ${timeSchedule}`);
+        console.log(`Waktu Sekarang : ${timeNow}`);
+        console.log("Waktu Selesai : " + endTime);
+        console.log("W.Selesai - W.Sekarang : " + result);
+        console.log("HASIL : " + duration);
+
         let fiveMinutes = 60 * duration,
           display = document.getElementById("time");
         startTimer(fiveMinutes, display);

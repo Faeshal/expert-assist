@@ -306,6 +306,7 @@ exports.getMentoring = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.findOne({ mentor: id })
     .then((schedule) => {
+      const dateTimeSchedule = schedule.datetime;
       if (!schedule) {
         console.log("No User Found");
       }
@@ -313,6 +314,8 @@ exports.getMentoring = (req, res, next) => {
       res.render("back/mentor/mentoring", {
         schedule: schedule,
         mentor: req.session.mentor._id,
+        dateTimeSchedule: dateTimeSchedule,
+        moment: moment,
       });
     })
     .catch((err) => console.log(err));
@@ -331,6 +334,7 @@ exports.getLive = (req, res, next) => {
         res.render("back/mentor/live", {
           schedule: schedule,
           mentor: req.session.mentor._id,
+          dateTimeSchedule: dateTimeSchedule,
         });
       }
     })
