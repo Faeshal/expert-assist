@@ -92,6 +92,7 @@ router.post(
 // * Mentoring
 router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
 router.get("/mentor/mentoring/live", isAuth, mentorController.getLive);
+router.post("/mentor/mentoring/finish", mentorController.postFinishMentoring);
 
 // * Review
 router.get("/mentor/review", isAuth, mentorController.getReview);

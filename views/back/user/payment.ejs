@@ -171,6 +171,7 @@
 
           doc.setFontSize(10);
           doc.text("Username : <%=session.username%> ", 15, 50);
+
           doc.text("Last Payment ID : <%=payment[0]._id%> ", 15, 55);
           doc.text("Last Payment Date : <%=payment[0].datetime%>", 15, 60);
 
@@ -179,8 +180,8 @@
             html: ".table",
             startY: 65,
             styles: {
-              halign: "center"
-            }
+              halign: "center",
+            },
           });
 
           window.open(doc.output("bloburl"));

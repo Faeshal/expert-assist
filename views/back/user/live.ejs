@@ -47,8 +47,8 @@
           >
             Waiting ...
           </button>
-          <button type="button" class="btn btn-sm btn-outline-dark">
-            Finish
+          <button type="button" class="btn btn-sm btn-outline-dark" id="time">
+            ......
           </button>
         </div>
       </div>
@@ -70,16 +70,25 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
     <script>
       window.onload = timer();
 
       function timer() {
-        let timeNow = "<%-moment.duration()%>";
-        let timeSchedule = "<%-moment.duration(dateTimeSchedule)%>";
+        let timeNow = "<%-moment().format('LT')%>";
+        let timeSchedule = "<%-moment(dateTimeSchedule).format('LT')%>";
+        let timeDuration = "<%-schedule.duration%>" * 60;
 
-        let remainingTime = timeNow.subtract(timeSchedule).minutes();
+        // * waktuSelesai = timeSchedule + durasiBooking
+        let endTime = moment("12:00").add(timeDuration, "m");
 
-        console.log(remainingTime);
+        // * durasiAkhir = waktuSelesai - waktuMulai
+        // let result = timeSchedule.add(timeDuration).minutes();
+
+        console.log("Waktu Selesai : " + endTime);
+        // console.log(result);
+        // console.log(`Waktu Sekarang : ${timeNow}`);
+        // console.log(`Waktu Mulai : ${timeSchedule}`);
 
         let duration = "<%-schedule.duration%>" * 60;
         let fiveMinutes = 60 * duration,

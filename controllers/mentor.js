@@ -322,7 +322,7 @@ exports.getLive = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.findOne({ mentor: id })
     .then((schedule) => {
-      console.log(schedule);
+      console.log(chalk.blue.inverse(schedule));
       const dateTimeSchedule = schedule.datetime;
       if (schedule.approve == false) {
         res.render("layouts/404");
@@ -333,6 +333,21 @@ exports.getLive = (req, res, next) => {
           mentor: req.session.mentor._id,
         });
       }
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postFinishMentoring = (req, res, next) => {
+  const id = req.body.id;
+  const status = req.body.status;
+  Schedule.findById(id)
+    .then((schedule) => {
+      schedule.status = status;
+      return schedule.save();
+    })
+    .then((result) => {
+      console.log(chalk.bgBlue(result));
+      res.redirect("/mentor/schedule");
     })
     .catch((err) => console.log(err));
 };

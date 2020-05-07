@@ -342,8 +342,15 @@
 
           doc.setFontSize(10);
           doc.text("Username : <%=mentor.username%> " , 15, 50);
-          doc.text("Last Withdraw ID : <%=withdraw[0]._id%> ", 15, 55);
-          doc.text("Last Witdraw Date : <%=withdraw[0].datetime%>", 15, 60);
+
+          if (withdraw === undefined || withdraw.length == 0 || withdraw.length<1) {
+            doc.text("Last Withdraw ID : - ", 15, 55);
+            doc.text("Last Witdraw Date : - ", 15, 60);
+          } else {
+            doc.text("Last Withdraw ID : <%=withdraw[0]._id%> ", 15, 55);
+            doc.text("Last Witdraw Date : <%=withdraw[0].datetime%>", 15, 60);
+          }
+
 
           var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
           var columns = [res.columns[0], res.columns[1],res.columns[2],res.columns[3]];

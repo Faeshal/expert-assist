@@ -49,9 +49,18 @@
           >
             Select Start If Ready ...
           </button>
-          <button type="button" class="btn btn-sm btn-outline-dark">
-            Finish
-          </button>
+          <form action="/mentor/mentoring/finish" method="POST" id="liveForm">
+            <input type="hidden" name="id" value="<%=schedule._id%>" />
+            <input type="hidden" name="status" value="true" />
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-dark"
+              id="btnFinish"
+            >
+              Finish
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -72,6 +81,7 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
       window.onload = timer();
 
@@ -101,6 +111,34 @@
           }
         }, 1000);
       }
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#btnFinish").click(function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: "Are you sure?",
+            text: "Mentoring Status will Change",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Finish",
+          }).then((result) => {
+            if (result.value) {
+              Swal.fire(
+                "Finished!",
+                "Congratulation, Mentoring has finished",
+                "success"
+              ).then(() => {
+                $("#liveForm").submit();
+              });
+            } else {
+              Swal.fire("Cancel!", "Ok, Always Be carefull", "info");
+            }
+          });
+        });
+      });
     </script>
   </body>
 </html>
