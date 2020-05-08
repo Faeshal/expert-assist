@@ -46,7 +46,7 @@
           <div class="card-body">
             <div class="row icon-examples">
               <div class="div mx-auto justify-content-center text-center">
-                <% if (!payment) { %>
+                <% if (!payment || payment==null) { %>
                 <img
                   class="img-fluid"
                   alt="Responsive image"
@@ -57,7 +57,7 @@
                 <h4 class="text-center mb-4 text-primary pt-4">
                   Anda belum membayar satupun mentor
                 </h4>
-                <% } else if (!schedule) { %>
+                <% } else if (!schedule || schedule == null) { %>
                 <img
                   class="img-fluid"
                   alt="Responsive image"
@@ -99,7 +99,7 @@
                   <h4 class="text-center mb-4 text-primary pt-4">
                     Happy Mentoring - Hope Your Problem Solve Soon
                   </h4>
-                  <% }else { %>
+                  <% }else{ %>
                   <span class="badge badge-danger"
                     >Waktu Mentoring Belum Tiba</span
                   >

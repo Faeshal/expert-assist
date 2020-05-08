@@ -265,11 +265,10 @@ exports.getMentoring = (req, res, next) => {
       }
       Schedule.findOne({ user: session._id })
         .then((schedule) => {
-          const dateTimeSchedule = schedule.datetime;
-          console.log(
-            chalk.yellow.inverse(`${dateTimeSchedule} = ${dateTimeNow}`)
-          );
-
+          const dateTimeSchedule = "";
+          if (schedule) {
+            dateTimeSchedule = schedule.datetime;
+          }
           // if (dateTimeNow > dateTimeNow2) {
           //   console.log(chalk.blue.inverse("Waktu sudah lewat , Kadaluarsa"));
           // } else if (dateTimeNow < dateTimeNow2) {
