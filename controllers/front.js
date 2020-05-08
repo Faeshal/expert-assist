@@ -17,8 +17,6 @@ exports.getIndex = (req, res, next) => {
         })
           .sort({ _id: -1 })
           .then((mentor) => {
-            console.log(mentor);
-            // console.log(session.mentor);
             res.render("front/index", {
               admin: admin,
               session: session,
