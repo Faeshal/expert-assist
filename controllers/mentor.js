@@ -14,13 +14,14 @@ const voca = require("voca");
 const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
-  const id = req.session.mentor._id;
+  const session = req.session.mentor;
 
-  Mentor.findOne({ _id: id })
+  Mentor.findOne({ _id: session._id })
     .then((mentor) => {
       res.render("back/mentor/dashboard", {
         mentor: mentor,
         currency: currency,
+        session: session,
       });
     })
     .catch((err) => console.log(err));
@@ -59,10 +60,12 @@ exports.postMentorStatus = (req, res, next) => {
 };
 
 exports.getProfile = (req, res, next) => {
-  Mentor.findById(req.session.mentor._id)
+  const session = req.session.mentor;
+  Mentor.findById(session._id)
     .then((mentor) => {
       res.render("back/mentor/profile", {
         mentor: mentor,
+        session: session,
       });
     })
     .catch((err) => {
@@ -71,18 +74,19 @@ exports.getProfile = (req, res, next) => {
 };
 
 exports.getPayment = (req, res, next) => {
-  const id = req.session.mentor._id;
-  Payment.find({ $and: [{ mentor: id }, { status: true }] })
+  const session = req.session.mentor;
+  Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
     .populate("user", "username email")
     .then((payment) => {
       console.log(chalk.greenBright.inverse(payment));
-      Mentor.findById(id).then((mentor) => {
+      Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/payment", {
           mentor: mentor,
           payment: payment,
           voca: voca,
           moment: moment,
           currency: currency,
+          session: session,
         });
       });
     })
@@ -90,10 +94,12 @@ exports.getPayment = (req, res, next) => {
 };
 
 exports.getUpdateProfile = (req, res, next) => {
-  Mentor.findById(req.session.mentor._id)
+  const session = req.session.mentor;
+  Mentor.findById(session._id)
     .then((mentor) => {
       res.render("back/mentor/profileUpdate", {
         mentor: mentor,
+        session: session,
       });
     })
     .catch((err) => console.log(err));
@@ -169,7 +175,7 @@ exports.updateProfile = (req, res, next) => {
 };
 
 exports.getExam = (req, res, next) => {
-  console.log(req.session.mentor);
+  const session = req.session.mentor;
   Admin.findOne({ level: "admin" })
     .then((admin) => {
       // ! Bug - Handle eror , kalau category exam belum di set admin
@@ -179,11 +185,12 @@ exports.getExam = (req, res, next) => {
         console.log("Admin not found");
         res.render("layouts/500");
       } else {
-        Mentor.findById(req.session.mentor._id)
+        Mentor.findById(session._id)
           .then((mentor) => {
             res.render("back/mentor/exam", {
               mentor: mentor,
               admin: admin,
+              session: session,
             });
           })
           .catch((err) => {
@@ -221,13 +228,13 @@ exports.postBeginExam = (req, res, next) => {
 };
 
 exports.getBeginExam = (req, res, next) => {
+  const session = req.session.mentor;
   Admin.findOne({ level: "admin" }).then((admin) => {
     if (!admin) {
       console.log("Admin not found");
     } else {
-      Mentor.findById(req.session.mentor._id)
+      Mentor.findById(session._id)
         .then((mentor) => {
-          console.log(req.session.mentor);
           console.log("------");
           // * Compare
           if (!mentor.expertise) {
@@ -249,6 +256,7 @@ exports.getBeginExam = (req, res, next) => {
               mentor: mentor,
               admin: admin,
               testlink: testlink,
+              session: session,
             });
           }
         })
@@ -258,16 +266,17 @@ exports.getBeginExam = (req, res, next) => {
 };
 
 exports.getSchedule = (req, res, next) => {
-  const id = req.session.mentor._id;
-  Schedule.find({ mentor: id })
+  const session = req.session.mentor;
+  Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
     .then((schedule) => {
       console.log(schedule);
-      Mentor.findById(id).then((mentor) => {
+      Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/schedule", {
           mentor: mentor,
           schedule: schedule,
           moment: moment,
+          session: session,
         });
       });
     })
@@ -303,8 +312,8 @@ exports.postUpdateSchedule = (req, res, next) => {
 };
 
 exports.getMentoring = (req, res, next) => {
-  const id = req.session.mentor._id;
-  Schedule.findOne({ mentor: id })
+  const session = req.session.mentor;
+  Schedule.findOne({ mentor: session._id })
     .then((schedule) => {
       const dateTimeSchedule = schedule.datetime;
       if (!schedule) {
@@ -316,6 +325,7 @@ exports.getMentoring = (req, res, next) => {
         mentor: req.session.mentor._id,
         dateTimeSchedule: dateTimeSchedule,
         moment: moment,
+        session: session,
       });
     })
     .catch((err) => console.log(err));
@@ -357,26 +367,26 @@ exports.postFinishMentoring = (req, res, next) => {
 };
 
 exports.getReview = (req, res, next) => {
-  const id = req.session.mentor._id;
+  const session = req.session.mentor;
 
-  Review.find({ mentor: id })
+  Review.find({ mentor: session._id })
     .sort({ _id: -1 })
     .populate("user", "username")
     .exec()
     .then((review) => {
       console.log(chalk.blueBright(review));
-      console.log(review.user);
       Schedule.findOne({
-        $and: [{ mentor: req.session.mentor._id }, { approve: true }],
+        $and: [{ mentor: session._id }, { approve: true }],
       })
         .then((schedule) => {
-          Mentor.findById(id).then((mentor) => {
+          Mentor.findById(session._id).then((mentor) => {
             res.render("back/mentor/review", {
               mentor: mentor,
               review: review,
               moment: moment,
               voca: voca,
               schedule: schedule,
+              session: session,
             });
           });
         })
@@ -386,33 +396,33 @@ exports.getReview = (req, res, next) => {
 };
 
 exports.getWithdraw = (req, res, next) => {
-  const id = req.session.mentor._id;
-
-  Mentor.findById(id)
+  const session = req.session.mentor;
+  Mentor.findById(session._id)
     .then((mentor) => {
       if (!mentor) {
         console.log("No Mentor");
       } else if (mentor) {
         console.log(chalk.yellow(mentor));
-        Payment.findOne({ mentor: id })
+        Payment.findOne({ mentor: session._id })
           .then((payment) => {
             console.log(chalk.blue(payment));
-            Withdraw.find({ mentor: id })
+            Withdraw.find({ mentor: session._id })
               .sort({ _id: -1 })
               .then((withdraw) => {
-                if (!withdraw) {
-                  console.log(chalk.grey("No Withdraw Found"));
-                } else if (withdraw) {
-                  console.log(chalk.cyanBright(withdraw));
-                  res.render("back/mentor/withdraw", {
-                    moment: moment,
-                    voca: voca,
-                    mentor: mentor,
-                    payment: payment,
-                    withdraw: withdraw,
-                    currency: currency,
-                  });
+                if (withdraw.length < 1) {
+                  console.log(chalk.yellow.inverse("No Withdraw Found"));
+                } else {
+                  console.log(chalk.cyanBright.inverse(withdraw));
                 }
+                res.render("back/mentor/withdraw", {
+                  moment: moment,
+                  voca: voca,
+                  mentor: mentor,
+                  payment: payment,
+                  withdraw: withdraw,
+                  currency: currency,
+                  session: session,
+                });
               })
               .catch((err) => console.log(err));
           })

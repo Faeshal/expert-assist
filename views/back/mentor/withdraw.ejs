@@ -187,7 +187,20 @@
                 </div>
               </div>
             </div>
-            <!-- Light Table -->
+            <% if (!withdraw || withdraw == null || withdraw == undefined) { %>
+            <div class="card">
+              <img
+                class="img-fluid"
+                alt="Responsive image"
+                src="../../back/assets/img/custom/mentoring-fail.svg"
+                alt=""
+                style="width: 55%;"
+              />
+              <h4 class="text-center mb-4 text-primary pt-4">
+                Maaf anda belum melakukan penarikan dana
+              </h4>
+            </div>
+            <% } else { %>
             <div class="table-responsive">
               <table class="table align-items-center table-flush" id="mytable">
                 <thead class="thead-light">
@@ -268,6 +281,7 @@
                 </tbody>
               </table>
             </div>
+            <% } %>
           </div>
         </div>
       </div>
@@ -278,9 +292,9 @@
     <script>
       $(document).ready(function () {
         $("#buttonAlert").click(function (e) {
-          let total = $("#total").val();
-          let income = <%-mentor.income%>;
           e.preventDefault();
+          let total = $("#total").val();
+          let income = "<%-mentor.income%>";
           if (total == null || total == "") {
             Swal.fire(
               "Input Kosong",
@@ -341,29 +355,34 @@
           doc.text("----- WITHDRAW REPORT -----", 105, 40, { align: "center" });
 
           doc.setFontSize(10);
-          doc.text("Username : <%=mentor.username%> " , 15, 50);
+          doc.text("Username : <%=mentor.username%> ", 15, 50);
 
-          if (withdraw === undefined || withdraw.length == 0 || withdraw.length<1) {
+          if (
+            withdraw.length < 1 ||
+            withdraw == null ||
+            withdraw[0]._id == undefined
+          ) {
             doc.text("Last Withdraw ID : - ", 15, 55);
             doc.text("Last Witdraw Date : - ", 15, 60);
-          } else {
-            doc.text("Last Withdraw ID : <%=withdraw[0]._id%> ", 15, 55);
-            doc.text("Last Witdraw Date : <%=withdraw[0].datetime%>", 15, 60);
+          } else if (withdraw.length > 1) {
           }
 
-
           var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
-          var columns = [res.columns[0], res.columns[1],res.columns[2],res.columns[3]];
+          var columns = [
+            res.columns[0],
+            res.columns[1],
+            res.columns[2],
+            res.columns[3],
+          ];
           doc.autoTable(columns, res.data, {
             startY: 65,
             styles: {
-              halign: "center"
-            }
+              halign: "center",
+            },
           });
 
           window.open(doc.output("bloburl"));
         });
-
       });
     </script>
   </div>

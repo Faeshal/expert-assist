@@ -140,6 +140,7 @@ exports.getStripe = (req, res, next) => {
 
 exports.postStripeSuccess = (req, res, next) => {
   const id = req.params.id;
+  console.log(chalk.red.inverse(`Payment ID : ${id}`));
   Payment.findById(id)
     .then((payment) => {
       payment.status = true;
@@ -147,30 +148,35 @@ exports.postStripeSuccess = (req, res, next) => {
         .save()
         .then((result) => {
           console.log(chalk.red(result));
-          Payment.findOne({ status: true }).then((payment) => {
-            const mentorId = payment.mentor;
-            // ** get the last payment
-            Payment.findOne({ mentor: mentorId })
-              .sort({ _id: -1 })
-              .limit(1)
-              .then((payment) => {
-                // console.log(chalk.yellowBright.inverse(payment));
-                let total = payment.total;
-                // console.log("-----------------");
-                Mentor.findById(mentorId)
-                  .then((mentor) => {
-                    // ** sum the last payment with intial income from mentor collection
-                    let income = mentor.income + total;
-                    mentor.income = income;
-                    return mentor.save();
-                  })
-                  .then((mentorIncome) => {
-                    res.redirect("/user/schedule");
-                  })
-                  .catch((err) => console.log(err));
-              })
-              .catch((err) => console.log(err));
-          });
+          Payment.findOne()
+            .sort({ _id: -1 })
+            .then((payment) => {
+              const mentorId = payment.mentor;
+              console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
+              // ** get the last payment
+              Payment.findOne({ mentor: mentorId })
+                .sort({ _id: -1 })
+                .limit(1)
+                .then((payment) => {
+                  // console.log(chalk.yellowBright.inverse(payment));
+                  let total = payment.total;
+                  // console.log("-----------------");
+                  Mentor.findById(mentorId)
+                    .then((mentor) => {
+                      // ** sum the last payment with intial income from mentor collection
+                      console.log(chalk.red.inverse(mentor));
+                      let income = mentor.income + total;
+                      mentor.income = income;
+                      return mentor.save();
+                    })
+                    .then((mentorIncome) => {
+                      console.log(chalk.red.inverse(mentorIncome));
+                      res.redirect("/user/schedule");
+                    })
+                    .catch((err) => console.log(err));
+                })
+                .catch((err) => console.log(err));
+            });
         })
         .catch((err) => console.log(err));
     })
