@@ -409,11 +409,18 @@ exports.getWithdraw = (req, res, next) => {
             Withdraw.find({ mentor: session._id })
               .sort({ _id: -1 })
               .then((withdraw) => {
-                if (withdraw.length < 1) {
-                  console.log(chalk.yellow.inverse("No Withdraw Found"));
+                let lastWithdrawId = "";
+                let lastDatetime = "";
+
+                if (withdraw.length > 0) {
+                  console.log(chalk.redBright.inverse("Ada isinya"));
+                  lastWithdrawId = withdraw[0]._id;
+                  lastDatetime = withdraw[0].datetime;
+                  console.log(chalk.redBright.inverse(lastWithdrawId));
                 } else {
-                  console.log(chalk.cyanBright.inverse(withdraw));
+                  console.log(chalk.red.inverse("Withdraw Array Kosong"));
                 }
+
                 res.render("back/mentor/withdraw", {
                   moment: moment,
                   voca: voca,
@@ -422,6 +429,8 @@ exports.getWithdraw = (req, res, next) => {
                   withdraw: withdraw,
                   currency: currency,
                   session: session,
+                  lastWithdrawId: lastWithdrawId,
+                  lastDatetime: lastDatetime,
                 });
               })
               .catch((err) => console.log(err));

@@ -172,19 +172,22 @@
                 <div class="col-6">
                   <h3 class="mb-0">Plan The Schedule</h3>
                 </div>
+                <% if (withdraw.length>0) { %>
                 <div class="col-6 text-right">
                   <a
                     href="#"
                     class="btn btn-sm btn-neutral btn-round btn-icon pdfButton"
                     data-toggle="tooltip"
-                    data-original-title="Edit product"
+                    data-original-title="All Withdraw Report"
                   >
                     <span class="btn-inner--icon"
                       ><i class="fas fa-user-edit"></i
                     ></span>
+
                     <span class="btn-inner--text">Report</span>
                   </a>
                 </div>
+                <% } %>
               </div>
             </div>
             <% if (!withdraw || withdraw == null || withdraw == undefined) { %>
@@ -357,15 +360,8 @@
           doc.setFontSize(10);
           doc.text("Username : <%=mentor.username%> ", 15, 50);
 
-          if (
-            withdraw.length < 1 ||
-            withdraw == null ||
-            withdraw[0]._id == undefined
-          ) {
-            doc.text("Last Withdraw ID : - ", 15, 55);
-            doc.text("Last Witdraw Date : - ", 15, 60);
-          } else if (withdraw.length > 1) {
-          }
+          doc.text("Last Withdraw ID : <%-lastWithdrawId%>", 15, 55);
+          doc.text("Last Witdraw Date : <%-lastDatetime%>", 15, 60);
 
           var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
           var columns = [
