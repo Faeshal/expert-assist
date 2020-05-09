@@ -170,10 +170,10 @@
           doc.text("----- PAYMENT REPORT -----", 105, 40, { align: "center" });
 
           doc.setFontSize(10);
-          doc.text("Username : <%=session.username%> ", 15, 50);
+          doc.text("Username : <%-session.username%>", 15, 50);
 
-          doc.text("Last Payment ID : <%=payment[0]._id%> ", 15, 55);
-          doc.text("Last Payment Date : <%=payment[0].datetime%>", 15, 60);
+          doc.text("Last Payment ID : <%-lastPaymentId%>", 15, 55);
+          doc.text("Last Payment Date : <%-lastDatetime%>", 15, 60);
 
           doc.autoTable({
             theme: "striped",

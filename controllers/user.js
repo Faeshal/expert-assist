@@ -452,22 +452,33 @@ exports.postChangePassword = (req, res, next) => {
 };
 
 exports.getPayment = (req, res, next) => {
-  const id = req.session.user._id;
   const session = req.session.user;
-  const username = req.session.user.username;
-  Payment.find({ user: id })
+  Payment.find({ user: session._id })
     .sort({ _id: -1 })
     .populate("mentor", "username email")
     .exec()
     .then((payment) => {
-      console.log(chalk.yellowBright(payment));
+      console.log(chalk.black.bgYellow(payment));
+      let lastPaymentId = "";
+      let lastDatetime = "";
+
+      if (payment.length > 0) {
+        console.log(chalk.redBright.inverse("Ada isinya"));
+        lastPaymentId = payment[0]._id;
+        lastDatetime = payment[0].datetime;
+        console.log(chalk.redBright.inverse(lastPaymentId));
+      } else {
+        console.log(chalk.red.inverse("Payment Array Kosong"));
+      }
+
       res.render("back/user/payment", {
         moment: moment,
         voca: voca,
         payment: payment,
-        user: id,
         session: session,
         currency: currency,
+        lastPaymentId: lastPaymentId,
+        lastDatetime: lastDatetime,
       });
     })
     .catch((err) => console.log(err));

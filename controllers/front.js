@@ -2,7 +2,6 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
 const currency = require("currency.js");
-const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 
 exports.getIndex = (req, res, next) => {
   Admin.findOne({ level: "admin" })
