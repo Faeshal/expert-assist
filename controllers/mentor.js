@@ -15,7 +15,6 @@ const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
-
   Mentor.findOne({ _id: session._id })
     .then((mentor) => {
       res.render("back/mentor/dashboard", {
