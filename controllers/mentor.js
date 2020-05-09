@@ -314,9 +314,12 @@ exports.getMentoring = (req, res, next) => {
   const session = req.session.mentor;
   Schedule.findOne({ mentor: session._id })
     .then((schedule) => {
-      const dateTimeSchedule = schedule.datetime;
-      if (!schedule) {
-        console.log("No User Found");
+      let dateTimeSchedule = "";
+      if (schedule) {
+        console.log(chalk.red.inverse("Array Schedule Ada Isinya"));
+        dateTimeSchedule = schedule.datetime;
+      } else {
+        console.log(chalk.redBright.inverse("Array Schedule Kosong"));
       }
       console.log(schedule);
       res.render("back/mentor/mentoring", {

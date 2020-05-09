@@ -118,6 +118,9 @@ exports.getStripe = (req, res, next) => {
           {
             name: "Mentor Payment",
             description: "Expert-Assist Payment System",
+            images: [
+              "https://cdn2.iconfinder.com/data/icons/money-related/128/MONEY_2-02-512.png",
+            ],
             amount: priceConvert,
             currency: "idr",
             quantity: duration,
