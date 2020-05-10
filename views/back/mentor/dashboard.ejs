@@ -409,9 +409,8 @@
             dataType: "json",
           })
             .done(function (data) {
-              let newData = JSON.stringify(data.data); // 8
-              let oldData = localStorage.getItem("data"); // 7
-
+              let newData = JSON.stringify(data.data);
+              let oldData = localStorage.getItem("data");
               if (!oldData || oldData == null) {
                 localStorage.setItem("data", newData);
               } else {
@@ -422,11 +421,7 @@
                     width: 400,
                     icon: "success",
                     padding: "3em",
-                    backdrop: `
-                    rgba(0,0,123,0.4)
-                    left top
-                    no-repeat
-                    `,
+                    backdrop: "rgba(0,0,123,0.4)",
                     showConfirmButton: false,
                     timer: 10000,
                   });

@@ -295,6 +295,23 @@ exports.getSchedule = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getScheduleJson = (req, res, next) => {
+  const session = req.session.mentor;
+  Schedule.find({ mentor: session._id })
+    .count()
+    .then((schedule) => {
+      console.log(schedule);
+      if (schedule) {
+        res
+          .status(200)
+          .json({ status: "schedule Fetched", schedule: schedule });
+      } else {
+        res.status(404).json({ status: "No Schedule Found" });
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.postDeleteSchedule = (req, res, next) => {
   const id = req.body.id;
   Schedule.findByIdAndDelete(id)
@@ -417,7 +434,7 @@ exports.getWithdraw = (req, res, next) => {
       if (!mentor) {
         console.log("No Mentor");
       } else if (mentor) {
-        console.log(chalk.yellow(mentor));
+        console.log(chalk.yellow.inverse(mentor.income));
         Payment.findOne({ mentor: session._id })
           .then((payment) => {
             console.log(chalk.blue(payment));
@@ -451,6 +468,22 @@ exports.getWithdraw = (req, res, next) => {
               .catch((err) => console.log(err));
           })
           .catch((err) => console.log(err));
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getWithdrawJson = (req, res, next) => {
+  const session = req.session.mentor;
+  Withdraw.find({ $and: [{ mentor: session._id }, { status: true }] })
+    .count()
+    .then((withdraw) => {
+      if (withdraw) {
+        res
+          .status(200)
+          .json({ message: "Withdraw Fetched", withdraw: withdraw });
+      } else {
+        res.status(404).json({ message: "Withdraw data is empty" });
       }
     })
     .catch((err) => console.log(err));

@@ -79,6 +79,7 @@ router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
 // * Schedule
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
+router.get("/mentor/schedule/json", isAuth, mentorController.getScheduleJson);
 router.post(
   "/mentor/schedule/delete",
   isAuth,
@@ -101,6 +102,7 @@ router.get("/mentor/review", isAuth, mentorController.getReview);
 
 // * withdraw
 router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
+router.get("/mentor/withdraw/json", isAuth, mentorController.getWithdrawJson);
 router.post("/mentor/withdraw", isAuth, mentorController.postWithdraw);
 router.post("/mentor/withdraw/delete", isAuth, mentorController.deleteWithdraw);
 

@@ -246,9 +246,13 @@
       </div>
     </div>
 
+    <!-- Footer -->
+    <%-include('../../layouts/back/mentor/footer.ejs')%>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <!-- Jquery -->
     <script>
       $(document).ready(function () {
+        let interval = 1000;
         $(".myTd").on("click", ".edit", function () {
           var id = $(this).data("id");
           console.log(id);
@@ -260,10 +264,63 @@
           $(".link").val(link);
           $(".id").val(id);
         });
+
+        function getRequest() {
+          $.when(
+            $.get({
+              url: "/mentor/schedule/json",
+            }),
+            $.get({
+              url: "/mentor/withdraw/json",
+            })
+          )
+            .then((data1, data2) => {
+              let newData1 = JSON.stringify(data1[0].schedule);
+              let newData2 = JSON.stringify(data2[0].withdraw);
+              console.log(newData1);
+              console.log(newData2);
+              let oldData1 = localStorage.getItem("schedule");
+              let oldData2 = localStorage.getItem("withdraw");
+
+              if (!oldData1) {
+                localStorage.setItem("schedule", newData1);
+              } else if (!oldData2) {
+                localStorage.setItem("withdraw", newData2);
+              } else {
+                if (oldData1 < newData1 || oldData1 !== newData1) {
+                  Swal.fire({
+                    title: "New Schedule Notification",
+                    width: 400,
+                    icon: "success",
+                    padding: "3em",
+                    backdrop: "rgba(0,0,123,0.4)",
+                    showConfirmButton: false,
+                    timer: 10000,
+                  });
+                  localStorage.removeItem("schedule");
+                } else if (oldData2 < newData2 || oldData2 !== newData2) {
+                  Swal.fire({
+                    title: "Withdraw Accepted Notification",
+                    width: 400,
+                    icon: "success",
+                    padding: "3em",
+                    backdrop: "rgba(0,0,123,0.4)",
+                    showConfirmButton: false,
+                    timer: 10000,
+                  });
+                  localStorage.removeItem("withdraw");
+                }
+              }
+            })
+            .fail((err) => {
+              res.status(500).json({ message: `Failed : ${err}` });
+            })
+            .always(function () {
+              setTimeout(getRequest, interval);
+            });
+        }
+        setTimeout(getRequest, interval);
       });
     </script>
-
-    <!-- Footer -->
-    <%-include('../../layouts/back/mentor/footer.ejs')%>
   </div>
 </div>
