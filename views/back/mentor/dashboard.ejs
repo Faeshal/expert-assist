@@ -398,5 +398,51 @@
 
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script>
+      $(document).ready(function () {
+        let interval = 1000;
+        function getRequest() {
+          $.ajax({
+            type: "GET",
+            url: "/mentor/payment/json",
+            dataType: "json",
+          })
+            .done(function (data) {
+              let newData = JSON.stringify(data.data); // 8
+              let oldData = localStorage.getItem("data"); // 7
+
+              if (!oldData || oldData == null) {
+                localStorage.setItem("data", newData);
+              } else {
+                console.log(`Old Data: ${oldData} == New Data: ${newData}`);
+                if (oldData < newData || oldData !== newData) {
+                  Swal.fire({
+                    title: "New Payment Notification",
+                    width: 400,
+                    icon: "success",
+                    padding: "3em",
+                    backdrop: `
+                    rgba(0,0,123,0.4)
+                    left top
+                    no-repeat
+                    `,
+                    showConfirmButton: false,
+                    timer: 10000,
+                  });
+                  localStorage.removeItem("data");
+                }
+              }
+            })
+            .fail(function () {
+              alert("error");
+            })
+            .always(function () {
+              setTimeout(getRequest, interval);
+            });
+        }
+        setTimeout(getRequest, interval);
+      });
+    </script>
   </div>
 </div>

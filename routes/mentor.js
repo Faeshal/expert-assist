@@ -69,6 +69,7 @@ router.post(
 
 // * Payment
 router.get("/mentor/payment", isAuth, mentorController.getPayment);
+router.get("/mentor/payment/json", mentorController.getPaymentJson);
 
 // * Exam
 router.get("/mentor/exam", isAuth, mentorController.getExam);

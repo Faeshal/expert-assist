@@ -77,7 +77,6 @@ exports.getPayment = (req, res, next) => {
   Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
     .populate("user", "username email")
     .then((payment) => {
-      console.log(chalk.greenBright.inverse(payment));
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/payment", {
           mentor: mentor,
@@ -88,6 +87,20 @@ exports.getPayment = (req, res, next) => {
           session: session,
         });
       });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getPaymentJson = (req, res, next) => {
+  const session = req.session.mentor;
+  Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
+    .count()
+    .then((payment) => {
+      if (payment) {
+        res.status(200).json({ message: "true", data: payment });
+      } else {
+        res.status(404).json({ message: "No Mentor Data" });
+      }
     })
     .catch((err) => console.log(err));
 };
@@ -506,7 +519,7 @@ exports.postChangePassword = (req, res, next) => {
                   if (err) {
                     console.log(err);
                   } else {
-                    res.json(result);
+                    res.statsu(201).json(result);
                     console.log(chalk.yellowBright(result));
                   }
                 });
