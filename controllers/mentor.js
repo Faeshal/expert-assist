@@ -97,9 +97,9 @@ exports.getPaymentJson = (req, res, next) => {
     .count()
     .then((payment) => {
       if (payment) {
-        res.status(200).json({ message: "true", data: payment });
+        res.status(200).json({ message: "true", payment: payment });
       } else {
-        res.status(404).json({ message: "No Mentor Data" });
+        res.json({ message: "No Mentor Data", payment: 0 });
       }
     })
     .catch((err) => console.log(err));
@@ -306,7 +306,7 @@ exports.getScheduleJson = (req, res, next) => {
           .status(200)
           .json({ status: "schedule Fetched", schedule: schedule });
       } else {
-        res.status(404).json({ status: "No Schedule Found" });
+        res.json({ status: "No Schedule Found", schedule: 0 });
       }
     })
     .catch((err) => console.log(err));
@@ -427,6 +427,21 @@ exports.getReview = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getReviewJson = (req, res, next) => {
+  const session = req.session.mentor;
+
+  Review.find({ mentor: session._id })
+    .count()
+    .then((review) => {
+      if (review) {
+        res.status(200).json({ message: "Successfully Fetch", review: review });
+      } else {
+        res.json({ message: "No Review Data", review: 0 });
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getWithdraw = (req, res, next) => {
   const session = req.session.mentor;
   Mentor.findById(session._id)
@@ -483,7 +498,7 @@ exports.getWithdrawJson = (req, res, next) => {
           .status(200)
           .json({ message: "Withdraw Fetched", withdraw: withdraw });
       } else {
-        res.status(404).json({ message: "Withdraw data is empty" });
+        res.json({ message: "Withdraw data is empty", withdraw: 0 });
       }
     })
     .catch((err) => console.log(err));

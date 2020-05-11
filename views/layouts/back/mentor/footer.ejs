@@ -72,7 +72,7 @@
 <!-- Rate Yo Star -->
 <script src="../../back/assets/js/rater.js"></script>
 <!-- JSPDF & Plugin -->
-<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>  
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.3/jspdf.plugin.autotable.min.js"></script>
 <!-- Data Table -->
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -101,5 +101,103 @@
       },
       responsive: true,
     });
+
+    let interval = 1000;
+
+    function getRequest() {
+      $.when(
+        $.get({
+          url: "/mentor/schedule/json",
+        }),
+        $.get({
+          url: "/mentor/withdraw/json",
+        }),
+        $.get({
+          url: "/mentor/payment/json",
+        }),
+        $.get({
+          url: "/mentor/review/json",
+        })
+      )
+        .then((data1, data2, data3, data4) => {
+          let newData1 = JSON.stringify(data1[0].schedule);
+          let newData2 = JSON.stringify(data2[0].withdraw);
+          let newData3 = JSON.stringify(data3[0].payment);
+          let newData4 = JSON.stringify(data4[0].review);
+
+          let oldData1 = localStorage.getItem("schedule");
+          let oldData2 = localStorage.getItem("withdraw");
+          let oldData3 = localStorage.getItem("payment");
+          let oldData4 = localStorage.getItem("review");
+
+          console.log(`Schedule: ${oldData1} = ${newData1}`);
+          console.log(`Withdraw: ${oldData2} = ${newData2}`);
+          console.log(`Payment: ${oldData3} = ${newData3}`);
+          console.log(`Review: ${oldData4} = ${newData4}`);
+
+          if (!oldData1) {
+            localStorage.setItem("schedule", newData1);
+          } else if (!oldData2) {
+            localStorage.setItem("withdraw", newData2);
+          } else if (!oldData3) {
+            localStorage.setItem("payment", newData3);
+          } else if (!oldData4) {
+            localStorage.setItem("review", newData4);
+          } else {
+            if (oldData1 < newData1 || oldData1 !== newData1) {
+              Swal.fire({
+                title: "New Schedule Notification",
+                width: 400,
+                icon: "success",
+                padding: "3em",
+                backdrop: "rgba(0,0,123,0.4)",
+                showConfirmButton: false,
+                timer: 10000,
+              });
+              localStorage.removeItem("schedule");
+            } else if (oldData2 < newData2 || oldData2 !== newData2) {
+              Swal.fire({
+                title: "Withdraw Accepted Notification",
+                width: 400,
+                icon: "success",
+                padding: "3em",
+                backdrop: "rgba(0,0,123,0.4)",
+                showConfirmButton: false,
+                timer: 10000,
+              });
+              localStorage.removeItem("withdraw");
+            } else if (oldData3 < newData3 || oldData3 !== newData3) {
+              Swal.fire({
+                title: "New Payment Notification",
+                width: 400,
+                icon: "success",
+                padding: "3em",
+                backdrop: "rgba(0,0,123,0.4)",
+                showConfirmButton: false,
+                timer: 10000,
+              });
+              localStorage.removeItem("payment");
+            } else if (oldData4 < newData4 || oldData4 !== newData4) {
+              Swal.fire({
+                title: "New Review Notification",
+                width: 400,
+                icon: "success",
+                padding: "3em",
+                backdrop: "rgba(0,0,123,0.4)",
+                showConfirmButton: false,
+                timer: 10000,
+              });
+              localStorage.removeItem("review");
+            }
+          }
+        })
+        .fail((err) => {
+          console.log(err);
+        })
+        .always(function () {
+          setTimeout(getRequest, interval);
+        });
+    }
+    setTimeout(getRequest, interval);
   });
 </script>

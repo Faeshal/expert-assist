@@ -98,7 +98,7 @@ router.post("/mentor/mentoring/finish", mentorController.postFinishMentoring);
 
 // * Review
 router.get("/mentor/review", isAuth, mentorController.getReview);
-router.get("/mentor/review", isAuth, mentorController.getReview);
+router.get("/mentor/review/json", isAuth, mentorController.getReviewJson);
 
 // * withdraw
 router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
