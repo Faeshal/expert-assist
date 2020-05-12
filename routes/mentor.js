@@ -69,7 +69,7 @@ router.post(
 
 // * Payment
 router.get("/mentor/payment", isAuth, mentorController.getPayment);
-router.get("/mentor/payment/json", mentorController.getPaymentJson);
+router.get("/api/mentor/payments", mentorController.getPaymentJson);
 
 // * Exam
 router.get("/mentor/exam", isAuth, mentorController.getExam);
@@ -79,7 +79,7 @@ router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
 // * Schedule
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
-router.get("/mentor/schedule/json", isAuth, mentorController.getScheduleJson);
+router.get("/api/mentor/schedules", isAuth, mentorController.getScheduleJson);
 router.post(
   "/mentor/schedule/delete",
   isAuth,
@@ -98,11 +98,11 @@ router.post("/mentor/mentoring/finish", mentorController.postFinishMentoring);
 
 // * Review
 router.get("/mentor/review", isAuth, mentorController.getReview);
-router.get("/mentor/review/json", isAuth, mentorController.getReviewJson);
+router.get("/api/mentor/reviews", isAuth, mentorController.getReviewJson);
 
 // * withdraw
 router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
-router.get("/mentor/withdraw/json", isAuth, mentorController.getWithdrawJson);
+router.get("/api/mentor/withdraws", isAuth, mentorController.getWithdrawJson);
 router.post("/mentor/withdraw", isAuth, mentorController.postWithdraw);
 router.post("/mentor/withdraw/delete", isAuth, mentorController.deleteWithdraw);
 

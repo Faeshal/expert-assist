@@ -107,16 +107,16 @@
     function getRequest() {
       $.when(
         $.get({
-          url: "/mentor/schedule/json",
+          url: "/api/mentor/schedules",
         }),
         $.get({
-          url: "/mentor/withdraw/json",
+          url: "/api/mentor/withdraws",
         }),
         $.get({
-          url: "/mentor/payment/json",
+          url: "/api/mentor/payments",
         }),
         $.get({
-          url: "/mentor/review/json",
+          url: "/api/mentor/reviews",
         })
       )
         .then((data1, data2, data3, data4) => {
