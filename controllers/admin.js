@@ -15,31 +15,31 @@ const base_url = "https://api.daily.co/v1/";
 const auth = {
   headers: {
     Authorization:
-      "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13"
-  }
+      "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13",
+  },
 };
 
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
-    .then(admin => {
+    .then((admin) => {
       res.render("back/admin/dashboard", {
         admin: admin,
-        pageTitle: "Welcome Admin"
+        pageTitle: "Welcome Admin",
       });
       console.log(req.session);
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getProfile = (req, res, next) => {
   Admin.findById(req.session.admin)
-    .then(admin => {
+    .then((admin) => {
       res.render("back/admin/profile", {
         admin: admin,
-        pageTitle: "Admin - Profile"
+        pageTitle: "Admin - Profile",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateProfile = (req, res, next) => {
@@ -48,41 +48,41 @@ exports.updateProfile = (req, res, next) => {
   const publicemail = req.body.publicemail;
   const id = req.session.admin._id;
   Admin.findById(id)
-    .then(admin => {
+    .then((admin) => {
       admin.username = username;
       admin.phone = phone;
       admin.publicemail = publicemail;
       return admin.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/profile");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getAllBlog = (req, res, next) => {
   Admin.findOne()
-    .then(admins => {
+    .then((admins) => {
       var blog = admins.blog;
       res.render("back/admin/blog", {
         blog: blog,
-        pageTitle: "Admin - Blog"
+        pageTitle: "Admin - Blog",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getCreateBlog = (req, res, next) => {
   console.log(req.session.admin);
   Admin.findById(req.session.admin)
-    .then(admin => {
+    .then((admin) => {
       res.render("back/admin/blogadd", {
         admin: admin,
-        pageTitle: "Admin - Create Blog"
+        pageTitle: "Admin - Create Blog",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.createBlog = (req, res, nexta) => {
@@ -93,34 +93,34 @@ exports.createBlog = (req, res, nexta) => {
 
   const id = req.session.admin._id;
   Admin.findById(id)
-    .then(admin => {
+    .then((admin) => {
       admin.blog.push({
         title: title,
         image: image,
         desc: desc,
-        content: content
+        content: content,
       });
       return admin.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/bloglist");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getUpdateBlog = (req, res, next) => {
   const id = req.params.id;
   Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
-    .then(admins => {
+    .then((admins) => {
       var blog = admins.blog[0];
       console.log(blog);
       res.render("back/admin/blogupdate", {
         blog: blog,
-        pageTitle: "Admin - Update Blog"
+        pageTitle: "Admin - Update Blog",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateBlog = (req, res, next) => {
@@ -139,15 +139,15 @@ exports.updateBlog = (req, res, next) => {
         "blog.$.image": image,
         "blog.$.desc": desc,
         "blog.$.status": status,
-        "blog.$.content": content
-      }
+        "blog.$.content": content,
+      },
     }
   )
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/bloglist");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteBlog = (req, res, next) => {
@@ -155,17 +155,17 @@ exports.deleteBlog = (req, res, next) => {
   console.log(id);
   // * $pull =  Query Native MongoDB
   Admin.updateOne({ $pull: { blog: { _id: id } } })
-    .then(admins => {
+    .then((admins) => {
       console.log(admins);
       console.log("Blog Deleted");
       res.redirect("/admin/bloglist");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getCategory = (req, res, next) => {
   Admin.findOne()
-    .then(admins => {
+    .then((admins) => {
       console.log(admins);
       var category = admins.category;
       console.log("=====================");
@@ -173,10 +173,10 @@ exports.getCategory = (req, res, next) => {
       res.render("back/admin/category", {
         category: category,
         pageTitle: "Admin - Category",
-        moment: moment
+        moment: moment,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postCategory = (req, res, next) => {
@@ -184,18 +184,18 @@ exports.postCategory = (req, res, next) => {
   const testlink = req.body.testlink;
   const id = req.session.admin._id;
   Admin.findById(id)
-    .then(admin => {
+    .then((admin) => {
       admin.category.push({
         name: name,
-        testlink: testlink
+        testlink: testlink,
       });
       return admin.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/category");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateCategory = (req, res, next) => {
@@ -208,15 +208,15 @@ exports.updateCategory = (req, res, next) => {
     {
       $set: {
         "category.$.name": name,
-        "category.$.testlink": testlink
-      }
+        "category.$.testlink": testlink,
+      },
     }
   )
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/category");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteCategory = (req, res, next) => {
@@ -224,24 +224,24 @@ exports.deleteCategory = (req, res, next) => {
   console.log(id);
   // * $pull =  Query Native MongoDB
   Admin.updateOne({ $pull: { category: { _id: id } } })
-    .then(admins => {
+    .then((admins) => {
       console.log(admins);
       console.log("Category Deleted");
       res.redirect("/admin/category");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getFaq = (req, res, next) => {
   Admin.findOne()
-    .then(admins => {
+    .then((admins) => {
       let faq = admins.faq;
       res.render("back/admin/faq", {
         faq: faq,
-        pageTitle: "Admin - FAQ"
+        pageTitle: "Admin - FAQ",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postFaq = (req, res, next) => {
@@ -249,18 +249,18 @@ exports.postFaq = (req, res, next) => {
   const answer = req.body.answer;
   const id = req.session.admin._id;
   Admin.findOne(id)
-    .then(admin => {
+    .then((admin) => {
       admin.faq.push({
         question: question,
-        answer: answer
+        answer: answer,
       });
       return admin.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/faq");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateFaq = (req, res, next) => {
@@ -273,38 +273,38 @@ exports.updateFaq = (req, res, next) => {
     {
       $set: {
         "faq.$.question": question,
-        "faq.$.answer": answer
-      }
+        "faq.$.answer": answer,
+      },
     }
   )
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/faq");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteFaq = (req, res, next) => {
   const id = req.body.id;
   Admin.updateOne({ $pull: { faq: { _id: id } } })
-    .then(admins => {
+    .then((admins) => {
       console.log(admins);
       console.log("Faq Deleted");
       res.redirect("/admin/faq");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getNews = (req, res, next) => {
   Admin.findOne()
-    .then(admins => {
+    .then((admins) => {
       var news = admins.news;
       res.render("back/admin/news", {
         news: news,
-        pageTitle: "Admin - News"
+        pageTitle: "Admin - News",
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postNews = (req, res, next) => {
@@ -315,20 +315,20 @@ exports.postNews = (req, res, next) => {
 
   const id = req.session.admin._id;
   Admin.findOne(id)
-    .then(admin => {
+    .then((admin) => {
       admin.news.push({
         title: title,
         desc: desc,
         target: target,
-        content: content
+        content: content,
       });
       return admin.save();
     })
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/news");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.updateNews = (req, res, next) => {
@@ -345,54 +345,67 @@ exports.updateNews = (req, res, next) => {
         "news.$.title": title,
         "news.$.desc": desc,
         "news.$.target": target,
-        "news.$.content": content
-      }
+        "news.$.content": content,
+      },
     }
   )
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.redirect("/admin/news");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.deleteNews = (req, res, next) => {
   const id = req.body.id;
   Admin.updateOne({ $pull: { news: { _id: id } } })
-    .then(admins => {
+    .then((admins) => {
       console.log(admins);
       console.log("News Deleted");
       res.redirect("/admin/news");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getMentorAll = (req, res, next) => {
   Mentor.find({ $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }] })
-    .then(mentor => {
+    .then((mentor) => {
       res.render("back/admin/mentorAll", {
         mentor: mentor,
         pageTitle: "Admin - All Mentor",
-        moment: moment
+        moment: moment,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getMentorExam = (req, res, next) => {
   Mentor.find({ mentorstatus: "false" })
     .sort({ _id: 1 })
-    .then(mentor => {
+    .then((mentor) => {
       if (!mentor) {
         console.log("No Mentor Unqualified");
       }
       res.render("back/admin/mentorExam", {
         mentor: mentor,
         pageTitle: "Admin - Mentor Exam",
-        moment: moment
+        moment: moment,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
+};
+
+exports.getMentorExamJson = (req, res, next) => {
+  Mentor.find({ mentorstatus: "false" })
+    .countDocuments()
+    .then((mentor) => {
+      if (mentor) {
+        res.status(200).json({ message: "success", mentor: mentor });
+      } else {
+        res.json({ message: "No Mentor was found" });
+      }
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postScore = (req, res, next) => {
@@ -400,42 +413,42 @@ exports.postScore = (req, res, next) => {
   const mentorstatus = req.body.mentorstatus;
   const id = req.body.id;
   Mentor.findById(id)
-    .then(mentor => {
+    .then((mentor) => {
       mentor.username = username;
       mentor.mentorstatus = mentorstatus;
       return mentor.save();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/admin/mentor/exam");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getUserAll = (req, res, next) => {
   User.find({ status: "true" })
-    .then(user => {
+    .then((user) => {
       res.render("back/admin/userAll", {
         user: user,
         pageTitle: "Admin - All User",
         moment: moment,
-        v: v
+        v: v,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getBlockUser = (req, res, next) => {
   User.find({ status: "block" })
     .sort({ _id: 1 })
-    .then(user => {
+    .then((user) => {
       res.render("back/admin/userBlock", {
         user: user,
         pageTitle: "Admin - user Blocked",
         moment: moment,
-        v: v
+        v: v,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postUserBlock = (req, res, next) => {
@@ -443,28 +456,28 @@ exports.postUserBlock = (req, res, next) => {
   const status = req.body.status;
 
   User.findById(id)
-    .then(user => {
+    .then((user) => {
       user.status = status;
       return user.save();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/admin/user/block");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getBlockMentor = (req, res, next) => {
   Mentor.find({ mentorstatus: "block" })
     .sort({ _id: 1 })
-    .then(mentor => {
+    .then((mentor) => {
       res.render("back/admin/mentorBlock", {
         mentor: mentor,
         pageTitle: "Admin - Mentor Blocked",
         moment: moment,
-        v: v
+        v: v,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.postMentorBlock = (req, res, next) => {
@@ -472,14 +485,14 @@ exports.postMentorBlock = (req, res, next) => {
   const mentorstatus = req.body.mentorstatus;
 
   Mentor.findById(id)
-    .then(mentor => {
+    .then((mentor) => {
       mentor.mentorstatus = mentorstatus;
       return mentor.save();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/admin/mentor/block");
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getPayment = (req, res, next) => {
@@ -487,13 +500,13 @@ exports.getPayment = (req, res, next) => {
     .populate({ path: "user", select: ["username", "email"] })
     .populate({ path: "mentor", select: ["username", "email"] })
     .exec()
-    .then(payment => {
+    .then((payment) => {
       console.log(payment);
       res.render("back/admin/payment", {
         payment: payment,
         pageTitle: "All Payment",
         moment: moment,
-        v: v
+        v: v,
       });
     });
 };
@@ -501,7 +514,7 @@ exports.getPayment = (req, res, next) => {
 exports.getMentoring = (req, res, next) => {
   axios
     .get(base_url + "rooms", auth)
-    .then(result => {
+    .then((result) => {
       console.log("----------------");
       console.log(result.data.data);
       let data = result.data.data;
@@ -509,25 +522,37 @@ exports.getMentoring = (req, res, next) => {
         moment: moment,
         pageTitle: "Welcome Admin",
         v: v,
-        data: data
+        data: data,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
     .populate({ path: "mentor", select: ["username", "email"] })
     .exec()
-    .then(withdraw => {
+    .then((withdraw) => {
       console.log(chalk.yellow(withdraw));
       res.render("back/admin/withdraw", {
         moment: moment,
         pageTitle: "Money Withdraw",
-        withdraw: withdraw
+        withdraw: withdraw,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
+};
+
+exports.getwithdrawJson = (req, res, next) => {
+  Withdraw.countDocuments()
+    .then((withdraw) => {
+      if (withdraw) {
+        res.status(200).json({ message: "success", withdraw: withdraw });
+      } else {
+        res.json({ message: "No Withdraw Found" });
+      }
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postUpdateWithdraw = (req, res, next) => {
@@ -535,33 +560,33 @@ exports.postUpdateWithdraw = (req, res, next) => {
   const status = req.body.status;
   const mentorId = req.body.mentor;
   Withdraw.findById(id)
-    .then(withdraw => {
+    .then((withdraw) => {
       withdraw.status = status;
       return withdraw.save();
     })
-    .then(result => {
+    .then((result) => {
       const newMentorId = mongoose.Types.ObjectId(mentorId);
       Withdraw.findOne({ mentor: newMentorId })
         .sort({ _id: -1 })
         .limit(1)
-        .then(newWithdraw => {
+        .then((newWithdraw) => {
           console.log(chalk.red.inverse(newWithdraw));
           let total = newWithdraw.total;
           console.log("-----------------");
           Mentor.findById(newMentorId)
-            .then(mentor => {
+            .then((mentor) => {
               console.log(chalk.greenBright.italic(mentor));
               let income = mentor.income - total;
               mentor.income = income;
               return mentor.save();
             })
-            .then(result2 => {
+            .then((result2) => {
               console.log(result2);
               res.redirect("/admin/withdraw");
             })
-            .catch(err => console.log(err));
+            .catch((err) => console.log(err));
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };

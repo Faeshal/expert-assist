@@ -40,6 +40,7 @@ router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
 router.get("/admin/mentor/all", adminContoller.getMentorAll);
 router.post("/admin/mentor/all", adminContoller.postMentorBlock);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
+router.get("/api/admin/mentorexams", adminContoller.getMentorExamJson);
 router.post("/admin/mentor/exam/update", adminContoller.postScore);
 router.get("/admin/mentor/block", adminContoller.getBlockMentor);
 
@@ -56,6 +57,7 @@ router.get("/admin/mentoring", adminContoller.getMentoring);
 
 // *Withdraw
 router.get("/admin/withdraw", adminContoller.getwithdraw);
+router.get("/api/admin/withdraws", adminContoller.getwithdrawJson);
 router.post("/admin/withdraw/update", adminContoller.postUpdateWithdraw);
 
 module.exports = router;

@@ -286,7 +286,7 @@ exports.getMentoring = (req, res, next) => {
           if (schedule) {
             dateTimeSchedule = schedule.datetime;
           }
-          // if (dateTimeNow > dateTimeNow2) {
+          // if (dateTimeNow > dateTimeNow2) {a
           //   console.log(chalk.blue.inverse("Waktu sudah lewat , Kadaluarsa"));
           // } else if (dateTimeNow < dateTimeNow2) {
           //   console.log(chalk.blue.inverse("waktu mentoring belum tiba"));
