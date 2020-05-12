@@ -144,7 +144,7 @@
           } else if (!oldData4) {
             localStorage.setItem("review", newData4);
           } else {
-            if (oldData1 < newData1 || oldData1 !== newData1) {
+            if (newData1 > oldData1) {
               Swal.fire({
                 title: "New Schedule Notification",
                 width: 400,
@@ -155,7 +155,7 @@
                 timer: 10000,
               });
               localStorage.removeItem("schedule");
-            } else if (oldData2 < newData2 || oldData2 !== newData2) {
+            } else if (newData2 > oldData2) {
               Swal.fire({
                 title: "Withdraw Accepted Notification",
                 width: 400,
@@ -166,7 +166,7 @@
                 timer: 10000,
               });
               localStorage.removeItem("withdraw");
-            } else if (oldData3 < newData3 || oldData3 !== newData3) {
+            } else if (newData3 > oldData3) {
               Swal.fire({
                 title: "New Payment Notification",
                 width: 400,
