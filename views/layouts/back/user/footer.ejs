@@ -64,12 +64,14 @@
 <script src="../../back/assets/js/vendor/jvectormap/jquery-jvectormap-world-mill.js"></script>
 <!-- Argon JS -->
 <script src="../../back/assets/js/argon.js?v=1.1.0"></script>
+<!-- Sweet Alert  -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Demo JS - remove this in your project -->
 <script src="../../back/assets/js/demo.min.js"></script>
 <!-- Rate Yo Star -->
 <script src="../../back/assets/js/rater.js"></script>
 <!-- JSPDF & Plugin -->
-<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>  
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.3/jspdf.plugin.autotable.min.js"></script>
 <!-- Data Table -->
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -77,6 +79,7 @@
 <!-- Data Table Setup -->
 <script>
   $(document).ready(function () {
+    let interval = 1000;
     $("#table_id").DataTable({
       ordering: false,
       stateSave: true,
@@ -91,5 +94,43 @@
       },
       responsive: true,
     });
+
+    function getRequest() {
+      $.when(
+        $.get({
+          url: "/api/user/schedules",
+        })
+      )
+        .then((data1) => {
+          let newData1 = JSON.stringify(data1.schedule);
+          let oldData1 = localStorage.getItem("schedule");
+
+          console.log(`schedule : ${oldData1} = ${newData1} `);
+
+          if (!oldData1) {
+            localStorage.setItem("schedule", newData1);
+          } else {
+            if (newData1 > oldData1) {
+              Swal.fire({
+                title: "Schedule Approve Notification",
+                width: 400,
+                icon: "success",
+                padding: "3em",
+                backdrop: "rgba(0,0,123,0.4)",
+                showConfirmButton: false,
+                timer: 10000,
+              });
+              localStorage.removeItem("schedule");
+            }
+          }
+        })
+        .fail((err) => {
+          console.log(err);
+        })
+        .always(function () {
+          setTimeout(getRequest, interval);
+        });
+    }
+    setTimeout(getRequest, interval);
   });
 </script>

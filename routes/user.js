@@ -63,6 +63,7 @@ router.get("/user/payment", isAuth, userController.getPayment);
 
 // * Scheduling
 router.get("/user/schedule", isAuth, userController.getSchedule);
+router.get("/api/user/schedules", isAuth, userController.getScheduleJson);
 router.post("/user/schedule", isAuth, userController.postSchedule);
 router.post("/user/schedule/delete", isAuth, userController.postDeleteSchedule);
 

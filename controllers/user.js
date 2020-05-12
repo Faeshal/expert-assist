@@ -225,6 +225,20 @@ exports.getSchedule = (req, res, next) => {
     });
 };
 
+exports.getScheduleJson = (req, res, next) => {
+  const session = req.session.user;
+  Schedule.find({ $and: [{ user: session._id }, { approve: true }] })
+    .count()
+    .then((schedule) => {
+      if (schedule) {
+        res.status(200).json({ message: "Success", schedule: schedule });
+      } else {
+        res.json({ message: "Data Not Found", schedule: 0 });
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.postSchedule = (req, res, next) => {
   const user = req.body.user;
   const mentor = req.body.mentor;
@@ -268,7 +282,7 @@ exports.getMentoring = (req, res, next) => {
       }
       Schedule.findOne({ user: session._id })
         .then((schedule) => {
-          const dateTimeSchedule = "";
+          let dateTimeSchedule = "";
           if (schedule) {
             dateTimeSchedule = schedule.datetime;
           }

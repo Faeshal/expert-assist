@@ -93,6 +93,7 @@ router.post(
 
 // * Mentoring
 router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
+router.get("/api/mentor/lives", isAuth, mentorController.getMentoringJson);
 router.get("/mentor/mentoring/live", isAuth, mentorController.getLive);
 router.post("/mentor/mentoring/finish", mentorController.postFinishMentoring);
 

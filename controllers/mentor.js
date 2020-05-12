@@ -297,6 +297,13 @@ exports.getSchedule = (req, res, next) => {
 
 exports.getScheduleJson = (req, res, next) => {
   const session = req.session.mentor;
+  // Schedule.aggregate([
+  //   { $match: { mentor: session._id } },
+
+  //   {
+  //     $count: "total",
+  //   },
+  // ])
   Schedule.find({ mentor: session._id })
     .count()
     .then((schedule) => {
@@ -359,6 +366,21 @@ exports.getMentoring = (req, res, next) => {
         moment: moment,
         session: session,
       });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getMentoringJson = (req, res, next) => {
+  const session = req.session.mentor;
+  Schedule.findOne({ mentor: session._id })
+    .then((schedule) => {
+      if (schedule) {
+        res
+          .status(200)
+          .json({ message: "Fetched Mentoring", mentoring: schedule });
+      } else {
+        res.json({ message: "Mentoring Data is Empty" });
+      }
     })
     .catch((err) => console.log(err));
 };
