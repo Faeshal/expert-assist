@@ -146,7 +146,7 @@
             localStorage.setItem(withdrawKey, newData2);
           } else if (!oldData3) {
             localStorage.setItem(paymentKey, newData3);
-          } else if (!oldData4) {
+          } else if (!oldData4 ) {
             localStorage.setItem(reviewKey, newData4);
           } else {
             if (newData1 > oldData1) {
@@ -182,7 +182,7 @@
                 timer: 10000,
               });
               localStorage.removeItem(paymentKey);
-            } else if (oldData4 > newData4) {
+            } else if (newData4 > oldData4) {
               Swal.fire({
                 title: "New Review Notification",
                 width: 400,

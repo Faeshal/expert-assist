@@ -349,7 +349,9 @@ exports.postUpdateSchedule = (req, res, next) => {
 
 exports.getMentoring = (req, res, next) => {
   const session = req.session.mentor;
+  const dateTimeNow = new Date();
   Schedule.findOne({ mentor: session._id })
+    .sort({ _id: -1 })
     .then((schedule) => {
       let dateTimeSchedule = "";
       if (schedule) {
@@ -358,11 +360,12 @@ exports.getMentoring = (req, res, next) => {
       } else {
         console.log(chalk.redBright.inverse("Array Schedule Kosong"));
       }
-      console.log(schedule);
+      console.log(chalk.blue.inverse(dateTimeNow + "--" + dateTimeSchedule));
       res.render("back/mentor/mentoring", {
         schedule: schedule,
         mentor: req.session.mentor._id,
         dateTimeSchedule: dateTimeSchedule,
+        dateTimeNow: dateTimeNow,
         moment: moment,
         session: session,
       });
@@ -388,6 +391,7 @@ exports.getMentoringJson = (req, res, next) => {
 exports.getLive = (req, res, next) => {
   const id = req.session.mentor._id;
   Schedule.findOne({ mentor: id })
+    .sort({ _id: -1 })
     .then((schedule) => {
       console.log(chalk.blue.inverse(schedule));
       const dateTimeSchedule = schedule.datetime;

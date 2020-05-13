@@ -69,6 +69,20 @@
                   Anda belum membuat jadwal , Segera request jadwal dengan
                   mentor anda
                 </h4>
+                <% }else if (schedule.status==true) { %>
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../back/assets/img/custom/finish_mentoring.svg"
+                  alt=""
+                  style="width: 35%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  Mentoring Selesai, Berikan Review untuk mentor
+                  <a class="text-danger font-weight-bold" href="/user/review"
+                    >Disini</a
+                  >
+                </h4>
                 <% } else if(schedule.approve==false) { %>
                 <img
                   class="img-fluid"
