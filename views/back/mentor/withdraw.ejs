@@ -248,8 +248,8 @@
                       </span>
                       <% } %>
                     </td>
+                    <% if(withdrawData.status==false) { %>
                     <td class="text-center">
-                      <% if(withdrawData.status==false) { %>
                       <form
                         id="deleteForm"
                         action="/mentor/withdraw/delete"
@@ -257,29 +257,26 @@
                       >
                         <input
                           type="hidden"
-                          name="id"
-                          value="<%=withdrawData._id%>"
-                        />
-                        <input
-                          type="hidden"
                           name="_csrf"
                           value="<%= csrfToken %>"
                         />
-
+                        <input
+                          type="hidden"
+                          name="id"
+                          id="withdrawId"
+                          value="<%=withdrawData._id%>"
+                        />
                         <button
-                          id="deleteAlert"
-                          type="button"
-                          class="table-action btn btn-sm"
+                          type="submit"
+                          class="table-action btn btn-sm deleteAlert"
                           data-toggle="tooltip"
                           data-original-title="Cancel Withdraw"
                         >
                           <i class="fas fa-trash"></i>
                         </button>
                       </form>
-                      <% } else { %>
-                      <i class="fas fa-check-circle text-success"></i>
-                      <% } %>
                     </td>
+                    <% } %>
                   </tr>
                   <% }) %>
                 </tbody>
@@ -311,7 +308,7 @@
               "warning"
             );
             $("#total").val("");
-          } else if (total > <%-mentor.income%>) {
+          } else if (total > "<%-mentor.income%>") {
             Swal.fire(
               "Dana Tidak Cukup",
               "Perhatikan Total Nilai Income Anda Sebelum Submit",
@@ -329,22 +326,30 @@
           }
         });
 
-        $("#deleteAlert").click(function (e) {
-          e.preventDefault();
-          Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-          }).then(function (result) {
-            if (result.value) {
-              $("#deleteForm").submit();
-            }
-          });
-        });
+        // $(".deleteAlert").click(function (e) {
+        //   e.preventDefault();
+        //   let id = this.value;
+        //   let inputId = $("input#withdrawId").val();
+        //   let baru = $("input#withdrawId").val("1234");
+        //   alert(id + " - " + inputId + "-" + baru);
+        // });
+
+        // $(".deleteAlert").click(function (e) {
+        //   e.preventDefault();
+        //   Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "You won't be able to revert this!",
+        //     icon: "warning",
+        //     showCancelButton: true,
+        //     confirmButtonColor: "#3085d6",
+        //     cancelButtonColor: "#d33",
+        //     confirmButtonText: "Yes, delete it!",
+        //   }).then(function (result) {
+        //     if (result.value) {
+        //       $("#deleteForm").submit();
+        //     }
+        //   });
+        // });
 
         let doc = new jsPDF();
         let imageData =
