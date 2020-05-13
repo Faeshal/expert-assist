@@ -102,13 +102,15 @@
         })
       )
         .then((data1) => {
+          let scheduleKey = "schedule_" + "<%-session.username%>";
+
           let newData1 = JSON.stringify(data1.schedule);
-          let oldData1 = localStorage.getItem("schedule");
+          let oldData1 = localStorage.getItem(scheduleKey);
 
           console.log(`schedule : ${oldData1} = ${newData1} `);
 
           if (!oldData1) {
-            localStorage.setItem("schedule", newData1);
+            localStorage.setItem(scheduleKey, newData1);
           } else {
             if (newData1 > oldData1) {
               Swal.fire({
@@ -120,7 +122,7 @@
                 showConfirmButton: false,
                 timer: 10000,
               });
-              localStorage.removeItem("schedule");
+              localStorage.removeItem(scheduleKey);
             }
           }
         })
