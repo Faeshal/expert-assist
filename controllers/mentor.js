@@ -513,7 +513,7 @@ exports.getWithdraw = (req, res, next) => {
 exports.getWithdrawJson = (req, res, next) => {
   const session = req.session.mentor;
   Withdraw.find({ $and: [{ mentor: session._id }, { status: true }] })
-    .count()
+    .countDocuments()
     .then((withdraw) => {
       if (withdraw) {
         res

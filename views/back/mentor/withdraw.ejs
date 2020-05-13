@@ -249,6 +249,7 @@
                       <% } %>
                     </td>
                     <td class="text-center">
+                      <% if(withdrawData.status==false) { %>
                       <form
                         id="deleteForm"
                         action="/mentor/withdraw/delete"
@@ -264,7 +265,7 @@
                           name="_csrf"
                           value="<%= csrfToken %>"
                         />
-                        <% if(withdrawData.status==false) { %>
+
                         <button
                           id="deleteAlert"
                           type="button"
@@ -274,10 +275,10 @@
                         >
                           <i class="fas fa-trash"></i>
                         </button>
-                        <% } else { %>
-                        <i class="fas fa-check-circle text-success"></i>
-                        <% } %>
                       </form>
+                      <% } else { %>
+                      <i class="fas fa-check-circle text-success"></i>
+                      <% } %>
                     </td>
                   </tr>
                   <% }) %>
@@ -297,21 +298,20 @@
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
           let total = $("#total").val();
-          let income = "<%-mentor.income%>";
           if (total == null || total == "") {
             Swal.fire(
               "Input Kosong",
               "Silahkan isi nilai dana terlebih dahulu",
               "warning"
             );
-          } else if (total <= 10000) {
+          } else if (total < 10000) {
             Swal.fire(
               "Dana Terlalu Kecil",
               "Minimal Pencairan Dana Rp. 10.000",
               "warning"
             );
             $("#total").val("");
-          } else if (total > 1000000) {
+          } else if (total > <%-mentor.income%>) {
             Swal.fire(
               "Dana Tidak Cukup",
               "Perhatikan Total Nilai Income Anda Sebelum Submit",
