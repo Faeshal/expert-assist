@@ -74,7 +74,5 @@ router.get("/user/mentoring/live", userController.getLive);
 // * Review
 router.get("/user/review", isAuth, userController.getReview);
 router.post("/user/review", userController.postReview);
-router.post("/user/review/update", userController.postUpdateReview);
-router.post("/user/review/delete", isAuth, userController.deleteReview);
 
 module.exports = router;

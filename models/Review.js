@@ -4,16 +4,16 @@ const ReviewSchema = new mongoose.Schema({
   rating: Number,
   datetime: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   mentor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Mentor"
-  }
+    ref: "Mentor",
+  },
 });
 
 module.exports = mongoose.model("Review", ReviewSchema);

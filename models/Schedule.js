@@ -26,6 +26,10 @@ const ScheduleSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  rating: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Schedule", ScheduleSchema);

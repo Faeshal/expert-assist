@@ -34,13 +34,27 @@
           url: "https://expert-assist.daily.co/<%=schedule.link%>",
         });
       </script>
-      <div
+           <div
         class="fixed-top mb-2 text-center mx-auto justify-content-center"
         style="width: 100%;"
       >
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center" style="height:35px;padding-top: 5px;padding-bottom: 5px;">
-          <h5 class="font-weight-bold text-danger mr-1">Duration : <h5>
-          <h5 class="font-weight-bold text-danger" id="time">.......<h5>
+        <nav
+          class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center"
+          style="height: 35px; padding-top: 5px; padding-bottom: 5px;"
+        >
+          <div class="container mx-auto text-center justify-content-center">
+            <div class="row mx-auto text-center justify-content-center">
+              <div class="col-sm">
+                <span class="badge badge-danger"><a class="text-white" href="/user/review">Finish</a></span>
+              </div>
+              <div class="col-sm">
+                <h5
+                  class="text-danger font-weight-bold mr-4 ml-4"
+                  id="time"
+                ></h5>
+              </div>
+            </div>
+          </div>
         </nav>
       </div>
     </div>

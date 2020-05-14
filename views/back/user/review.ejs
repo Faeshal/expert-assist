@@ -25,9 +25,6 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-          </div>
         </div>
       </div>
     </div>
@@ -45,15 +42,6 @@
                 <div class="col-6">
                   <h3 class="mb-0">Feedback</h3>
                 </div>
-                <div class="col-6 text-right">
-                  <a
-                    href="javascript:void(0);"
-                    class="btn btn-sm btn-neutral tombolTambahData"
-                    data-toggle="modal"
-                    data-target="#modal-form"
-                    >Create</a
-                  >
-                </div>
               </div>
             </div>
 
@@ -65,11 +53,10 @@
                   alt="Responsive image"
                   src="../../back/assets/img/custom/no-review.svg"
                   alt=""
-                  style="width: 30%;"
+                  style="width: 40%;"
                 />
                 <h4 class="text-center mb-4 text-primary pt-4">
-                  Anda belum memberi review apapun , karena belum melakukan
-                  transaksi
+                  Anda belum memberi review apapun
                 </h4>
               </div>
             </div>
@@ -85,7 +72,6 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th class="text-center">Rating</th>
-                    <th class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,41 +100,6 @@
                         data-rate-value="<%= reviewData.rating%>"
                       ></div>
                     </td>
-                    <td class="table-actions myTd text-center">
-                      <form method="POST" action="/user/review/delete">
-                        <a
-                          href="javascript:void(0);"
-                          class="table-action edit"
-                          data-original-title="Edit category"
-                          data-toggle="modal"
-                          data-target="#modal-form"
-                          data-id="<%=reviewData._id%>"
-                          data-content="<%=reviewData.content%>"
-                          data-rate-value="<%=reviewData.rating%>"
-                        >
-                          <i class="fas fa-user-edit"></i>
-                        </a>
-                        <input
-                          type="hidden"
-                          value="<%= reviewData._id %>"
-                          name="id"
-                        />
-                        <input
-                          type="hidden"
-                          name="_csrf"
-                          value="<%= csrfToken %>"
-                        />
-                        <button
-                          type="submit"
-                          onclick="return confirm('Are you sure you want to delete?');"
-                          class="table-action btn btn-sm"
-                          data-toggle="tooltip"
-                          data-original-title="Delete Review"
-                        >
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
-                    </td>
                   </tr>
                   <% }) %>
                 </tbody>
@@ -160,7 +111,6 @@
       </div>
     </div>
 
-    <% if (schedule) { %>
     <!-- Modals -->
     <div class="col-md-6">
       <div
@@ -177,9 +127,9 @@
               <div class="card bg-secondary border-0 mb-0">
                 <div class="card-body px-lg-5 py-lg-5">
                   <div class="text-center text-muted mb-4 mt-4">
-                    <h3 id="formModalLabel">Update Review</h3>
+                    <h3 id="formModalLabel">Create Review</h3>
                   </div>
-                  <form role="form" method="POST" action="/user/review/update">
+                  <form role="form" method="POST" action="/user/review/">
                     <div class="form-group mb-4">
                       <label for="exampleFormControlTextarea1">Rating</label>
                       <div
@@ -190,7 +140,11 @@
                           name="_csrf"
                           value="<%= csrfToken %>"
                         />
-                        <input type="hidden" name="id" class="id" />
+                        <input
+                          type="hidden"
+                          name="id"
+                          value="<%=schedule._id%>"
+                        />
 
                         <input
                           type="hidden"
@@ -214,7 +168,7 @@
                       <textarea
                         class="form-control content"
                         id="exampleFormControlTextarea1"
-                        rows="3"
+                        rows="4"
                         name="content"
                       ></textarea>
                     </div>
@@ -223,7 +177,7 @@
                         type="submit"
                         class="btn btn-primary my-4 text-center button-dynamic"
                       >
-                        Update
+                        RATE MENTOR
                       </button>
                     </div>
                   </form>
@@ -234,7 +188,6 @@
         </div>
       </div>
     </div>
-    <% } %>
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
@@ -250,45 +203,18 @@
     };
     $(".rate").rate(options1);
 
-    // ** Create Button
-    $(".tombolTambahData").on("click", function () {
-      $("#formModalLabel").html("Create review");
-      $(".button-dynamic button[type=submit]").html("Submit");
-      $(".content").val("");
-      $(".rating").val("");
-      $(".rate-post").val("");
-
-      $(".modal-body form").attr("action", "/user/review/");
-
-      $(".ratePost").rate({
-        max_value: 10,
-        step_size: 1,
-        initial_value: 0,
-        update_input_field_name: $("#rating"),
-      });
+    $(".ratePost").rate({
+      max_value: 10,
+      step_size: 1,
+      initial_value: 0,
+      update_input_field_name: $("#rating"),
     });
 
-    // ** Edit Button
-    $(".myTd").on("click", ".edit", function () {
-      $("#formModalLabel").html("Update review");
-      $(".button-dynamic button[type=submit]").html("Update");
-      var id = $(this).data("id");
-      console.log(id);
-      var content = $(this).data("content");
-      var ratePost = $(this).data("rate-value");
-      console.log(ratePost);
-
-      $(".content").val(content);
-      $(".ratePost").val(ratePost);
-      $(".id").val(id);
-
-      $(".ratePost").rate({
-        max_value: 10,
-        step_size: 1,
-        initial_value: 0,
-        update_input_field_name: $("#rating"),
-      });
-    });
+    if(<%-schedule.rating%> == true){
+      $("#modal-form").modal("hide");
+    }else{
+      $("#modal-form").modal("show");
+    }
   });
 </script>
 

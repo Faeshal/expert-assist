@@ -326,11 +326,11 @@ exports.getReview = (req, res, next) => {
 
   Review.find({ user: session._id })
     .populate("mentor", "username")
+    .sort({ _id: -1 })
     .exec()
     .then((review) => {
-      console.log(chalk.blueBright(review));
-
-      Schedule.findOne({ $and: [{ user: session._id }, { approve: true }] })
+      Schedule.findOne({ $and: [{ user: session._id }, { status: true }] })
+        .sort({ _id: -1 })
         .then((schedule) => {
           res.render("back/user/review", {
             session: session,
@@ -346,6 +346,7 @@ exports.getReview = (req, res, next) => {
 };
 
 exports.postReview = (req, res, next) => {
+  const id = req.body.id;
   const content = req.body.content;
   const rating = req.body.rating;
   const user = req.session.user._id;
@@ -357,63 +358,40 @@ exports.postReview = (req, res, next) => {
     user: user,
     mentor: mentor,
   });
-  review
-    .save()
-    .then((review) => {
-      console.log(chalk.yellow.inverse(review));
-      const convertMentorId = mongoose.Types.ObjectId(mentor);
-      Review.aggregate([
-        {
-          $match: { mentor: convertMentorId },
-        },
-        {
-          $group: { _id: null, avgRating: { $avg: "$rating" } },
-        },
-      ]).then((resultReview) => {
-        console.log(chalk.bgYellow(JSON.stringify(resultReview)));
-        let avgRating = resultReview[0].avgRating;
-        Mentor.findById(mentor)
-          .then((mentors) => {
-            mentors.rating = avgRating;
-            return mentors.save();
-          })
-          .then((result) => {
-            res.redirect("/user/review");
+
+  Schedule.findById(id)
+    .then((schedule) => {
+      schedule.rating = true;
+      return schedule.save().then(() => {
+        review
+          .save()
+          .then((review) => {
+            console.log(chalk.yellow.inverse(review));
+            const convertMentorId = mongoose.Types.ObjectId(mentor);
+            Review.aggregate([
+              {
+                $match: { mentor: convertMentorId },
+              },
+              {
+                $group: { _id: null, avgRating: { $avg: "$rating" } },
+              },
+            ]).then((resultReview) => {
+              console.log(chalk.bgYellow(JSON.stringify(resultReview)));
+              let avgRating = resultReview[0].avgRating;
+              Mentor.findById(mentor)
+                .then((mentors) => {
+                  mentors.rating = avgRating;
+                  return mentors.save();
+                })
+                .then((result) => {
+                  console.log(chalk.magenta.inverse(result));
+                  res.redirect("/user/review");
+                })
+                .catch((err) => console.log(err));
+            });
           })
           .catch((err) => console.log(err));
       });
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.postUpdateReview = (req, res, next) => {
-  const id = req.body.id;
-  const mentor = req.body.mentor;
-  const user = req.session.user._id;
-  const content = req.body.content;
-  const rating = req.body.rating;
-
-  Review.findById(id)
-    .then((review) => {
-      review.user = user;
-      review.mentor = mentor;
-      review.content = content;
-      review.rating = rating;
-      return review.save();
-    })
-    .then((result) => {
-      console.log(chalk.yellow.inverse(result));
-      res.redirect("/user/review");
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.deleteReview = (req, res, next) => {
-  const id = req.body.id;
-  Review.findByIdAndDelete(id)
-    .then((result) => {
-      console.log(chalk.yellow(result));
-      res.redirect("/user/review");
     })
     .catch((err) => console.log(err));
 };
