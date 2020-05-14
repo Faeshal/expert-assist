@@ -210,7 +210,7 @@ exports.getSchedule = (req, res, next) => {
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
-          console.log(schedule);
+          console.log(chalk.yellow.inverse(schedule[0]));
           res.render("back/user/schedule", {
             payment: payment,
             schedule: schedule,
