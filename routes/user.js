@@ -65,7 +65,6 @@ router.get("/user/payment", isAuth, userController.getPayment);
 router.get("/user/schedule", isAuth, userController.getSchedule);
 router.get("/api/user/schedules", isAuth, userController.getScheduleJson);
 router.post("/user/schedule", isAuth, userController.postSchedule);
-router.post("/user/schedule/delete", isAuth, userController.postDeleteSchedule);
 
 // * mentoring
 router.get("/user/mentoring", isAuth, userController.getMentoring);

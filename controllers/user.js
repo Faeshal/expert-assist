@@ -261,16 +261,6 @@ exports.postSchedule = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postDeleteSchedule = (req, res, next) => {
-  const id = req.body.id;
-  Schedule.findByIdAndDelete(id)
-    .then((schedule) => {
-      console.log(chalk.redBright(schedule));
-      res.redirect("/user/schedule");
-    })
-    .catch((err) => console.log(err));
-};
-
 exports.getMentoring = (req, res, next) => {
   const session = req.session.user;
   const dateTimeNow = new Date();
@@ -281,11 +271,13 @@ exports.getMentoring = (req, res, next) => {
         console.log("User Not Yet Pay");
       }
       Schedule.findOne({ user: session._id })
+        .sort({ _id: -1 })
         .then((schedule) => {
           let dateTimeSchedule = "";
           if (schedule) {
             dateTimeSchedule = schedule.datetime;
           }
+          console.log(chalk.yellowBright.inverse(schedule));
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,

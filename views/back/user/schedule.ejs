@@ -90,7 +90,11 @@
                           name="mentor"
                           value="<%=payment.mentor._id%>"
                         />
-                        <input type="hidden" name="duration" value="<%= payment.duration %>">
+                        <input
+                          type="hidden"
+                          name="duration"
+                          value="<%= payment.duration %>"
+                        />
                         <input
                           class="pl-2 form-control"
                           placeholder="User"
@@ -233,7 +237,7 @@
                       <% } %>
                     </td>
                     <td>
-                      <form method="POST" action="/user/schedule/delete">
+                      <form method="POST" action="">
                         <input
                           type="hidden"
                           name="_csrf"
