@@ -4,27 +4,32 @@ const chalk = require("chalk");
 const currency = require("currency.js");
 
 exports.getIndex = (req, res, next) => {
-  Admin.findOne({ level: "admin" })
-    .then((admin) => {
-      let session = req.session;
-      if (!admin) {
-        console.log("Admin Not Found");
-        res.render("layouts/500");
-      } else {
-        Mentor.find({
-          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-        })
-          .sort({ _id: -1 })
-          .then((mentor) => {
-            res.render("front/index", {
-              admin: admin,
-              session: session,
-              mentor: mentor,
-              currency: currency,
-            });
+  let session = req.session;
+  Mentor.find({
+    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+  })
+    .limit(7)
+    .sort({ _id: -1 })
+    .then((newMentor) => {
+      Mentor.find({ mentorstatus: "true" })
+        .limit(7)
+        .sort({ rating: -1 })
+        .then((bestMentor) => {
+          Mentor.find({
+            $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
           })
-          .catch((err) => console.log(err));
-      }
+            .limit(7)
+            .sort({ price: 1 })
+            .then((cheapestMentor) => {
+              res.render("front/index", {
+                session: session,
+                newMentor: newMentor,
+                bestMentor: bestMentor,
+                cheapestMentor: cheapestMentor,
+                currency: currency,
+              });
+            });
+        });
     })
     .catch((err) => console.log(err));
 };
@@ -121,6 +126,20 @@ exports.getMentorList = (req, res, next) => {
       res.render("front/mentorList", {
         mentor: mentor,
         currency: currency,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getMentorListJson = (req, res, next) => {
+  Mentor.find()
+    .then((mentor) => {
+      Mentor.countDocuments().then((total) => {
+        if (mentor) {
+          res.status(200).json({ message: true, data: mentor, total: total });
+        } else {
+          res.json({ message: "No Mentor Data", total: 0 });
+        }
       });
     })
     .catch((err) => console.log(err));

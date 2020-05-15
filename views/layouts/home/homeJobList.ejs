@@ -28,49 +28,38 @@
               role="tab"
               aria-controls="recent-job"
               aria-selected="true"
-              >Recent Jobs</a
+              >New Expert</a
             >
           </li>
           <li class="nav-item">
             <a
               class="nav-link rounded"
-              id="featured-job-tab"
+              id="best-expert-tab"
               data-toggle="pill"
-              href="#featured-job"
+              href="#best-expert"
               role="tab"
-              aria-controls="featured-job"
+              aria-controls="best-expert"
               aria-selected="false"
-              >Featured Jobs</a
+              >Highest Rating</a
             >
           </li>
           <li class="nav-item">
             <a
               class="nav-link rounded"
-              id="part-job-tab"
+              id="low-expert-tab"
               data-toggle="pill"
-              href="#part-job"
+              href="#low-expert"
               role="tab"
-              aria-controls="part-job"
+              aria-controls="low-expert"
               aria-selected="false"
-              >Part Time</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link rounded"
-              id="full-job-tab"
-              data-toggle="pill"
-              href="#full-job"
-              role="tab"
-              aria-controls="full-job"
-              aria-selected="false"
-              >Full Time</a
+              >Lowest Price</a
             >
           </li>
         </ul>
       </div>
     </div>
 
+  
     <!-- Core Looping -->
     <div class="row">
       <div class="col-12">
@@ -81,8 +70,8 @@
             role="tabpanel"
             aria-labelledby="recent-job-tab"
           >
-            <!-- Loop Here -->
-            <% mentor.forEach((mentorData)=>{ %>
+            <!-- Recent-job Loop  -->
+            <% newMentor.forEach((mentorData)=>{ %>
             <div class="row" >
               <div class="col-lg-12">
                 <div data-aos="zoom-in" data-aos-duration="933"
@@ -183,19 +172,20 @@
               </div>
             </div>
             <% } )%>
-
             <!-- End Of Loop -->
           </div>
 
           <div
             class="tab-pane fade"
-            id="featured-job"
+            id="best-expert"
             role="tabpanel"
-            aria-labelledby="featured-job-tab"
+            aria-labelledby="best-expert-tab"
           >
-            <div class="row">
+          <!-- Best-mentor Loop  -->
+          <% bestMentor.forEach((mentorData)=>{ %>
+            <div class="row" >
               <div class="col-lg-12">
-                <div
+                <div data-aos="zoom-in" data-aos-duration="933"
                   class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
                 >
                   <div class="lable text-center pt-2 pb-2">
@@ -212,19 +202,22 @@
                       <div class="col-md-2">
                         <div class="mo-mb-2">
                           <img
-                            src="/front/images/featured-job/img-3.png"
+                            src="<%= mentorData.profilepicture %>"
                             alt=""
                             class="img-fluid mx-auto d-block"
+                            style="width: 45%;"
                           />
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div>
                           <h5 class="f-18">
-                            <a href="#" class="text-dark">Graphic Designer</a>
+                            <a href="#" class="text-dark"
+                              ><%= mentorData.username %>
+                            </a>
                           </h5>
                           <p class="text-muted mb-0">
-                            Web Technology pvt.Ltd
+                            <%= mentorData.job %>
                           </p>
                         </div>
                       </div>
@@ -232,109 +225,16 @@
                         <div>
                           <p class="text-muted mb-0">
                             <i class="mdi mdi-map-marker text-primary mr-2"></i
-                            >Sumner Street Anaheim
+                            ><%= mentorData.city %>
                           </p>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">$</span>800-1000/m
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <p class="text-muted mb-0">Part Time</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="p-3 bg-light">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Experience :</span> 0 - 1
-                            years
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Notes :</span> languages
-                            only differ in their grammar.
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <a href="#" class="text-primary"
-                            >Apply Now
-                            <i class="mdi mdi-chevron-double-right"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="part-job"
-            role="tabpanel"
-            aria-labelledby="part-job-tab"
-          >
-            <div class="row">
-              <div class="col-lg-12">
-                <div
-                  class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
-                >
-                  <div class="lable text-center pt-2 pb-2">
-                    <ul
-                      class="list-unstyled best text-white mb-0 text-uppercase"
-                    >
-                      <li class="list-inline-item">
-                        <i class="mdi mdi-star"></i>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="p-4">
-                    <div class="row align-items-center">
-                      <div class="col-md-2">
-                        <div class="mo-mb-2">
-                          <img
-                            src="/front/images/featured-job/img-1.png"
-                            alt=""
-                            class="img-fluid mx-auto d-block"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div>
-                          <h5 class="f-18">
-                            <a href="#" class="text-dark">Web Developer</a>
-                          </h5>
-                          <p class="text-muted mb-0">
-                            Web Technology pvt.Ltd
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div>
-                          <p class="text-muted mb-0">
-                            <i class="mdi mdi-map-marker text-primary mr-2"></i
-                            >Oakridge Lane Richardson
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">$</span>1000-1200/m
+                            <span class="text-primary">Rp.<%=
+                            currency(mentorData.price,{precision:0}).format() %>
+                            </span>
                           </p>
                         </div>
                       </div>
@@ -347,26 +247,32 @@
                   </div>
                   <div class="p-3 bg-light">
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-md-5">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Experience :</span> 1 - 2
-                            years
+                            <span class="text-dark font-weight-bold"
+                              >Experience :</span
+                            >
+                            <%= mentorData.experience %>
                           </p>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Notes :</span> languages
-                            only differ in their grammar.
+                            <span class="text-dark font-weight-bold"
+                              >Expertise :</span
+                            >
+                            <%= mentorData.expertise %>
                           </p>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div>
-                          <a href="#" class="text-primary"
-                            >Apply Now
+                          <a
+                            href="mdetail/<%=mentorData._id%>"
+                            class="text-primary"
+                            >See Details
                             <i class="mdi mdi-chevron-double-right"></i
                           ></a>
                         </div>
@@ -376,21 +282,26 @@
                 </div>
               </div>
             </div>
+            <% } )%>
           </div>
-          <div
+          <!-- End Of Loop -->
+
+           <div
             class="tab-pane fade"
-            id="full-job"
+            id="low-expert"
             role="tabpanel"
-            aria-labelledby="full-job-tab"
+            aria-labelledby="low-expert-tab"
           >
-            <div class="row">
+          <!-- Lowesest-mentor Loop  -->
+          <% cheapestMentor.forEach((mentorData)=>{ %>
+            <div class="row" >
               <div class="col-lg-12">
-                <div
+                <div data-aos="zoom-in" data-aos-duration="933"
                   class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
                 >
                   <div class="lable text-center pt-2 pb-2">
                     <ul
-                      class="list-unstyled best text-white mb-0 text-uppercase"
+                      class="list-unstyled low text-white mb-0 text-uppercase"
                     >
                       <li class="list-inline-item">
                         <i class="mdi mdi-star"></i>
@@ -402,19 +313,22 @@
                       <div class="col-md-2">
                         <div class="mo-mb-2">
                           <img
-                            src="/front/images/featured-job/img-3.png"
+                            src="<%= mentorData.profilepicture %>"
                             alt=""
                             class="img-fluid mx-auto d-block"
+                            style="width: 45%;"
                           />
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div>
                           <h5 class="f-18">
-                            <a href="#" class="text-dark">Graphic Designer</a>
+                            <a href="#" class="text-dark"
+                              ><%= mentorData.username %>
+                            </a>
                           </h5>
                           <p class="text-muted mb-0">
-                            Web Technology pvt.Ltd
+                            <%= mentorData.job %>
                           </p>
                         </div>
                       </div>
@@ -422,46 +336,54 @@
                         <div>
                           <p class="text-muted mb-0">
                             <i class="mdi mdi-map-marker text-primary mr-2"></i
-                            >Sumner Street Anaheim
+                            ><%= mentorData.city %>
                           </p>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">$</span>800-1000/m
+                            <span class="text-primary">Rp.<%=
+                            currency(mentorData.price,{precision:0}).format() %>
+                            </span>
                           </p>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div>
-                          <p class="text-muted mb-0">Part Time</p>
+                          <p class="text-muted mb-0">Full Time</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="p-3 bg-light">
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-md-5">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Experience :</span> 0 - 1
-                            years
+                            <span class="text-dark font-weight-bold"
+                              >Experience :</span
+                            >
+                            <%= mentorData.experience %>
                           </p>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark">Notes :</span> languages
-                            only differ in their grammar.
+                            <span class="text-dark font-weight-bold"
+                              >Expertise :</span
+                            >
+                            <%= mentorData.expertise %>
                           </p>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div>
-                          <a href="#" class="text-primary"
-                            >Apply Now
+                          <a
+                            href="mdetail/<%=mentorData._id%>"
+                            class="text-primary"
+                            >See Details
                             <i class="mdi mdi-chevron-double-right"></i
                           ></a>
                         </div>
@@ -471,8 +393,11 @@
                 </div>
               </div>
             </div>
-            <!-- end row -->
+            <% } )%>
           </div>
+          <!-- End Of Loop -->
+
+
         </div>
       </div>
     </div>
@@ -485,6 +410,6 @@
       </div>
     </div>
   </div>
-  <!-- end containar -->
 </section>
 <!-- all jobs end -->
+

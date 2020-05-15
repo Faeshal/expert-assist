@@ -13,5 +13,6 @@ router.get("/blog/:id", frontController.getDetailBlog);
 router.get("/mdetail/:id", frontController.getDetailMentor);
 
 router.get("/mlist", frontController.getMentorList);
+router.get("/api/mlists", frontController.getMentorListJson);
 
 module.exports = router;
