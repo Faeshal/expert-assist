@@ -941,6 +941,11 @@ p {
   position: relative;
 }
 
+.sectionSearchBar {
+  padding: 40px 0;
+  position: relative;
+}
+
 .section-two {
   padding: 60px 0;
   position: relative;
@@ -1813,8 +1818,8 @@ p {
 }
 
 .bg-half {
-  padding: 280px 0px 180px 0px;
-  background-image: url("https://images.pexels.com/photos/1237114/pexels-photo-1237114.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+  padding: 210px 0px 70px 0px;
+  background-image: url("https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
   background-size: cover;
   position: relative;
   background-position: center center;

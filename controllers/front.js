@@ -3,6 +3,7 @@ const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
 const currency = require("currency.js");
 const ITEMS_PER_PAGE = 6;
+const voca = require("voca");
 
 exports.getIndex = (req, res, next) => {
   let session = req.session;
@@ -121,13 +122,34 @@ exports.getDetailMentor = (req, res, next) => {
 };
 
 exports.getSearch = (req, res, next) => {
-  var term = req.query.term;
-  Mentor.find({ $text: { $search: term } })
-    .sort({ _id: -1 })
-    .then((mentor) => {
-      res.redirect("/mlist");
-    })
-    .catch((err) => console.log(err));
+  const search = req.query.search;
+  const trim = voca.trim(search);
+  // const searchTrim = search.trim();
+  const page = +req.query.page || 1;
+  let totalMentors = 1;
+  if (trim == "page=1" || trim == null || trim == "") {
+    console.log("Redirect harusnya");
+    res.redirect("/mlist");
+  } else {
+    Mentor.find({ $text: { $search: trim } })
+      .sort({ _id: -1 })
+      .then((mentor) => {
+        Mentor.countDocuments().then(() => {
+          res.render("front/mentorList", {
+            mentor: mentor,
+            currency: currency,
+            totalMentors: totalMentors,
+            currentPage: 1,
+            hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+            hasPreviousPage: page > 1,
+            nextPage: 0,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+          });
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 };
 
 exports.getMentorList = (req, res, next) => {
@@ -141,7 +163,6 @@ exports.getMentorList = (req, res, next) => {
         .limit(ITEMS_PER_PAGE);
     })
     .then((mentor) => {
-      console.log(chalk.yellowBright(mentor));
       res.render("front/mentorList", {
         mentor: mentor,
         currency: currency,
