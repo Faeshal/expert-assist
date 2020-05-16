@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const chalk = require("chalk");
 const currency = require("currency.js");
+const ITEMS_PER_PAGE = 6;
 
 exports.getIndex = (req, res, next) => {
   let session = req.session;
@@ -12,13 +13,13 @@ exports.getIndex = (req, res, next) => {
     .sort({ _id: -1 })
     .then((newMentor) => {
       Mentor.find({ mentorstatus: "true" })
-        .limit(7)
+        .limit(3)
         .sort({ rating: -1 })
         .then((bestMentor) => {
           Mentor.find({
             $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
           })
-            .limit(7)
+            .limit(3)
             .sort({ price: 1 })
             .then((cheapestMentor) => {
               res.render("front/index", {
@@ -120,12 +121,26 @@ exports.getDetailMentor = (req, res, next) => {
 };
 
 exports.getMentorList = (req, res, next) => {
-  Mentor.find()
+  const page = +req.query.page || 1;
+  let totalMentors;
+  Mentor.countDocuments()
+    .then((numMentors) => {
+      totalMentors = numMentors;
+      return Mentor.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then((mentor) => {
       console.log(chalk.yellowBright(mentor));
       res.render("front/mentorList", {
         mentor: mentor,
         currency: currency,
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => console.log(err));

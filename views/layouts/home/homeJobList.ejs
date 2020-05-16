@@ -1,6 +1,7 @@
 <!-- all jobs start -->
 <section class="section bg-light">
   <div class="container">
+    <!-- Header Sentence -->
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="section-title text-center mb-4 pb-2">
@@ -12,6 +13,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Filter Button Group -->
     <div class="row justify-content-center">
       <div class="col-lg-9 text-center mt-4 pt-2">
         <ul
@@ -59,8 +62,7 @@
       </div>
     </div>
 
-  
-    <!-- Core Looping -->
+    <!-- List Mentor -->
     <div class="row">
       <div class="col-12">
         <div class="tab-content mt-2" id="pills-tabContent">
@@ -72,10 +74,12 @@
           >
             <!-- Recent-job Loop  -->
             <% newMentor.forEach((mentorData)=>{ %>
-            <div class="row" >
+            <div class="row">
               <div class="col-lg-12">
-                <div data-aos="zoom-in" data-aos-duration="933"
+                <div
                   class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
+                  data-aos="zoom-in"
+                  data-aos-duration="900"
                 >
                   <div class="lable text-center pt-2 pb-2">
                     <ul
@@ -121,119 +125,10 @@
                       <div class="col-md-2">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">Rp.<%=
-                            currency(mentorData.price,{precision:0}).format() %>
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <p class="text-muted mb-0">Full Time</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="p-3 bg-light">
-                    <div class="row">
-                      <div class="col-md-5">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark font-weight-bold"
-                              >Experience :</span
-                            >
-                            <%= mentorData.experience %>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-5">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-dark font-weight-bold"
-                              >Expertise :</span
-                            >
-                            <%= mentorData.expertise %>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <a
-                            href="mdetail/<%=mentorData._id%>"
-                            class="text-primary"
-                            >See Details
-                            <i class="mdi mdi-chevron-double-right"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <% } )%>
-            <!-- End Of Loop -->
-          </div>
-
-          <div
-            class="tab-pane fade"
-            id="best-expert"
-            role="tabpanel"
-            aria-labelledby="best-expert-tab"
-          >
-          <!-- Best-mentor Loop  -->
-          <% bestMentor.forEach((mentorData)=>{ %>
-            <div class="row" >
-              <div class="col-lg-12">
-                <div data-aos="zoom-in" data-aos-duration="933"
-                  class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
-                >
-                  <div class="lable text-center pt-2 pb-2">
-                    <ul
-                      class="list-unstyled best text-white mb-0 text-uppercase"
-                    >
-                      <li class="list-inline-item">
-                        <i class="mdi mdi-star"></i>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="p-4">
-                    <div class="row align-items-center">
-                      <div class="col-md-2">
-                        <div class="mo-mb-2">
-                          <img
-                            src="<%= mentorData.profilepicture %>"
-                            alt=""
-                            class="img-fluid mx-auto d-block"
-                            style="width: 45%;"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div>
-                          <h5 class="f-18">
-                            <a href="#" class="text-dark"
-                              ><%= mentorData.username %>
-                            </a>
-                          </h5>
-                          <p class="text-muted mb-0">
-                            <%= mentorData.job %>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div>
-                          <p class="text-muted mb-0">
-                            <i class="mdi mdi-map-marker text-primary mr-2"></i
-                            ><%= mentorData.city %>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div>
-                          <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">Rp.<%=
-                            currency(mentorData.price,{precision:0}).format() %>
+                            <span class="text-primary"
+                              >Rp.<%=
+                              currency(mentorData.price,{precision:0}).format()
+                              %>
                             </span>
                           </p>
                         </div>
@@ -286,17 +181,130 @@
           </div>
           <!-- End Of Loop -->
 
-           <div
+          <div
+            class="tab-pane fade"
+            id="best-expert"
+            role="tabpanel"
+            aria-labelledby="best-expert-tab"
+          >
+            <!-- Best-mentor Loop  -->
+            <% bestMentor.forEach((mentorData)=>{ %>
+            <div class="row">
+              <div class="col-lg-12">
+                <div
+                  class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
+                >
+                  <div class="lable text-center pt-2 pb-2">
+                    <ul
+                      class="list-unstyled best text-white mb-0 text-uppercase"
+                    >
+                      <li class="list-inline-item">
+                        <i class="mdi mdi-star"></i>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="p-4">
+                    <div class="row align-items-center">
+                      <div class="col-md-2">
+                        <div class="mo-mb-2">
+                          <img
+                            src="<%= mentorData.profilepicture %>"
+                            alt=""
+                            class="img-fluid mx-auto d-block"
+                            style="width: 45%;"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div>
+                          <h5 class="f-18">
+                            <a href="#" class="text-dark"
+                              ><%= mentorData.username %>
+                            </a>
+                          </h5>
+                          <p class="text-muted mb-0">
+                            <%= mentorData.job %>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div>
+                          <p class="text-muted mb-0">
+                            <i class="mdi mdi-map-marker text-primary mr-2"></i
+                            ><%= mentorData.city %>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div>
+                          <p class="text-muted mb-0 mo-mb-2">
+                            <span class="text-primary"
+                              >Rp.<%=
+                              currency(mentorData.price,{precision:0}).format()
+                              %>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div>
+                          <p class="text-muted mb-0">Full Time</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-3 bg-light">
+                    <div class="row">
+                      <div class="col-md-5">
+                        <div>
+                          <p class="text-muted mb-0 mo-mb-2">
+                            <span class="text-dark font-weight-bold"
+                              >Experience :</span
+                            >
+                            <%= mentorData.experience %>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div>
+                          <p class="text-muted mb-0 mo-mb-2">
+                            <span class="text-dark font-weight-bold"
+                              >Expertise :</span
+                            >
+                            <%= mentorData.expertise %>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div>
+                          <a
+                            href="mdetail/<%=mentorData._id%>"
+                            class="text-primary"
+                            >See Details
+                            <i class="mdi mdi-chevron-double-right"></i
+                          ></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } )%>
+          </div>
+          <!-- End Of Loop -->
+
+          <div
             class="tab-pane fade"
             id="low-expert"
             role="tabpanel"
             aria-labelledby="low-expert-tab"
           >
-          <!-- Lowesest-mentor Loop  -->
-          <% cheapestMentor.forEach((mentorData)=>{ %>
-            <div class="row" >
+            <!-- Lowesest-mentor Loop  -->
+            <% cheapestMentor.forEach((mentorData)=>{ %>
+            <div class="row">
               <div class="col-lg-12">
-                <div data-aos="zoom-in" data-aos-duration="933"
+                <div
                   class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
                 >
                   <div class="lable text-center pt-2 pb-2">
@@ -343,8 +351,10 @@
                       <div class="col-md-2">
                         <div>
                           <p class="text-muted mb-0 mo-mb-2">
-                            <span class="text-primary">Rp.<%=
-                            currency(mentorData.price,{precision:0}).format() %>
+                            <span class="text-primary"
+                              >Rp.<%=
+                              currency(mentorData.price,{precision:0}).format()
+                              %>
                             </span>
                           </p>
                         </div>
@@ -396,20 +406,17 @@
             <% } )%>
           </div>
           <!-- End Of Loop -->
-
-
         </div>
       </div>
     </div>
     <!-- end row -->
 
-    <!-- end row -->
-    <div class="row">
+    <!-- More Button-->
+    <div class="row" data-aos="zoom-out-up">
       <div class="col-lg-12 mt-5 pt-2 mx-auto text-center">
-       <button class="btn btn-sm btn-outline-primary"><< MORE >></button>
+        <button class="btn btn-sm btn-outline-primary"><< MORE >></button>
       </div>
     </div>
   </div>
 </section>
 <!-- all jobs end -->
-

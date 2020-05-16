@@ -19,7 +19,7 @@ const MentorSchema = new mongoose.Schema({
     default: "images/default_cover.jpg",
   },
   bio: String,
-  price: String,
+  price: Number,
   city: String,
   phone: String,
   twitter: String,
