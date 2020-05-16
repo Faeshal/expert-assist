@@ -120,6 +120,16 @@ exports.getDetailMentor = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getSearch = (req, res, next) => {
+  var term = req.query.term;
+  Mentor.find({ $text: { $search: term } })
+    .sort({ _id: -1 })
+    .then((mentor) => {
+      res.redirect("/mlist");
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getMentorList = (req, res, next) => {
   const page = +req.query.page || 1;
   let totalMentors;
