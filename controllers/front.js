@@ -1,9 +1,11 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const Schedule = require("../models/Schedule");
 const chalk = require("chalk");
 const currency = require("currency.js");
 const ITEMS_PER_PAGE = 6;
 const voca = require("voca");
+const moment = require("moment");
 
 exports.getIndex = (req, res, next) => {
   let session = req.session;
@@ -113,10 +115,19 @@ exports.getDetailMentor = (req, res, next) => {
 
   Mentor.findOne({ _id: id })
     .then((mentor) => {
-      res.render("front/mentorDetail", {
-        mentor: mentor,
-        userId: userId,
-      });
+      Schedule.find({
+        $and: [{ mentor: id }, { approve: true }, { status: false }],
+      })
+        .limit(4)
+        .sort({ datetime: 1 })
+        .then((schedule) => {
+          res.render("front/mentorDetail", {
+            mentor: mentor,
+            userId: userId,
+            schedule: schedule,
+            moment: moment,
+          });
+        });
     })
     .catch((err) => console.log(err));
 };

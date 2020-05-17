@@ -7,22 +7,22 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
-          <h3 class="text-uppercase title mb-4"><%=mentor.username %></h3>
-          <% if (userId=="xxx") { %>
-          <a href="/login">
-            <button class="btn btn-sm btn-outline-primary">
+          <h3 class="text-uppercase title"><%=mentor.username %></h3>
+          <p class="lead text-center"><%=mentor.bio %></p>
+          <div class="text-center mt-3">
+            <a href="/login" class="badge badge-light mr-4">Message</a>
+            <% if (userId=="xxx") { %>
+            <a href="/login" class="badge badge-light">Hire</a>
+            <% } else { %>
+            <button
+              class="btn btn-sm btn-light"
+              data-toggle="modal"
+              data-target="#paymentModal"
+            >
               Hire Mentor
             </button>
-          </a>
-          <% } else { %>
-          <button
-            class="btn btn-sm btn-light"
-            data-toggle="modal"
-            data-target="#paymentModal"
-          >
-            Hire Mentor
-          </button>
-          <% } %>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
@@ -336,59 +336,32 @@
 
         <div class="job-detail border rounded mt-4 p-4">
           <h5 class="text-muted text-center pb-2">
-            <i class="mdi mdi-clock-outline mr-2"></i>Opening Hours
+            <i class="mdi mdi-clock-outline mr-2"></i>History Booked Schedule
           </h5>
 
-          <div class="job-detail-time border-top pt-4">
+          <div class="job-detail-time border-top pt-2">
             <ul class="list-inline mb-0">
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Monday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">9AM - 7PM</h5>
+              <% if(schedule.length < 1) { %>
+              <li class="clearfix text-muted border-bottom mt-3 ">
+                <div class="text-center">
+                  <p>No Schedule</p>
                 </div>
               </li>
-
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Tuesday</div>
+              <% } else { %> 
+              <% schedule.forEach(scheduleData=>{ %>
+              <li class="clearfix text-muted border-bottom pb-2 pt-2">
+                <div class="float-left">
+                  <h6>
+                    <%=moment(scheduleData.datetime).format("LL") %>
+                  </h6>
+                </div>
                 <div class="float-right">
-                  <h5 class="f-13 mb-0">9AM - 7PM</h5>
+                  <h6 class="f-13 mb-0"></h5>
+                    <%=moment(scheduleData.datetime).format('LT') %>
+                  </h6>
                 </div>
               </li>
-
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Wednesday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">9AM - 7PM</h5>
-                </div>
-              </li>
-
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Thursday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">9AM - 7PM</h5>
-                </div>
-              </li>
-
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Friday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">9AM - 7PM</h5>
-                </div>
-              </li>
-
-              <li class="clearfix text-muted border-bottom pb-3">
-                <div class="float-left">Saturday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">6:30AM - 1PM</h5>
-                </div>
-              </li>
-
-              <li class="clearfix text-muted pb-0">
-                <div class="float-left">Sunday</div>
-                <div class="float-right">
-                  <h5 class="f-13 mb-0">Closed</h5>
-                </div>
-              </li>
+              <% }) %> <% } %>
             </ul>
           </div>
         </div>
