@@ -366,34 +366,14 @@
                   <i class="mdi mdi-map-marker mr-2"></i><%= mentorData.city %>
                 </p>
                 <ul class="employers-icons list-inline mb-1">
-                  <li class="list-inline-item">
-                    <a href="#" class="text-success"
-                      ><i class="mdi mdi-star"></i
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="#" class="text-success"
-                      ><i class="mdi mdi-star"></i
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="#" class="text-success"
-                      ><i class="mdi mdi-star"></i
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="#" class="text-success"
-                      ><i class="mdi mdi-star"></i
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="#" class="text-success"
-                      ><i class="mdi mdi-star"></i
-                    ></a>
-                  </li>
-                  <li class="list-inline-item badge badge-success text-white">
+                  <div
+                    style="font-size: 17px; color: orange;"
+                    class="rate mx-auto justify-content-center"
+                    data-rate-value="<%= mentorData.rating%>"
+                  ></div>
+                  <p class="text-warning font-weight-bold">
                     <%= mentorData.rating %>
-                  </li>
+                  </p>
                 </ul>
               </div>
               <div class="apply-button text-center mt-3">
@@ -491,3 +471,14 @@
 
 <!-- footer start -->
 <%-include('../layouts/home/footer.ejs')%>
+<script src="/back/assets/js/rater.js"></script>
+
+<script>
+  $(document).ready(() => {
+    let option = {
+      max_value: 10,
+      readonly: true,
+    };
+    $(".rate").rate(option);
+  });
+</script>
