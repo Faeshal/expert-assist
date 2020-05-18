@@ -198,24 +198,28 @@ exports.postStripeCancel = (req, res, next) => {
 
 exports.getSchedule = (req, res, next) => {
   const session = req.session.user;
+  let lastSchedule = "";
   Payment.findOne({ user: session._id })
     .sort({ _id: -1 })
     .populate("user", "username")
     .populate("mentor", "username")
     .exec()
     .then((payment) => {
+      lastSchedule = payment._id;
+
+      console.log(chalk.blue.inverse(lastSchedule));
       console.log(payment);
       Schedule.find({ user: session._id })
         .sort({ _id: -1 })
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
-          console.log(chalk.yellow.inverse(schedule[0]));
           res.render("back/user/schedule", {
             payment: payment,
             schedule: schedule,
             moment: moment,
             session: session,
+            lastSchedule: lastSchedule,
           });
         })
         .catch((err) => console.log(err));
@@ -276,6 +280,8 @@ exports.getMentoring = (req, res, next) => {
           let dateTimeSchedule = "";
           if (schedule) {
             dateTimeSchedule = schedule.datetime;
+          } else {
+            schedule = 0;
           }
           console.log(chalk.yellowBright.inverse(schedule));
           res.render("back/user/mentoring", {
@@ -324,6 +330,12 @@ exports.getReview = (req, res, next) => {
       Schedule.findOne({ $and: [{ user: session._id }, { status: true }] })
         .sort({ _id: -1 })
         .then((schedule) => {
+          if (!schedule) {
+            schedule = 0;
+            console.log(chalk.redBright.inverse("Ga punya jadwal"));
+          } else {
+            console.log("punya jadwal");
+          }
           res.render("back/user/review", {
             session: session,
             review: review,

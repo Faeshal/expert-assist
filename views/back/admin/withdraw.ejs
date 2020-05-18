@@ -74,6 +74,7 @@
                   <tr>
                     <th>Mentor</th>
                     <th>Email</th>
+                    <th>Bank</th>
                     <th>Total</th>
                     <th>Date</th>
                     <th>Time</th>
@@ -88,8 +89,14 @@
                     <td class="table-user">
                       <b><%= withdrawData.mentor.username %></b>
                     </td>
+
                     <td class="table-user">
                       <b class="text-muted"><%= withdrawData.mentor.email %></b>
+                    </td>
+                    <td class="table-user">
+                      <b class="disabled">
+                        <%= withdrawData.mentor.bankaccount %>
+                      </b>
                     </td>
                     <td class="table-user">
                       <b><%= withdrawData.total %></b>
@@ -139,7 +146,7 @@
                           value="<%=withdrawData.mentor._id%>"
                         />
                         <input type="hidden" name="status" value="true" />
-                       
+
                         <% if(withdrawData.status==false) { %>
                         <button
                           type="submit"

@@ -531,7 +531,7 @@ exports.getMentoring = (req, res, next) => {
 
 exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
-    .populate({ path: "mentor", select: ["username", "email"] })
+    .populate({ path: "mentor", select: ["username", "email", "bankaccount"] })
     .exec()
     .then((withdraw) => {
       console.log(chalk.yellow(withdraw));

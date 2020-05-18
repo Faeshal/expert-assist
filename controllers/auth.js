@@ -7,6 +7,7 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const bcrypt = require("bcryptjs");
 const chalk = require("chalk");
+const voca = require("voca");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -33,7 +34,7 @@ exports.getRegister = (req, res, next) => {
 exports.postRegister = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const username = req.body.username;
+  const username = voca.capitalize(req.body.username);
   const level = req.body.level;
 
   // *Express Validator

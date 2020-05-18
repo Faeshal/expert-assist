@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const ScheduleSchema = new mongoose.Schema({
+  payment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Payment",
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
