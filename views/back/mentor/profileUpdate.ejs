@@ -21,7 +21,6 @@
               class="btn btn-sm btn-neutral"
               >Pexel</a
             >
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
           </div>
         </div>
       </div>
@@ -55,26 +54,31 @@
               <div class="row py-3 align-items-center">
                 <input type="hidden" name="id" value="<%=mentor._id%>" />
                 <div class="col-lg-6">
+                  <label for="username">Username</label>
                   <input
                     type="text"
-                    class="form-control"
+                    id="username"
+                    class="form-control text-dark"
                     name="username"
                     placeholder="username"
                     value="<%=mentor.username%>"
                   />
                 </div>
                 <div class="col-lg-6">
+                  <label>Your Price</label>
                   <input
                     type="number"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="price"
                     placeholder="price"
                     value="<%=mentor.price%>"
+                    required
                   />
                 </div>
               </div>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-6">
+                  <label>Profile Picture</label>
                   <input
                     type="file"
                     class="form-control form-control-sm profilepicture"
@@ -82,6 +86,7 @@
                   />
                 </div>
                 <div class="col-lg-6">
+                  <label>Cover Picture</label>
                   <input
                     type="file"
                     class="form-control form-control-sm coverpicture"
@@ -91,21 +96,64 @@
               </div>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-6">
+                  <label>Job</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="job"
                     placeholder="job"
                     value="<%=mentor.job%>"
                   />
                 </div>
                 <div class="col-lg-6">
+                  <label>City</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="city"
                     placeholder="city"
                     value="<%=mentor.city%>"
+                  />
+                </div>
+              </div>
+
+              <h4 class="text-primary mt-4 border-primary border-bottom">
+                Bank Account
+              </h4>
+
+              <div class="row py-3 align-items-center">
+                <div class="col-lg-6">
+                  <label>Bank Name</label>
+                  <select
+                    class="form-control experience text-dark"
+                    name="bankname"
+                    value="<%=mentor.bankname%>"
+                    required
+                  >
+                    <option
+                      value="<%=mentor.bankname%>"
+                      disabled
+                      selected
+                      hidden
+                      ><%=mentor.bankname%>
+                    </option>
+                    <option value="BRI">BRI</option>
+                    <option value="BCA">BCA</option>
+                    <option value="BRIS">BRI SYARIAH</option>
+                    <option value="Mandiri">MANDIRI</option>
+                    <option value="BNI">BNI</option>
+                    <option value="Muamalat">MUAMALAT</option>
+                  </select>
+                </div>
+                <div class="col-lg-6">
+                  <label>Account Number</label>
+                  <input
+                    type="number"
+                    class="form-control text-dark"
+                    name="bankaccount"
+                    placeholder="bankaccount"
+                    value="<%=mentor.bankaccount%>"
+                    required
                   />
                 </div>
               </div>
@@ -116,36 +164,41 @@
 
               <div class="row py-3 align-items-center">
                 <div class="col-lg-3">
+                  <label>Phone</label>
                   <input
                     type="number"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="phone"
                     placeholder="phone"
                     value="<%=mentor.phone%>"
+                    required
                   />
                 </div>
                 <div class="col-lg-3">
+                  <label>Twitter</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="twitter"
                     placeholder="Twitter"
                     value="<%=mentor.twitter%>"
                   />
                 </div>
                 <div class="col-lg-3">
+                  <label>Linkedin</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="linkedin"
                     placeholder="linkedin"
                     value="<%=mentor.linkedin%>"
                   />
                 </div>
                 <div class="col-lg-3">
+                  <label>Github</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="github"
                     placeholder="github"
                     value="<%=mentor.github%>"
@@ -157,13 +210,14 @@
               </h4>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-4">
+                  <label>Years Experience</label>
                   <select
-                    class="form-control experience"
+                    class="form-control experience text-dark"
                     name="experience"
                     value="<%=mentor.experience%>"
                   >
-                    <option value="" disabled selected hidden
-                      >How much ? ...</option
+                    <option value="<%=mentor.experience%>" selected hidden
+                      ><%=mentor.experience%></option
                     >
                     <option value="1 Years">1 Years</option>
                     <option value="2-4 Years">2-4 Years</option>
@@ -172,18 +226,20 @@
                   </select>
                 </div>
                 <div class="col-lg-4">
+                  <label>Portofolio Link</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="portofolio"
-                    placeholder="portofolio"
+                    placeholder="portofolio "
                     value="<%=mentor.portofolio%>"
                   />
                 </div>
                 <div class="col-lg-4">
+                  <label>CV Link</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="cv"
                     placeholder="cv"
                     value="<%=mentor.cv%>"
@@ -192,9 +248,10 @@
               </div>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-12">
+                  <label>Profile Bio</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control text-dark"
                     name="bio"
                     placeholder="bio"
                     value="<%=mentor.bio%>"
@@ -203,6 +260,7 @@
               </div>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-12">
+                  <label>Skillset</label>
                   <input
                     type="text"
                     placeholder="Write your skill here"
@@ -210,18 +268,20 @@
                     class="demo-default"
                     name="skill"
                     value="<%=mentor.skill%>"
+                    required
                   />
                 </div>
               </div>
               <div class="row py-3 align-items-center">
                 <div class="col-lg-12">
+                  <label>Description</label>
                   <textarea
                     row="8"
                     class="form-control"
                     id="summernote"
                     name="desc"
                   >
-<%=mentor.desc%></textarea
+                    <%=mentor.desc%></textarea
                   >
                 </div>
               </div>
@@ -278,8 +338,9 @@
       $(document).ready(() => {
         $("#skill").selectize({
           persist: false,
-          delimiter: ',',
+          delimiter: ",",
           createOnBlur: true,
+          maxItems: 15,
           create: true,
         });
       });

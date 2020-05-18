@@ -31,6 +31,7 @@ const MentorSchema = new mongoose.Schema({
   skill: String,
   experience: String,
   portofolio: String,
+  cv: String,
   resetToken: String,
   resetTokenExpiration: Date,
   income: {
@@ -53,7 +54,8 @@ const MentorSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+  bankname: String,
+  bankaccount: String,
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

@@ -133,6 +133,8 @@ exports.updateProfile = (req, res, next) => {
   const github = req.body.github;
   const linkedin = req.body.linkedin;
   const skill = req.body.skill;
+  const bankname = req.body.bankname;
+  const bankaccount = req.body.bankaccount;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
@@ -175,6 +177,8 @@ exports.updateProfile = (req, res, next) => {
       mentor.bio = bio;
       mentor.desc = desc;
       mentor.skill = skill;
+      mentor.bankname = bankname;
+      mentor.bankaccount = bankaccount;
 
       console.log(mentor.coverpicture);
 
