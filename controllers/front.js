@@ -86,6 +86,17 @@ exports.getAllBlog = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getFaq = (req, res, next) => {
+  Admin.find()
+    .then((admin) => {
+      res.render("front/faq", {
+        admin: admin,
+        voca: voca,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getDetailBlog = (req, res, next) => {
   id = req.params.id;
   Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
