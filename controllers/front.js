@@ -80,6 +80,7 @@ exports.getAllBlog = (req, res, next) => {
         res.render("front/blog", {
           admin: admins,
           blog: blog,
+          moment: moment,
         });
       }
     })
@@ -101,10 +102,18 @@ exports.getDetailBlog = (req, res, next) => {
   id = req.params.id;
   Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
     .then((admins) => {
-      var blog = admins.blog[0];
-      res.render("front/blogdetail", {
-        blog: blog,
-      });
+      let blog = admins.blog[0];
+      Admin.find({ status: true })
+        .then((admins2) => {
+          let allBlog = admins2[0].blog;
+          console.log(allBlog);
+          res.render("front/blogdetail", {
+            blog: blog,
+            allBlog: allBlog,
+            moment: moment,
+          });
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 };

@@ -68,6 +68,7 @@ exports.getAllBlog = (req, res, next) => {
       res.render("back/admin/blog", {
         blog: blog,
         pageTitle: "Admin - Blog",
+        moment: moment,
       });
     })
     .catch((err) => console.log(err));
