@@ -132,6 +132,7 @@ exports.updateProfile = (req, res, next) => {
   const twitter = req.body.twitter;
   const github = req.body.github;
   const linkedin = req.body.linkedin;
+  const skill = req.body.skill;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
@@ -173,6 +174,7 @@ exports.updateProfile = (req, res, next) => {
       mentor.cv = cv;
       mentor.bio = bio;
       mentor.desc = desc;
+      mentor.skill = skill;
 
       console.log(mentor.coverpicture);
 

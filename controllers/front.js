@@ -135,17 +135,21 @@ exports.getDetailMentor = (req, res, next) => {
 
   Mentor.findOne({ _id: id })
     .then((mentor) => {
+      let skillString = mentor.skill;
       Schedule.find({
         $and: [{ mentor: id }, { approve: true }, { status: false }],
       })
         .limit(4)
         .sort({ datetime: 1 })
         .then((schedule) => {
+          let skillString = mentor.skill;
           res.render("front/mentorDetail", {
             mentor: mentor,
             userId: userId,
             schedule: schedule,
             moment: moment,
+            voca: voca,
+            skillString: skillString,
           });
         });
     })
