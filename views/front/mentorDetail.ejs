@@ -122,13 +122,19 @@
             <div class="job-detail border rounded mt-2 p-4">
               <div class="job-detail-desc">
                 <% let splitString = voca.split(skillString, ",") %>
+               
                 <% splitString.forEach(skill=>{ %> 
                 <div class="job-details-desc-item">
                   <div class="float-left mr-3">
                     <i class="mdi mdi-send text-primary"></i>
                   </div>
+                  <% if (splitString==null || splitString=="") { %>
+                    <p class="text-muted mb-2">Skill Not Set</p>
+                  <% }else{%> 
                   <p class="text-muted mb-2"><%=skill%></p>
+                  <% } %> 
                 </div>
+                
                 <% }) %> 
               </div>
             </div>
