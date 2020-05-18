@@ -68,6 +68,7 @@
                   <label>Your Price</label>
                   <input
                     type="number"
+                    id="price"
                     class="form-control text-dark"
                     name="price"
                     placeholder="price"
@@ -125,6 +126,7 @@
                 <div class="col-lg-6">
                   <label>Bank Name</label>
                   <select
+                    id="bankname"
                     class="form-control experience text-dark"
                     name="bankname"
                     value="<%=mentor.bankname%>"
@@ -149,6 +151,7 @@
                   <label>Account Number</label>
                   <input
                     type="number"
+                    id="bankaccount"
                     class="form-control text-dark"
                     name="bankaccount"
                     placeholder="bankaccount"
@@ -167,6 +170,7 @@
                   <label>Phone</label>
                   <input
                     type="number"
+                    id="phone"
                     class="form-control text-dark"
                     name="phone"
                     placeholder="phone"
@@ -300,13 +304,33 @@
       $(document).ready(function () {
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Data Successfully Submit",
-          }).then(function () {
-            $("#formProfile").submit();
-          });
+          let username = $("#username").val();
+          let price = $("#price").val();
+          let bankname = $("#bankname").val();
+          let bankaccount = $("#bankaccount").val();
+          let phone = $("#phone").val();
+
+          if (
+            username == "" ||
+            price == "" ||
+            bankname == "" ||
+            bankaccount == "" ||
+            phone == ""
+          ) {
+            Swal.fire(
+              "Input Data Kosong",
+              "Silahkan isi Data penting yang masih kosong",
+              "warning"
+            );
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Success!",
+              text: "Data Successfully Submit",
+            }).then(function () {
+              $("#formProfile").submit();
+            });
+          }
         });
       });
     </script>
