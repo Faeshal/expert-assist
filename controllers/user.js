@@ -161,6 +161,7 @@ exports.postStripeSuccess = (req, res, next) => {
                 .sort({ _id: -1 })
                 .limit(1)
                 .then((payment) => {
+                  userId = payment.user;
                   // console.log(chalk.yellowBright.inverse(payment));
                   let total = payment.total;
                   // console.log("-----------------");
@@ -206,7 +207,6 @@ exports.getSchedule = (req, res, next) => {
     .exec()
     .then((payment) => {
       lastSchedule = payment._id;
-
       console.log(chalk.blue.inverse(lastSchedule));
       console.log(payment);
       Schedule.find({ user: session._id })
@@ -214,12 +214,18 @@ exports.getSchedule = (req, res, next) => {
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
+          let approveStatus;
+          if (schedule) {
+            approveStatus = schedule[0].approve;
+          }
+          console.log(chalk.greenBright.inverse(approveStatus));
           res.render("back/user/schedule", {
             payment: payment,
             schedule: schedule,
             moment: moment,
             session: session,
             lastSchedule: lastSchedule,
+            approveStatus: approveStatus,
           });
         })
         .catch((err) => console.log(err));
@@ -232,7 +238,7 @@ exports.getSchedule = (req, res, next) => {
 exports.getScheduleJson = (req, res, next) => {
   const session = req.session.user;
   Schedule.find({ $and: [{ user: session._id }, { approve: true }] })
-    .count()
+    .countDocuments()
     .then((schedule) => {
       if (schedule) {
         res.status(200).json({ message: "Success", schedule: schedule });
@@ -263,6 +269,18 @@ exports.postSchedule = (req, res, next) => {
       res.redirect("/user/schedule");
     })
     .catch((err) => console.log(err));
+};
+
+exports.psotEditSchedule = (req, res, next) => {
+  const id = req.body.id;
+  const datetime = req.body.datetime;
+  Schedule.findByIdAndUpdate(id).then((schedule) => {
+    schedule.datetime = datetime;
+    return schedule.save().then((result) => {
+      console.log(chalk.green.inverse(result));
+      res.redirect("/user/schedule");
+    });
+  });
 };
 
 exports.getMentoring = (req, res, next) => {

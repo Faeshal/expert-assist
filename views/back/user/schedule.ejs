@@ -5,6 +5,7 @@
 <div class="main-content" id="panel">
   <!-- Topnav -->
   <%-include('../../layouts/back/user/topNav.ejs')%>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lockr/0.8.5/lockr.min.js"></script>
   <!-- Header -->
   <!-- Header -->
   <div class="header bg-secondary pb-6">
@@ -51,8 +52,9 @@
               <h3 class="mb-0">Input Request</h3>
             </div>
             <!-- Card body -->
+
             <div class="card-body">
-              <% if(!payment ) { %>
+              <% if(!payment) { %>
               <div class="row icon-examples">
                 <div class="div mx-auto justify-content-center text-center">
                   <img
@@ -110,7 +112,13 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <div class="input-group input-group-merge">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"
+                            ><i class="fas fa-credit-card"></i
+                          ></span>
+                        </div>
                         <input
+                          id="datetime"
                           class="pl-2 form-control"
                           type="datetime-local"
                           value="2020-10-23T10:30:00"
@@ -137,14 +145,12 @@
                           value="<%= csrfToken %>"
                         />
                         <input
-                          class="form-control"
+                          id="note"
+                          class="form-control pl-2"
                           placeholder="Note"
                           type="text"
                           name="note"
                         />
-                        <div class="input-group-append">
-                          <span class="input-group-text"></span>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -236,32 +242,76 @@
                       >
                       <% } %>
                     </td>
-                    <td>
-                      <form method="POST" action="">
-                        <input
-                          type="hidden"
-                          name="_csrf"
-                          value="<%= csrfToken %>"
-                        />
-                        <input
-                          type="hidden"
-                          name="id"
-                          value="<%=scheduleData._id%>"
-                        />
-                        <button
-                          type="submit"
-                          onclick=""
-                          class="table-action btn btn-sm"
-                          data-toggle="tooltip"
-                          data-original-title="Cancel Schedule"
-                        >
-                          <i
-                            class="fa fa-reply-all text-danger"
-                            aria-hidden="true"
-                          ></i>
-                        </button>
-                      </form>
+                    <td class="text-center">
+                      <% if (scheduleData.approve==true){ %>
+                      <i class="fas fa-check-circle text-success"></i>
+                      <% }else{ %>
+                      <button
+                        type="button"
+                        onclick=""
+                        data-toggle="modal"
+                        data-target="#exampleModal"
+                        class="table-action btn btn-sm"
+                        data-toggle="tooltip"
+                        data-original-title="edit Schedule"
+                      >
+                        <i
+                          class="fa fa-reply-all text-danger"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                      <% } %>
                     </td>
+                    <!-- Modal -->
+                    <div
+                      class="modal fade"
+                      id="exampleModal"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div
+                        class="modal-dialog modal-dialog-centered"
+                        role="document"
+                      >
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                              Change Schedule
+                            </h5>
+                          </div>
+                          <form action="/user/schedule/edit" method="POST">
+                            <div class="modal-body">
+                              <input
+                                type="hidden"
+                                name="_csrf"
+                                value="<%= csrfToken %>"
+                              />
+                              <input
+                                type="hidden"
+                                name="id"
+                                value="<%=scheduleData._id%>"
+                              />
+                              <input
+                                class="pl-2 form-control text-dark"
+                                type="datetime-local"
+                                value="<%=scheduleData.datetime%>"
+                                name="datetime"
+                              />
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                              <button
+                                type="submit"
+                                class="btn btn-primary btn-sm"
+                              >
+                                Save changes
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
                     <% }) %>
                   </tr>
                 </tbody>
@@ -271,11 +321,18 @@
         </div>
       </div>
     </div>
+
     <!-- Footer -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
       $(document).ready(function () {
+        if ("<%=approveStatus%>" == "false") {
+          $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
+          $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
+          $("#note").prop("disabled", true);
+          $("#datetime").prop("disabled", true);
+        }
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
           Swal.fire({
