@@ -66,8 +66,8 @@
               <th>Created at</th>
               <th>Desc</th>
               <th>Status</th>
-              <th>Action</th>
-              <th></th>
+              <th class="text-center">Action</th>
+           
             </tr>
           </thead>
           <tbody>
@@ -78,10 +78,10 @@
                 <b><%=blogdata.title%></b>
               </td>
               <td>
-                <span class="text-muted"><%=blogdata.date%></span>
+                <span class="text-muted"><%=moment(blogdata.dateadm).format("LLL")%></span>
               </td>
               <td>
-                <b><%=blogdata.desc%></b>
+                <b><%=v.prune(blogdata.desc,10)%></b>
               </td>
               <td>
                 <%if (blogdata.status === true) {%>
@@ -90,7 +90,7 @@
                 <b class="font-weight-bold text-danger">Postpone</b>
                 <% } %>
               </td>
-              <td class="table-actions">
+              <td class="table-actions text-center">
                 <form method="POST" action="/admin/blog/delete">
                   <a
                     href="/admin/blog/<%=blogdata._id%>"
@@ -100,6 +100,7 @@
                   >
                     <i class="fas fa-user-edit"></i>
                   </a>
+                   <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
                   <input type="hidden" value="<%= blogdata._id %>" name="id" />
                   <button
                     type="submit"
@@ -113,8 +114,9 @@
                 </form>
               </td>
             </tr>
-            <% } %>
+          
           </tbody>
+          <% } %>
         </table>
       </div>
     </div>

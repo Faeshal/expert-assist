@@ -62,8 +62,8 @@ exports.getAllBlog = (req, res, next) => {
         console.log("No Admins Data");
         res.redirect("/");
       } else {
-        console.log(admins);
-        console.log("===========Convert To Object Below=============");
+        // console.log(admins);
+        // console.log("===========Convert To Object Below=============");
         var after = {};
         admins.forEach(function (obj) {
           // obj here is the element of the array, i.e. object
@@ -74,7 +74,7 @@ exports.getAllBlog = (req, res, next) => {
           });
         });
 
-        console.log(after);
+        // console.log(after);
 
         var blog = after.blog;
         res.render("front/blog", {
@@ -106,7 +106,6 @@ exports.getDetailBlog = (req, res, next) => {
       Admin.find({ status: true })
         .then((admins2) => {
           let allBlog = admins2[0].blog;
-          console.log(allBlog);
           res.render("front/blogdetail", {
             blog: blog,
             allBlog: allBlog,

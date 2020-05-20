@@ -69,6 +69,7 @@ exports.getAllBlog = (req, res, next) => {
         blog: blog,
         pageTitle: "Admin - Blog",
         moment: moment,
+        v: v,
       });
     })
     .catch((err) => console.log(err));
@@ -105,7 +106,7 @@ exports.createBlog = (req, res, nexta) => {
     })
     .then((result) => {
       console.log(result);
-      res.redirect("/admin/bloglist");
+      res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
 };
@@ -146,7 +147,7 @@ exports.updateBlog = (req, res, next) => {
   )
     .then((result) => {
       console.log(result);
-      res.redirect("/admin/bloglist");
+      res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
 };
@@ -159,7 +160,7 @@ exports.deleteBlog = (req, res, next) => {
     .then((admins) => {
       console.log(admins);
       console.log("Blog Deleted");
-      res.redirect("/admin/bloglist");
+      res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
 };
