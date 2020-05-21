@@ -36,7 +36,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-10 mx-auto">
+      <div class="col-lg-12 mx-auto">
         <div class="card-wrapper">
           <!-- CATEGORY TABLE -->
           <div class="card">
@@ -80,11 +80,11 @@
                       <b><%= faqdata.question %></b>
                     </td>
                     <td>
-                      <span class="text-muted"><%= faqdata.answer %></span>
+                      <span class="text-muted"><%= v.prune(faqdata.answer,20) %></span>
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"
-                        ><%= faqdata.date %></a
+                        ><%= moment(faqdata.date).format("LLL") %></a
                       >
                     </td>
                     <td class="table-actions">
@@ -173,11 +173,7 @@
                             ><i class="ni ni-lock-circle-open"></i
                           ></span>
                         </div>
-                        <input
-                          class="form-control answer text-dark"
-                          type="text"
-                          name="answer"
-                        />
+                        <textarea name="answer"  class="form-control answer text-dark asnwer" cols="3" rows="10"></textarea>
                       </div>
                     </div>
                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">

@@ -138,7 +138,7 @@
                       <b><%= categorydata.name %></b>
                     </td>
                     <td>
-                      <span class="text-muted"><%= categorydata.date %></span>
+                      <span class="text-muted"><%= moment(categorydata.date).format("LL") %></span>
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"

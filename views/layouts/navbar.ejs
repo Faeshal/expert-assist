@@ -16,11 +16,6 @@
           <%if (isAuthenticated) { %>
           <form id="form1" action="/logout" method="POST">
             <li class="list-inline-item">
-              <a href="javascript:void(0);"
-                ><i class="mdi mdi-account mr-2"></i> Lelah
-              </a>
-            </li>
-            <li class="list-inline-item">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <a
                 href="javascript:;"

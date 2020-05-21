@@ -176,6 +176,7 @@ exports.getCategory = (req, res, next) => {
         category: category,
         pageTitle: "Admin - Category",
         moment: moment,
+        v: v,
       });
     })
     .catch((err) => console.log(err));
@@ -241,6 +242,8 @@ exports.getFaq = (req, res, next) => {
       res.render("back/admin/faq", {
         faq: faq,
         pageTitle: "Admin - FAQ",
+        moment: moment,
+        v: v,
       });
     })
     .catch((err) => console.log(err));

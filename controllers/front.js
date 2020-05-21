@@ -3,7 +3,7 @@ const Mentor = require("../models/Mentor");
 const Schedule = require("../models/Schedule");
 const chalk = require("chalk");
 const currency = require("currency.js");
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 9;
 const voca = require("voca");
 const moment = require("moment");
 
