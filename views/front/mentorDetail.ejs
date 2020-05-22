@@ -12,10 +12,10 @@
           <p class="lead text-center"><%=mentor.bio %></p>
           <div class="text-center mt-3">
             <% if (userId=="xxx") { %>
-            <a href="/login" class="badge badge-light">Hire</a>
+            <a href="/login" class="badge badge-primary pl-4 pr-4 pt-2 pb-2">Hire</a>
             <% } else { %>
             <button
-              class="btn btn-sm btn-light"
+              class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
               data-toggle="modal"
               data-target="#paymentModal"
             >
@@ -298,12 +298,12 @@
 </div>
 
 <!-- Button -->
-<!-- <script type="text/javascript">
+<script>
   (function() {
     var options = {
-      whatsapp: "ejs mentor phone", // WhatsApp number
-      call: "ejs mentor phone", // Call phone number
-      call_to_action: "Message us", // Call to action
+      whatsapp: "<%=mentor.phone%>", // WhatsApp number
+      call: "<%=mentor.phone%>", // Call phone number
+      call_to_action: "Chat Mentor", // Call to action
       button_color: "#666666", // Color of button
       position: "right", // Position may be 'right' or 'left'
       order: "whatsapp,call" // Order of buttons
@@ -321,7 +321,7 @@
     var x = document.getElementsByTagName("script")[0];
     x.parentNode.insertBefore(s, x);
   })();
-</script> -->
+</script>
 
 <!-- footer start -->
 <%-include('../layouts/home/footer.ejs')%>
