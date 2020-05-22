@@ -46,9 +46,9 @@
             <div class="row">
               <div class="col">
                 <h5 class="card-title text-uppercase text-muted mb-0">
-                  Interaction
+                  Failed Payment
                 </h5>
-                <span class="h2 font-weight-bold mb-0">0</span>
+                <span class="h2 font-weight-bold mb-0"><%=failedPayment%></span>
               </div>
               <div class="col-auto">
                 <div
@@ -74,9 +74,9 @@
             <div class="row">
               <div class="col">
                 <h5 class="card-title text-uppercase text-muted mb-0">
-                  Mentor
+                Payment Done
                 </h5>
-                <span class="h2 font-weight-bold mb-0">0</span>
+                <span class="h2 font-weight-bold mb-0"><%=totalPayment%></span>
               </div>
               <div class="col-auto">
                 <div
@@ -104,7 +104,7 @@
                 <h5 class="card-title text-uppercase text-muted mb-0">
                   Schedule
                 </h5>
-                <span class="h2 font-weight-bold mb-0">0</span>
+                <span class="h2 font-weight-bold mb-0"><%=incomingSchedule%></span>
               </div>
               <div class="col-auto">
                 <div
@@ -130,9 +130,9 @@
             <div class="row">
               <div class="col">
                 <h5 class="card-title text-uppercase text-muted mb-0">
-                  Performance
+                  Review
                 </h5>
-                <span class="h2 font-weight-bold mb-0">0%</span>
+                <span class="h2 font-weight-bold mb-0"><%=totalReview%></span>
               </div>
               <div class="col-auto">
                 <div
@@ -244,16 +244,7 @@
 
     <!-- Footer -->
 
-    <!-- <script>
-      var cc = new ChatCamp({
-        appId: 6648956694871142400
-      });
-      cc.connect(USER_ID, function(error, user) {
-        if (errror === null) {
-          console.log("Connected to ChatCamp");
-        }
-      });
-    </script> -->
+
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
 </div>

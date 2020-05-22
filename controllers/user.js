@@ -18,13 +18,25 @@ exports.getDashboard = (req, res, next) => {
   const session = req.session.user;
   User.findById(session._id)
     .then((user) => {
-      const message = req.flash("message", "Flash is back!");
-      console.log(chalk.yellow(message));
-
-      res.render("back/user/dashboard", {
-        user: user,
-        message: message,
-        session: session,
+      Payment.countDocuments({ user: session._id }).then((totalPayment) => {
+        Payment.countDocuments({
+          $and: [{ user: session._id }, { approve: true }, { status: false }],
+        }).then((failedPayment) => {
+          Schedule.countDocuments({
+            $and: [{ user: session._id }, { approve: true }, { status: false }],
+          }).then((incomingSchedule) => {
+            Review.countDocuments({ user: session._id }).then((totalReview) => {
+              res.render("back/user/dashboard", {
+                user: user,
+                session: session,
+                totalPayment: totalPayment,
+                failedPayment: failedPayment,
+                incomingSchedule: incomingSchedule,
+                totalReview: totalReview,
+              });
+            });
+          });
+        });
       });
     })
     .catch((err) => console.log(err));
