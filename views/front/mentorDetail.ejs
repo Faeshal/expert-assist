@@ -7,6 +7,7 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
+          <img src="/<%=mentor.profilepicture%>" style="width: 23%;" class="mb-3">
           <h3 class="text-uppercase title"><%=mentor.username %></h3>
           <p class="lead text-center"><%=mentor.bio %></p>
           <div class="text-center mt-3">
@@ -100,12 +101,7 @@
           </h5>
 
           <div class="job-detail-location pt-4 border-top">
-            <div class="job-details-desc-item">
-              <div class="float-left mr-2">
-                <i class="mdi mdi-bank text-muted"></i>
-              </div>
-              <p class="text-muted mb-2">: Web Themes.pvt.Ltd</p>
-            </div>
+        
 
             <div class="job-details-desc-item">
               <div class="float-left mr-2">
@@ -118,7 +114,7 @@
               <div class="float-left mr-2">
                 <i class="mdi mdi-web text-muted"></i>
               </div>
-              <p class="text-muted mb-2">: https://www.WebThemes.com</p>
+              <p class="text-muted mb-2">: <%=mentor.portofolio%></p>
             </div>
 
             <div class="job-details-desc-item">
@@ -129,38 +125,34 @@
             </div>
 
             <div class="job-details-desc-item">
-              <div class="float-left mr-2">
-                <i class="mdi mdi-currency-usd text-muted"></i>
+              <div class="float-left mr-2 text-muted">
+               Rp :
               </div>
-              <p class="text-muted mb-2">: <%= mentor.price %></p>
+              <p class="text-muted mb-2"><%=currency(mentor.price,{precision:0}).format() %></p>
             </div>
 
             <div class="job-details-desc-item">
               <div class="float-left mr-2">
                 <i class="mdi mdi-security text-muted"></i>
               </div>
-              <p class="text-muted mb-2">: 1 To 3 Years.</p>
+              <p class="text-muted mb-2">: <%=mentor.experience%></p>
             </div>
 
 
             <h6 class="text-dark f-17 mt-3 mb-0">Share Job :</h6>
             <ul class="social-icon list-inline mt-3 mb-0">
               <li class="list-inline-item">
-                <a href="#" class="rounded"><i class="mdi mdi-facebook"></i></a>
+                <a href=" https://www.facebook.com/" class="rounded"><i class="mdi mdi-facebook"></i></a>
               </li>
               <li class="list-inline-item">
-                <a href="#" class="rounded"><i class="mdi mdi-twitter"></i></a>
+                <a href="https://twitter.com/" class="rounded"><i class="mdi mdi-twitter"></i></a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https://web.whatsapp.com/" class="rounded"><i class="mdi mdi-whatsapp"></i></a>
               </li>
               <li class="list-inline-item">
-                <a href="#" class="rounded"
-                  ><i class="mdi mdi-google-plus"></i
-                ></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#" class="rounded"><i class="mdi mdi-whatsapp"></i></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#" class="rounded"><i class="mdi mdi-linkedin"></i></a>
+                <a href="linkedin.com" class="rounded"><i class="mdi mdi-linkedin"></i></a>
               </li>
             </ul>
           </div>

@@ -149,6 +149,7 @@ exports.getDetailMentor = (req, res, next) => {
             moment: moment,
             voca: voca,
             skillString: skillString,
+            currency: currency,
           });
         });
     })
