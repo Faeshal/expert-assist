@@ -265,6 +265,7 @@
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <input type="hidden" name="id" class="id" />
               <input type="hidden" name="mentorstatus" value="true" />
+              <input type="hidden" name="mentorusername" value="<%=mentor.username%>" />
               <button
                 onclick="statusSubmit()"
                 type="submit"

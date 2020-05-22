@@ -21,13 +21,13 @@ exports.getDashboard = (req, res, next) => {
         $and: [{ mentor: session._id }, { status: true }],
       }).then((totalClient) => {
         Review.countDocuments({ mentor: session._id }).then((totalReview) => {
-          console.log(chalk.bgBlueBright.inverse(totalReview));
           res.render("back/mentor/dashboard", {
             mentor: mentor,
             currency: currency,
             session: session,
             totalClient: totalClient,
             totalReview: totalReview,
+            voca: voca,
           });
         });
       });
@@ -37,10 +37,11 @@ exports.getDashboard = (req, res, next) => {
 
 exports.postMentorStatus = (req, res, next) => {
   const mentorstatus = req.body.mentorstatus;
-  const mentorUsername = req.session.mentor.username;
+  const mentorusername = voca.slugify(req.body.mentorusername);
+  const slugusername = mentorusername;
 
   let data = {
-    name: mentorUsername,
+    name: slugusername,
     privacy: "public",
   };
   axios
@@ -103,7 +104,7 @@ exports.getPayment = (req, res, next) => {
 exports.getPaymentJson = (req, res, next) => {
   const session = req.session.mentor;
   Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
-    .count()
+    .countDocuments()
     .then((payment) => {
       if (payment) {
         res.status(200).json({ message: "true", payment: payment });
@@ -297,13 +298,14 @@ exports.getSchedule = (req, res, next) => {
   Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
     .then((schedule) => {
-      console.log(schedule);
+      console.log(schedule[0].user.username);
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/schedule", {
           mentor: mentor,
           schedule: schedule,
           moment: moment,
           session: session,
+          voca: voca,
         });
       });
     })
@@ -320,7 +322,7 @@ exports.getScheduleJson = (req, res, next) => {
   //   },
   // ])
   Schedule.find({ mentor: session._id })
-    .count()
+    .countDocuments()
     .then((schedule) => {
       console.log(schedule);
       if (schedule) {
@@ -472,7 +474,7 @@ exports.getReviewJson = (req, res, next) => {
   const session = req.session.mentor;
 
   Review.find({ mentor: session._id })
-    .count()
+    .countDocuments()
     .then((review) => {
       if (review) {
         res.status(200).json({ message: "Successfully Fetch", review: review });
