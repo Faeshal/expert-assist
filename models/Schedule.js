@@ -13,7 +13,10 @@ const ScheduleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  note: String,
+  note: {
+    type: String,
+    note: "Nothing",
+  },
   approve: {
     type: Boolean,
     default: false,

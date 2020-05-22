@@ -17,10 +17,19 @@ exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
   Mentor.findOne({ _id: session._id })
     .then((mentor) => {
-      res.render("back/mentor/dashboard", {
-        mentor: mentor,
-        currency: currency,
-        session: session,
+      Payment.countDocuments({
+        $and: [{ mentor: session._id }, { status: true }],
+      }).then((totalClient) => {
+        Review.countDocuments({ mentor: session._id }).then((totalReview) => {
+          console.log(chalk.bgBlueBright.inverse(totalReview));
+          res.render("back/mentor/dashboard", {
+            mentor: mentor,
+            currency: currency,
+            session: session,
+            totalClient: totalClient,
+            totalReview: totalReview,
+          });
+        });
       });
     })
     .catch((err) => console.log(err));
@@ -152,7 +161,7 @@ exports.updateProfile = (req, res, next) => {
       mentor.job = job;
 
       if (profilepicture) {
-        fileHelper.deleteFile(mentor.profilepicture);
+        // fileHelper.deleteFile(mentor.profilepicture);
         mentor.profilepicture = req.files["profilepicture"][0].path.replace(
           "\\",
           "/"
@@ -160,7 +169,7 @@ exports.updateProfile = (req, res, next) => {
       }
 
       if (coverpicture) {
-        fileHelper.deleteFile(mentor.coverpicture);
+        // fileHelper.deleteFile(mentor.coverpicture);
         mentor.coverpicture = req.files["coverpicture"][0].path.replace(
           "\\",
           "/"
