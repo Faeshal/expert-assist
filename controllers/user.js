@@ -218,9 +218,6 @@ exports.getSchedule = (req, res, next) => {
     .populate("mentor", "username")
     .exec()
     .then((payment) => {
-      lastSchedule = payment._id;
-      console.log(chalk.blue.inverse(lastSchedule));
-      console.log(payment);
       Schedule.find({ user: session._id })
         .sort({ _id: -1 })
         .populate("mentor", "username")
@@ -236,7 +233,6 @@ exports.getSchedule = (req, res, next) => {
             schedule: schedule,
             moment: moment,
             session: session,
-            lastSchedule: lastSchedule,
             approveStatus: approveStatus,
           });
         })

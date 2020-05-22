@@ -76,10 +76,11 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
+                      <small>Mentor</small>
                       <div class="input-group input-group-merge">
                         <div class="input-group-prepend">
                           <span class="input-group-text"
-                            ><i class="fas fa-envelope"></i
+                            ><i class="fas fa-user"></i
                           ></span>
                         </div>
                         <input
@@ -111,10 +112,11 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
+                      <small>Schedule</small>
                       <div class="input-group input-group-merge">
                         <div class="input-group-prepend">
                           <span class="input-group-text"
-                            ><i class="fas fa-credit-card"></i
+                            ><i class="far fa-calendar-times"></i
                           ></span>
                         </div>
                         <input
@@ -133,10 +135,11 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
+                      <small>Note</small>
                       <div class="input-group input-group-merge">
                         <div class="input-group-prepend">
                           <span class="input-group-text"
-                            ><i class="fas fa-credit-card"></i
+                            ><i class="far fa-file-alt"></i
                           ></span>
                         </div>
                         <input
@@ -147,7 +150,7 @@
                         <input
                           id="note"
                           class="form-control pl-2"
-                          placeholder="Note"
+                          placeholder="Write some message here"
                           type="text"
                           name="note"
                         />
@@ -162,7 +165,7 @@
                       type="submit"
                       class="btn btn-sm btn-primary"
                     >
-                      Book Mentor
+                      Request Schedule
                     </button>
                   </div>
                 </div>
@@ -337,8 +340,8 @@
           e.preventDefault();
           Swal.fire({
             icon: "success",
-            title: "Success!",
-            text: "Data Successfully Submit",
+            title: "Request Berhasil!",
+            text: "Mohon menunggu sampai jadwal diApprove oleh Mentor",
           }).then(function () {
             $("#scheduleForm").submit();
           });

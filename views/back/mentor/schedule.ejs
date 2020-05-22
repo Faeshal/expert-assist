@@ -93,7 +93,6 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th>Note</th>
-                    <th>Link</th>
                     <th class="text-center">Approval</th>
                     <th class="text-center">Action</th>
                   </tr>
@@ -120,24 +119,24 @@
                       >
                     </td>
                     <td>
+                      <% if (schedule.note == "" || schedule.note==null){ %>
+                      <a href="#!" class="text-muted">Nothing </a>
+                      <% }else{ %>
                       <a href="#!" class="font-weight-bold"
                         ><%= scheduleData.note %>
                       </a>
+                      <% } %>
                     </td>
-                    <td>
-                      <a href="#!" class="font-weight-bold"
-                        ><%= scheduleData.link %>
-                      </a>
-                    </td>
+
                     <td class="text-center">
-                      <% if(scheduleData.approve==true) { %>
-                      <a href="#!" class="font-weight-bold"
-                        ><%= scheduleData.approve %>
-                      </a>
-                      <% } else { %>
-                      <a href="#!" class="font-weight-bold text-danger"
-                        ><%= scheduleData.approve %>
-                      </a>
+                      <% if (scheduleData.approve == false) { %>
+                      <span class="badge badge-pill badge-warning text-dark"
+                        >Waiting</span
+                      >
+                      <% } else{ %>
+                      <span class="badge badge-pill badge-success text-dark"
+                        >Approve</span
+                      >
                       <% } %>
                     </td>
                     <td class="table-actions myTd text-center">
