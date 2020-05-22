@@ -33,20 +33,20 @@
           <div class="sort-button float-right">
             <ul class="list-inline mb-0">
               <li class="list-inline-item mb-0 mr-3">
-                <select class="nice-select rounded">
+                <select class="nice-select rounded" id="selectBy">
                   <option data-display="Sort By">Nothing</option>
-                  <option value="1">Web Developer</option>
-                  <option value="2">PHP Developer</option>
-                  <option value="3">Web Designer</option>
+                  <option value="1">FrontEnd Developer</option>
+                  <option value="2">BackEnd Developer</option>
+                  <option value="3">English Teacher</option>
                 </select>
               </li>
 
-              <li class="list-inline-item">
+              <li class="list-inline-item" id="sortBy">
                 <select class="nice-select rounded">
                   <option data-display="Default">Nothing</option>
-                  <option value="1">Web Developer</option>
-                  <option value="2">PHP Developer</option>
-                  <option value="3">Web Designer</option>
+                  <option value="1">Backend Developer</option>
+                  <option value="2">Frontend Developer</option>
+                  <option value="3">English Teacher</option>
                 </select>
               </li>
             </ul>
@@ -251,7 +251,7 @@
                     <label
                       class="custom-control-label ml-1 text-muted"
                       for="customRadio7"
-                      >Web Designer</label
+                      >Web Developer</label
                     >
                   </div>
 
@@ -265,7 +265,7 @@
                     <label
                       class="custom-control-label ml-1 text-muted"
                       for="customRadio12"
-                      >Accountancy</label
+                      >English Teacher</label
                     >
                   </div>
                 </div>
@@ -476,6 +476,7 @@
 <!-- footer start -->
 <%-include('../layouts/home/footer.ejs')%>
 <script src="/back/assets/js/rater.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script>
   $(document).ready(() => {
@@ -484,5 +485,16 @@
       readonly: true,
     };
     $(".rate").rate(option);
+
+    $(
+      "#selectBy,#sortBy,#customRadio1,#customRadio2,#customRadio3,#customRadio4,#customRadio5,#customCheck7,#customCheck8,#customCheck9,#customCheck10,#customCheck3,#customCheck4,#customRadio7,#customRadio12,#customRadio13,#customRadio14,#customRadio15"
+    ).change(() => {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops.. Under Development",
+        text:
+          "Sorry We're on Deadline, This Feature is not ready to use. But You can use our search bar",
+      });
+    });
   });
 </script>
