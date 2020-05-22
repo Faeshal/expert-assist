@@ -215,10 +215,10 @@ exports.getSchedule = (req, res, next) => {
         .exec()
         .then((schedule) => {
           let approveStatus;
-          if (schedule) {
+          if (schedule.length > 0) {
             approveStatus = schedule[0].approve;
           }
-          console.log(chalk.greenBright.inverse(approveStatus));
+
           res.render("back/user/schedule", {
             payment: payment,
             schedule: schedule,
