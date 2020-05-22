@@ -103,19 +103,19 @@
                 <%= user.bio == null ? "Not Set" : bio.toUpperCase() %>
               </div>
             </div>
-            <div class="text-center">
-              <div class="w-65"><hr /></div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Phone <%=user.phone%>
+            <hr>
+            <div class="row mt-3 text-center mx-auto justify-content-center">
+              <div class="col-md-3">
+                <i class="fas fa-phone mr-2 fa-lg"></i><%= user.phone %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Twitter <%=user.twitter%>
+              <div class="col-md-3">
+                <i class="fab fa-twitter mr-2 fa-lg"></i><%= user.twitter %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Github <%=user.github%>
+              <div class="col-md-3">
+                <i class="fab fa-github mr-2 fa-lg"></i><%= user.github %>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>Linkedin <%=user.linkedin%>
+              <div class="col-md-3">
+                <i class="fab fa-linkedin mr-2 fa-lg"></i><%= user.linkedin %>
               </div>
             </div>
           </div>
@@ -230,7 +230,7 @@
                 enctype="multipart/form-data"
               >
                 <div class="row">
-                  <div class="col-sm-12">
+                  <div class="col-sm-6">
                     <div class="form-group">
                       <input type="hidden" name="id" class="id" />
                       <label for="recipient-name" class="col-form-label"
@@ -238,8 +238,21 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm username"
+                        class="form-control form-control-sm username text-dark"
                         name="username"
+                      />
+                    </div>
+                  </div>
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                      <input type="hidden" name="id" class="id" />
+                      <label for="recipient-name" class="col-form-label"
+                        >Profile Picture</label
+                      >
+                       <input
+                        type="file"
+                        class="form-control form-control-sm profilepicture "
+                        name="profilepicture"
                       />
                     </div>
                   </div>
@@ -249,11 +262,11 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="message-text" class="col-form-label"
-                        >Job:</label
+                        >Job</label
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm job"
+                        class="form-control form-control-sm job text-dark"
                         name="job"
                       />
                     </div>
@@ -261,11 +274,11 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="message-text" class="col-form-label"
-                        >Bio:</label
+                        >Bio</label
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm bio"
+                        class="form-control form-control-sm bio text-dark"
                         name="bio"
                       />
                     </div>
@@ -275,11 +288,11 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="message-text" class="col-form-label"
-                        >city</label
+                        >City</label
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm city"
+                        class="form-control form-control-sm city text-dark"
                         name="city"
                       />
                     </div>
@@ -291,7 +304,7 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm phone"
+                        class="form-control form-control-sm phone text-dark"
                         name="phone"
                       />
                     </div>
@@ -305,7 +318,7 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm twitter"
+                        class="form-control form-control-sm twitter text-dark"
                         name="twitter"
                       />
                     </div>
@@ -317,7 +330,7 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm github"
+                        class="form-control form-control-sm github text-dark"
                         name="github"
                       />
                     </div>
@@ -329,26 +342,13 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-sm linkedin"
+                        class="form-control form-control-sm linkedin text-dark"
                         name="linkedin"
                       />
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label"
-                        >Profile Picture:</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control form-control-sm profilepicture"
-                        name="profilepicture"
-                      />
-                    </div>
-                  </div>
-                </div>
+               
                 <div class="modal-footer justify-content-center mx-auto">
                   <button
                     id="buttonAlert"
