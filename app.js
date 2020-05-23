@@ -27,6 +27,17 @@ app.use(cors());
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
+// Set 'views' directory for any views
+// being rendered res.render()
+app.set("views", path.join(__dirname, "views"));
+
+// ** Template
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+// Set view engine as EJS
+app.engine("html", require("ejs").renderFile);
+// app.set("view engine", "html");
 
 app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "10mb", extended: true }));
@@ -59,10 +70,6 @@ app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 });
-
-// * Templating Engine
-app.set("view engine", "ejs");
-app.set("views", "views");
 
 // * Routing
 
