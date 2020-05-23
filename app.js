@@ -34,7 +34,8 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
 const store = new MongoDBStore({
-  uri: process.env.MONGO_URI,
+  uri:
+    "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
   collection: "sessions",
 });
 
