@@ -3,6 +3,8 @@ dotenv.config({ path: "./config.env" });
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI =
+  "mongodb+srv://faeshal:toshibac855d@expert-assist-ukbbx.mongodb.net/exas?retryWrites=true&w=majority";
 const mongoose = require("mongoose");
 const cors = require("cors");
 const csrf = require("csurf");
@@ -78,16 +80,14 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
   useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
 mongoose.connection.on("connected", function () {
-  console.log(
-    chalk.blueBright("MongoDB connected to " + process.env.MONGO_URI)
-  );
+  console.log(chalk.blueBright("MongoDB connected "));
 });
 
 mongoose.connection.on("error", function (err) {
@@ -103,32 +103,32 @@ app.listen(PORT, (err) => {
   }
 });
 
-// * Heathcheck TINI
-// quit on ctrl-c when running docker in terminal
-process.on("SIGINT", function onSigint() {
-  console.info(
-    "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
-    new Date().toISOString()
-  );
-  shutdown();
-});
+// // * Heathcheck TINI
+// // quit on ctrl-c when running docker in terminal
+// process.on("SIGINT", function onSigint() {
+//   console.info(
+//     "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
+//     new Date().toISOString()
+//   );
+//   shutdown();
+// });
 
-// quit properly on docker stop
-process.on("SIGTERM", function onSigterm() {
-  console.info(
-    "Got SIGTERM (docker container stop). Graceful shutdown ",
-    new Date().toISOString()
-  );
-  shutdown();
-});
+// // quit properly on docker stop
+// process.on("SIGTERM", function onSigterm() {
+//   console.info(
+//     "Got SIGTERM (docker container stop). Graceful shutdown ",
+//     new Date().toISOString()
+//   );
+//   shutdown();
+// });
 
-// shut down server
-function shutdown() {
-  server.close(function onServerClosed(err) {
-    if (err) {
-      console.error(err);
-      process.exitCode = 1;
-    }
-    process.exit();
-  });
-}
+// // shut down server
+// function shutdown() {
+//   server.close(function onServerClosed(err) {
+//     if (err) {
+//       console.error(err);
+//       process.exitCode = 1;
+//     }
+//     process.exit();
+//   });
+// }

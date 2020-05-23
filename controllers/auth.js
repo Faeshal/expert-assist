@@ -9,7 +9,10 @@ const bcrypt = require("bcryptjs");
 const chalk = require("chalk");
 const voca = require("voca");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(
+  "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"
+);
 
 exports.getRegister = (req, res, next) => {
   let message = req.flash("error");
