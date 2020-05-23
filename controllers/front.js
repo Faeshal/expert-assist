@@ -106,7 +106,7 @@ exports.getDetailBlog = (req, res, next) => {
       Admin.find({ status: true })
         .then((admins2) => {
           let allBlog = admins2[0].blog;
-          res.render("front/blogdetail", {
+          res.render("front/blogDetail", {
             blog: blog,
             allBlog: allBlog,
             moment: moment,
