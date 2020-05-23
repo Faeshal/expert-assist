@@ -1,5 +1,4 @@
-<%-include('../layouts/home/header.ejs')%> 
-<%-include('../layouts/navbar.ejs')%>
+<%-include('../layouts/home/header.ejs')%> <%-include('../layouts/navbar.ejs')%>
 <%-include('../layouts/home/homeJumbotron.ejs')%>
 
 <!-- popular category start -->
@@ -7,7 +6,11 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12">
-        <div class="section-title text-center mb-4 pb-2">
+        <div
+          class="section-title text-center mb-4 pb-2"
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+        >
           <h4 class="title title-line pb-5">Popular Category</h4>
           <p class="text-muted para-desc mx-auto mb-1">
             Find a Mentor based on their expertise that will help you solving
@@ -16,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="row" data-aos="fade-up" data-aos-duration="700">
+    <div class="row" data-aos="fade-up" data-aos-duration="1100">
       <div class="col-lg-3 col-md-6 mt-4 pt-2">
         <a href="javascript:void(0)">
           <div class="popu-category-box bg-light rounded text-center p-4">
@@ -79,11 +82,7 @@
       </div>
     </div>
 
-    <div
-      class="row justify-content-center"
-      data-aos="fade-up"
-      data-aos-duration="1000"
-    >
+    <div class="row justify-content-center">
       <div class="col-12 text-center mt-4 pt-2">
         <a href="/mlist" class="btn btn-primary-outline"
           >Browse More <i class="mdi mdi-chevron-right"></i
@@ -99,7 +98,7 @@
 <!-- How it Work start -->
 <section class="section">
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" data-aos="fade-down">
       <div class="col-12">
         <div class="section-title text-center mb-4 pb-2">
           <h4 class="title title-line pb-5">How It Work</h4>
@@ -112,11 +111,7 @@
       </div>
     </div>
     <div class="row">
-      <div
-        class="col-md-4 mt-4 pt-2"
-        data-aos="fade-right"
-        data-aos-duration="800"
-      >
+      <div class="col-md-4 mt-4 pt-2" data-aos="fade-down">
         <div class="how-it-work-box bg-light p-4 text-center rounded shadow">
           <div class="how-it-work-img position-relative rounded-pill mb-3">
             <img
@@ -138,11 +133,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="col-md-4 mt-4 pt-2"
-        data-aos="zoom-in"
-        data-aos-duration="800"
-      >
+      <div class="col-md-4 mt-4 pt-2" data-aos="fade-down">
         <div class="how-it-work-box bg-light p-4 text-center rounded shadow">
           <div class="how-it-work-img position-relative rounded-pill mb-3">
             <img
@@ -164,11 +155,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="col-md-4 mt-4 pt-2"
-        data-aos="fade-left"
-        data-aos-duration="800"
-      >
+      <div class="col-md-4 mt-4 pt-2" data-aos="fade-down">
         <div class="how-it-work-box bg-light p-4 text-center rounded shadow">
           <div class="how-it-work-img position-relative rounded-pill mb-3">
             <img
@@ -198,7 +185,7 @@
 <!-- testimonial start -->
 <section class="section">
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" data-aos="fade-down">
       <div class="col-12">
         <div class="section-title text-center mb-4 pb-2">
           <h4 class="title title-line pb-5">Our Success Stories</h4>
@@ -209,8 +196,8 @@
         </div>
       </div>
     </div>
-    <div class="row pt-4">
-      <div class="col-lg-12" data-aos="zoom-out-down">
+    <div class="row pt-4" data-aos="fade-down">
+      <div class="col-lg-12">
         <div id="owl-testi" class="owl-carousel owl-theme">
           <div
             class="item testi-box rounded p-4 mr-3 ml-2 mb-4 bg-light position-relative"
@@ -296,11 +283,7 @@
   </div>
 
   <div class="container mt-100 mt-60">
-    <div
-      class="row justify-content-center"
-      data-aos="fade-up"
-      data-aos-duration="600"
-    >
+    <div class="row justify-content-center" data-aos="fade-up">
       <div class="col-12">
         <div class="section-title text-center mb-4 pb-2">
           <h4 class="title title-line pb-5">Our Client's</h4>
@@ -312,11 +295,7 @@
       </div>
     </div>
 
-    <div
-      class="row align-items-center"
-      data-aos="zoom-in-down"
-      data-aos-duration="750"
-    >
+    <div class="row align-items-center" data-aos="fade-up">
       <div class="col-lg-2 col-md-4 col-6 mt-4 pt-2 text-center">
         <img src="/front/images/clients/1.png" height="50" alt="" />
       </div>
@@ -353,5 +332,3 @@
 
 <!-- subscribe end -->
 <%-include('../layouts/home/footer.ejs')%>
-
-

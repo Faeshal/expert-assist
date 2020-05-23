@@ -16,13 +16,13 @@ exports.getIndex = (req, res, next) => {
     .sort({ _id: -1 })
     .then((newMentor) => {
       Mentor.find({ mentorstatus: "true" })
-        .limit(3)
+        .limit(7)
         .sort({ rating: -1 })
         .then((bestMentor) => {
           Mentor.find({
             $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
           })
-            .limit(3)
+            .limit(7)
             .sort({ price: 1 })
             .then((cheapestMentor) => {
               res.render("front/index", {

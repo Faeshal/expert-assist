@@ -64,22 +64,21 @@
 
     <!-- List Mentor -->
     <div class="row">
-      <div class="col-12">
+      <div class="col-12" >
         <div class="tab-content mt-2" id="pills-tabContent">
           <div
             class="tab-pane fade show active"
             id="recent-job"
             role="tabpanel"
-            aria-labelledby="recent-job-tab"
+            aria-labelledby="recent-job-tab" 
           >
             <!-- Recent-job Loop  -->
             <% newMentor.forEach((mentorData)=>{ %>
-            <div class="row">
-              <div class="col-lg-12">
+            <div class="row" data-aos="fade-down" data-aos-duration="700">
+              <div class="col-lg-12" >
                 <div
                   class="job-box bg-white overflow-hidden border rounded mt-4 position-relative overflow-hidden"
-                  data-aos="zoom-in"
-                  data-aos-duration="700"
+                  
                 >
                   <div class="lable text-center pt-2 pb-2">
                     <ul
@@ -412,7 +411,7 @@
     <!-- end row -->
 
     <!-- More Button-->
-    <div class="row" data-aos="zoom-out-up">
+    <div class="row">
       <div class="col-lg-12 mt-5 pt-2 mx-auto text-center">
         <a href="/mlist" class="btn btn-sm btn-outline-primary"><< MORE >></a>
       </div>
