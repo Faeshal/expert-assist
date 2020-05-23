@@ -1,10 +1,6 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./config.env" });
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI =
-  "mongodb+srv://faeshal:toshibac855d@expert-assist-ukbbx.mongodb.net/exas?retryWrites=true&w=majority";
 const mongoose = require("mongoose");
 const cors = require("cors");
 const csrf = require("csurf");
@@ -80,14 +76,17 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.on("connected", function () {
-  console.log(chalk.blueBright("MongoDB connected "));
+  console.log(chalk.blueBright("MongoDB connected"));
 });
 
 mongoose.connection.on("error", function (err) {
