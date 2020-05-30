@@ -310,6 +310,8 @@ exports.getMentoring = (req, res, next) => {
             schedule = 0;
           }
           console.log(chalk.yellowBright.inverse(schedule));
+          const now = moment().format("LTS");
+          console.log(chalk.red.inverse(now));
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
@@ -317,6 +319,7 @@ exports.getMentoring = (req, res, next) => {
             dateTimeNow: dateTimeNow,
             dateTimeSchedule: dateTimeSchedule,
             moment: moment,
+            now: now,
           });
         })
         .catch((err) => console.log(err));
