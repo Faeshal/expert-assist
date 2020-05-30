@@ -81,11 +81,6 @@ router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
 router.get("/api/mentor/schedules", isAuth, mentorController.getScheduleJson);
 router.post(
-  "/mentor/schedule/delete",
-  isAuth,
-  mentorController.postDeleteSchedule
-);
-router.post(
   "/mentor/schedule/update",
   isAuth,
   mentorController.postUpdateSchedule

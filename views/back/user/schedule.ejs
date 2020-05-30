@@ -234,19 +234,23 @@
                       >
                     </td>
                     <td class="table-actions">
-                      <% if (scheduleData.approve == false) { %>
+                      <% if (scheduleData.approve == "false") { %>
                       <span class="badge badge-pill badge-warning text-dark"
                         >Waiting</span
                       >
-                      <% } else{ %>
+                      <% } else if(scheduleData.approve == "reject"){ %>
+                      <span class="badge badge-pill badge-dark text-white"
+                        >Reject</span
+                      >
+                      <% } else { %>
                       <span class="badge badge-pill badge-success text-dark"
                         >Approve</span
                       >
                       <% } %>
                     </td>
                     <td class="text-center">
-                      <% if (scheduleData.approve==true){ %>
-                      <i class="fas fa-check-circle text-success"></i>
+                      <% if (scheduleData.approve=="true" ||scheduleData.approve=="reject"){ %>
+                       <i class="fas fa-check-circle"></i>
                       <% }else{ %>
                       <button
                         type="button"

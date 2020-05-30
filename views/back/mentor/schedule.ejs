@@ -129,50 +129,38 @@
                     </td>
 
                     <td class="text-center">
-                      <% if (scheduleData.approve == false) { %>
+                      <% if (scheduleData.approve == "false") { %>
                       <span class="badge badge-pill badge-warning text-dark"
                         >Waiting</span
                       >
-                      <% } else{ %>
-                      <span class="badge badge-pill badge-success text-dark"
+                      <% } else if(scheduleData.approve=="reject"){ %>
+                      <span class="badge badge-pill badge-dark text-white"
+                        >Reject</span
+                      >
+                      <% } else { %>
+                        <span class="badge badge-pill badge-success text-dark"
                         >Approve</span
                       >
-                      <% } %>
+                      <% } %> 
                     </td>
+
                     <td class="table-actions myTd text-center">
-                      <form method="POST" action="/mentor/schedule/delete">
-                        <a
-                          href="javascript:void(0);"
-                          class="table-action edit"
-                          data-original-title="Edit category"
-                          data-toggle="modal"
-                          data-target="#exampleModal"
-                          data-id="<%=scheduleData._id%>"
-                          data-approve="<%=scheduleData.approve%>"
-                          data-username="<%=scheduleData.user.username%>"
-                        >
-                          <i class="fas fa-user-edit"></i>
-                        </a>
-                        <input
-                          type="hidden"
-                          value="<%= scheduleData._id %>"
-                          name="id"
-                        />
-                        <input
-                          type="hidden"
-                          name="_csrf"
-                          value="<%= csrfToken %>"
-                        />
-                        <button
-                          type="submit"
-                          onclick="return confirm('Are you sure you want to delete?');"
-                          class="table-action btn btn-sm"
-                          data-toggle="tooltip"
-                          data-original-title="Delete Category"
-                        >
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
+                      <% if(scheduleData.approve=="true" || scheduleData.approve=="reject"){ %>
+                        <i class="fas fa-check-circle"></i>
+                      <% }else{%>  
+                      <a
+                        href="javascript:void(0);"
+                        class="table-action edit"
+                        data-original-title="Edit category"
+                        data-toggle="modal"
+                        data-target="#exampleModal"
+                        data-id="<%=scheduleData._id%>"
+                        data-approve="<%=scheduleData.approve%>"
+                        data-username="<%=scheduleData.user.username%>"
+                      >
+                     <i class="far fa-calendar-check fa-lg text-primary"></i>
+                      </a>
+                    <% } %> 
                     </td>
                   </tr>
                   <% }) %>
@@ -213,7 +201,11 @@
                 <label for="exampleInputPassword1">Username</label>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="id" class="id" />
-                <input type="hidden" name="link" value="<%=mentor.videocallroom%>" />
+                <input
+                  type="hidden"
+                  name="link"
+                  value="<%=mentor.videocallroom%>"
+                />
                 <input
                   type="text"
                   class="form-control username"
@@ -225,13 +217,13 @@
               <div class="form-group">
                 <label for="exampleFormControlSelect1">Approval</label>
                 <select
-                  class="form-control"
+                  class="form-control text-dark font-weight-bold
                   id="exampleFormControlSelect1"
                   required
                   name="approve"
                 >
-                  <option selected value="">Choose One...</option>
-                  <option value="false">Reject</option>
+                  <option selected value="false">Choose One...</option>
+                  <option value="reject">Reject</option>
                   <option value="true">Approve</option>
                 </select>
               </div>

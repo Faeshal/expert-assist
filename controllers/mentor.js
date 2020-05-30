@@ -347,16 +347,6 @@ exports.getScheduleJson = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postDeleteSchedule = (req, res, next) => {
-  const id = req.body.id;
-  Schedule.findByIdAndDelete(id)
-    .then((result) => {
-      console.log(result);
-      res.redirect("/mentor/schedule");
-    })
-    .catch((er) => console.log(err));
-};
-
 exports.postUpdateSchedule = (req, res, next) => {
   const id = req.body.id;
   const approve = req.body.approve;

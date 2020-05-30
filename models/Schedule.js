@@ -18,8 +18,8 @@ const ScheduleSchema = new mongoose.Schema({
     note: "Nothing",
   },
   approve: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "false",
   },
   link: {
     type: String,
