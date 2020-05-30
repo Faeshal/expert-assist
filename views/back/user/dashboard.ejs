@@ -28,6 +28,15 @@
               </ol>
             </nav>
           </div>
+          <div class="col-lg-6 col-5 text-right">
+            <form action="/logout" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button type="submit" class="btn btn-sm btn-danger">
+                <i class="ni ni-user-run"></i>
+                <span>Logout</span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +79,7 @@
             <div class="row">
               <div class="col">
                 <h5 class="card-title text-uppercase text-muted mb-0">
-                Payment Done
+                  Payment Done
                 </h5>
                 <span class="h2 font-weight-bold mb-0"><%=totalPayment%></span>
               </div>
@@ -100,7 +109,9 @@
                 <h5 class="card-title text-uppercase text-muted mb-0">
                   Schedule
                 </h5>
-                <span class="h2 font-weight-bold mb-0"><%=incomingSchedule%></span>
+                <span class="h2 font-weight-bold mb-0"
+                  ><%=incomingSchedule%></span
+                >
               </div>
               <div class="col-auto">
                 <div
@@ -239,7 +250,6 @@
     <!-- <script async type="text/javascript" src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/5a16afc55e544ccbe84d0baa383eb5bbbf18d4b8ca4a761d337c9b42bbabe095.js"></script>   -->
 
     <!-- Footer -->
-
 
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
