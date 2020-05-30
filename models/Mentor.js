@@ -56,6 +56,7 @@ const MentorSchema = new mongoose.Schema({
   },
   bankname: String,
   bankaccount: String,
+  videocallroom: String,
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

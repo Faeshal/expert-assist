@@ -15,6 +15,7 @@ const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
+
   Mentor.findOne({ _id: session._id })
     .then((mentor) => {
       Payment.countDocuments({
@@ -36,12 +37,16 @@ exports.getDashboard = (req, res, next) => {
 };
 
 exports.postMentorStatus = (req, res, next) => {
+  const session = req.session.mentor;
   const mentorstatus = req.body.mentorstatus;
   const mentorusername = voca.slugify(req.body.mentorusername);
-  const slugusername = mentorusername;
+  const slugUsername = mentorusername;
+  const firstString = voca.first(session._id, 3);
+  const lastString = voca.last(session._id, 3);
+  const roomName = slugUsername + "-" + firstString + lastString;
 
   let data = {
-    name: slugusername,
+    name: roomName,
     privacy: "public",
   };
   axios
@@ -61,7 +66,8 @@ exports.postMentorStatus = (req, res, next) => {
   Mentor.findById(req.session.mentor._id)
     .then((mentor) => {
       mentor.mentorstatus = mentorstatus;
-      return mentor.save().then((result) => {
+      mentor.videocallroom = roomName;
+      return mentor.save().then(() => {
         res.redirect("/mentor/profile");
       });
     })
