@@ -330,10 +330,11 @@ exports.getLive = (req, res, next) => {
     .then((schedule) => {
       const dateTimeSchedule = schedule.datetime;
       console.log(schedule);
-      if (schedule.approve == false) {
+      console.log("MASUK");
+      if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");
         console.log("Not Auhtorize");
-      } else if (schedule.approve == true) {
+      } else if (schedule.approve == "true") {
         res.render("back/user/live", {
           schedule: schedule,
           user: req.session.user._id,

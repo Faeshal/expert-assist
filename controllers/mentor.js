@@ -413,10 +413,10 @@ exports.getLive = (req, res, next) => {
     .then((schedule) => {
       console.log(chalk.blue.inverse(schedule));
       const dateTimeSchedule = schedule.datetime;
-      if (schedule.approve == false) {
+      if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");
         console.log("Not Auhtorize");
-      } else if (schedule.approve == true) {
+      } else if (schedule.approve == "true") {
         res.render("back/mentor/live", {
           schedule: schedule,
           mentor: req.session.mentor._id,
