@@ -309,9 +309,20 @@ exports.getMentoring = (req, res, next) => {
           } else {
             schedule = 0;
           }
-          console.log(chalk.yellowBright.inverse(schedule));
-          const now = moment().format("LTS");
-          console.log(chalk.red.inverse(now));
+          var now = moment().format();
+          var finish = moment(dateTimeSchedule).format();
+
+          let newdate = new Date();
+          let hasil = Math.abs(dateTimeSchedule - newdate);
+          let convert = moment.utc(hasil).format("LTS");
+
+          console.log(now);
+          console.log(finish);
+          // console.log("new date:" + newdate);
+
+          console.log(chalk.red.inverse("Milisecond:" + hasil));
+          console.log(chalk.blue.inverse("Hasil:" + convert));
+
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
@@ -320,6 +331,7 @@ exports.getMentoring = (req, res, next) => {
             dateTimeSchedule: dateTimeSchedule,
             moment: moment,
             now: now,
+            convert: convert,
           });
         })
         .catch((err) => console.log(err));

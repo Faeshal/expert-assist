@@ -90,16 +90,18 @@
                     Happy Mentoring - Hope Your Problem Solve Soon
                   </h4>
                   <% }else{ %>
-
                   <div class="text-center">
-                    <span class="text-dark">Waktu Sekarang : <%=now%> </span> -
                     <span class="small text-danger font-weight-bold"
-                      >Waktu Mentoring:50:00:00</span
-                    >
+                      >Waktu Sekarang : <span id="clock"></span>
+                    </span>
                   </div>
                   <span class="badge badge-danger"
                     >Waktu Mentoring Belum Tiba</span
-                  >
+                  ><br />
+                  <h3 class="text-danger mt-3">
+                    Incoming:
+                    <h3 id="convert"></h3>
+                  </h3>
 
                   <h4 class="text-center mb-4 text-primary pt-4">
                     Silahkan Periksa Jadwal Anda
@@ -195,5 +197,24 @@
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+    <script>
+      function displayTime() {
+        let time = moment().format("LTS");
+        $("#clock").html(time);
+        setTimeout(displayTime, 1000);
+      }
+
+      function convertTime() {
+        let convertTime = "<%=convert%>";
+        $("#convert").html(convertTime);
+        setTimeout(convertTime, 1000);
+      }
+
+      $(document).ready(function () {
+        displayTime();
+        convertTime();
+      });
+    </script>
   </div>
 </div>

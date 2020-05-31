@@ -92,6 +92,7 @@ exports.getPayment = (req, res, next) => {
   const session = req.session.mentor;
   Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
     .populate("user", "username email")
+    .sort({ _id: -1 })
     .then((payment) => {
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/payment", {
