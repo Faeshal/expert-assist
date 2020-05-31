@@ -78,11 +78,14 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect("mongodb://localhost:27017/exas", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.on("connected", function () {
   console.log(chalk.blueBright("MongoDB connected"));
