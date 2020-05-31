@@ -90,27 +90,13 @@
                     Happy Mentoring - Hope Your Problem Solve Soon
                   </h4>
                   <% }else{ %>
-                  <div class="text-center">
-                    <span class="small text-danger font-weight-bold"
-                      >Waktu Sekarang : <span id="clock"></span>
-                    </span>
-                  </div>
+                  <h3 class="text-danger mt-3 text-danger font-weight-bold">
+                    Waktu Mentoring Tiba Dalam:
+                    <h1 clas="text-danger font-weight-bold" id="demo"></h1>
+                  </h3>
                   <span class="badge badge-danger"
                     >Waktu Mentoring Belum Tiba</span
-                  ><br />
-                  <h3 class="text-danger mt-3">
-                    Incoming:
-                    <h3 id="convert"></h3>
-                  </h3>
-
-                  <h4 class="text-center mb-4 text-primary pt-4">
-                    Silahkan Periksa Jadwal Anda
-                    <a
-                      class="text-danger font-weight-bold"
-                      href="/user/schedule"
-                      >Disini</a
-                    >
-                  </h4>
+                  >
                   <% } %>
                 </div>
                 <% } %>
@@ -197,24 +183,49 @@
 
     <!-- Footer -->
     <%-include('../../layouts/back/user/footer.ejs')%>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script>
-      function displayTime() {
-        let time = moment().format("LTS");
-        $("#clock").html(time);
-        setTimeout(displayTime, 1000);
-      }
+      // Set the date we're counting down to
+      let countDownDate = new Date("<%-dateTimeSchedule%>").getTime();
 
-      function convertTime() {
-        let convertTime = "<%=convert%>";
-        $("#convert").html(convertTime);
-        setTimeout(convertTime, 1000);
-      }
+      // Update the count down every 1 second
+      let x = setInterval(function () {
+        // Get today's date and time
+        let now = new Date().getTime();
 
-      $(document).ready(function () {
-        displayTime();
-        convertTime();
-      });
+        // Find the distance between now and the count down date
+        let distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result in the element with id="demo"
+        if (days == "") {
+          document.getElementById("demo").innerHTML =
+            hours + " jam " + minutes + " menit " + seconds + " detik ";
+        } else if (days > 0) {
+          document.getElementById("demo").innerHTML =
+            days +
+            " hari " +
+            hours +
+            " jam " +
+            minutes +
+            " menit " +
+            seconds +
+            " detik ";
+        }
+
+        // If the count down is finished, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("demo").innerHTML =
+            "WAKTU MENTORING TIBA - SILAHKAN REFRESH BROWSER";
+        }
+      }, 1000);
     </script>
   </div>
 </div>
