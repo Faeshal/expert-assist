@@ -41,7 +41,8 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
 const store = new MongoDBStore({
-  uri: "mongodb://localhost:27017/exas",
+  uri:
+    "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
 });
 
 const csrfProtection = csrf();
