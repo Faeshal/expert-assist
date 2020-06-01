@@ -206,10 +206,11 @@
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
-                    <th class="text-center">Hours</th>
+                    <th class="text-center">D</th>
                     <th>Date</th>
                     <th>Start</th>
                     <th>Approve</th>
+                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -248,9 +249,21 @@
                       >
                       <% } %>
                     </td>
+                    <td class="table-actions">
+                      <% if (scheduleData.status == false) { %>
+                      <span class="badge badge-pill badge-danger text-dark"
+                        >Progress</span
+                      >
+                      <% } else { %>
+                      <span class="badge badge-pill badge-success text-white"
+                        >Finish</span
+                      >
+                      <% } %>
+                    </td>
                     <td class="text-center">
-                      <% if (scheduleData.approve=="true" ||scheduleData.approve=="reject"){ %>
-                       <i class="fas fa-check-circle"></i>
+                      <% if (scheduleData.approve=="true"
+                      ||scheduleData.approve=="reject"){ %>
+                      <i class="fas fa-check-circle"></i>
                       <% }else{ %>
                       <button
                         type="button"
