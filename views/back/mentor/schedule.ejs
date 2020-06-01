@@ -90,10 +90,12 @@
                   <tr>
                     <th>User</th>
                     <th>Email</th>
+                    <th>D</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Note</th>
                     <th class="text-center">Approval</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
                   </tr>
                 </thead>
@@ -106,6 +108,11 @@
                     <td>
                       <span class="text-dark"
                         ><%= scheduleData.user.email %></span
+                      >
+                    </td>
+                    <td>
+                      <span class="text-dark"
+                        ><%= scheduleData.duration %></span
                       >
                     </td>
                     <td>
@@ -142,6 +149,21 @@
                         >Approve</span
                       >
                       <% } %> 
+                    </td>
+                    <td  class="text-center">
+                     <% if (scheduleData.status == false) { %>
+                      <span class="badge  badge-danger text-dark"
+                        >Progress</span
+                      >
+                      <% } else if(scheduleData.approve == "reject") { %>
+                      <span class="badge  badge-dark text-white"
+                        >Cancel</span
+                      >
+                      <% }else{ %>
+                      <span class="badge badge-success text-dark"
+                        >Finish</span
+                      >
+                      <% } %>
                     </td>
 
                     <td class="table-actions myTd text-center">

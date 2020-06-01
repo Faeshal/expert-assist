@@ -81,11 +81,11 @@
                   <tr>
                     <th>User</th>
                     <th>Email</th>
-                    <th class="text-center">Our Price</th>
+                    <th class="text-center">Price</th>
                     <th class="text-center">Hour</th>
                     <th class="text-center">Total</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Time</th>
                     <th class="text-center">Status</th>
                   </tr>
                 </thead>
@@ -115,12 +115,12 @@
                         }).format()%></span
                       >
                     </td>
-                    <td>
+                    <td class="text-center">
                       <span class="text-muted"
                         ><%= moment(paymentData.datetime).format("LL") %></span
                       >
-                    </td>
-                    <td>
+                    </td >
+                    <td class="text-center">
                       <span class="text-muted"
                         ><%= moment(paymentData.datetime).format("LT") %></span
                       >

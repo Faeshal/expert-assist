@@ -209,8 +209,8 @@
                     <th class="text-center">D</th>
                     <th>Date</th>
                     <th>Start</th>
-                    <th>Approve</th>
-                    <th>Status</th>
+                    <th class="text-center">Approve</th>
+                    <th class="text-center">Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -249,13 +249,17 @@
                       >
                       <% } %>
                     </td>
-                    <td class="table-actions">
+                    <td class="table-actions text-center">
                       <% if (scheduleData.status == false) { %>
-                      <span class="badge badge-pill badge-danger text-dark"
+                      <span class="badge badge-danger text-dark"
                         >Progress</span
                       >
-                      <% } else { %>
-                      <span class="badge badge-pill badge-success text-white"
+                      <% } else if(scheduleData.approve == "reject") { %>
+                      <span class="badge badge-dark text-white"
+                        >Cancel</span
+                      >
+                      <% }else{ %>
+                      <span class="badge badge-success text-dark"
                         >Finish</span
                       >
                       <% } %>

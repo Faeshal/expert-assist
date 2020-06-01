@@ -309,6 +309,7 @@ exports.getSchedule = (req, res, next) => {
   const session = req.session.mentor;
   Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
+    .sort({ _id: -1 })
     .then((schedule) => {
       console.log(schedule[0].user.username);
       Mentor.findById(session._id).then((mentor) => {
