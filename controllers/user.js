@@ -300,7 +300,7 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ user: session._id })
+      Schedule.findOne({ user: session._id }).populate("mentor", "username")
         .sort({ _id: -1 })
         .then((schedule) => {
           let dateTimeSchedule = "";

@@ -373,6 +373,7 @@ exports.getMentoring = (req, res, next) => {
   Schedule.findOne({
     $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
   })
+    .populate("user", "username")
     .sort({ datetime: 1 })
     .then((schedule) => {
       let dateTimeSchedule = "";
