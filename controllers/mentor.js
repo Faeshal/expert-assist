@@ -370,8 +370,10 @@ exports.postUpdateSchedule = (req, res, next) => {
 exports.getMentoring = (req, res, next) => {
   const session = req.session.mentor;
   const dateTimeNow = new Date();
-  Schedule.findOne({ mentor: session._id })
-    .sort({ _id: -1 })
+  Schedule.findOne({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  })
+    .sort({ datetime: 1 })
     .then((schedule) => {
       let dateTimeSchedule = "";
       if (schedule) {
@@ -380,7 +382,7 @@ exports.getMentoring = (req, res, next) => {
       } else {
         console.log(chalk.redBright.inverse("Array Schedule Kosong"));
       }
-      console.log(chalk.blue.inverse(dateTimeNow + "--" + dateTimeSchedule));
+      console.log(chalk.blueBright.inverse(schedule));
       res.render("back/mentor/mentoring", {
         schedule: schedule,
         mentor: req.session.mentor._id,
