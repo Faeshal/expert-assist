@@ -143,14 +143,14 @@
               <%}else{%> <%review.forEach(reviewData=>{%>
               <div class="job-detail-desc mb-3 border-bottom">
                 <div class="row">
-                  <div class="col-sm-2">
+                  <div class="col-sm-3">
                     <img
                       src="/<%=reviewData.user.profilepicture%>"
                       style="width: 50px;"
-                      class="mb-1 float-left"
+                      class="float-left"
                     />
                   </div>
-                  <div class="col-sm-10">
+                  <div class="col-sm-9">
                     <div
                       style="font-size: 30px; color: orange;"
                       class="review float-left"
@@ -159,14 +159,14 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-sm-2">
-                    <h5><%=reviewData.user.username%></h5>
+                  <div class="col-sm-3">
+                    <h5 class="float-left"><%=reviewData.user.username%></h5>
                   </div>
-                  <div class="col-sm-10">
-                    <small
+                  <div class="col-sm-9">
+                    <small class="ml-1"
                       ><%=moment(reviewData.datetime).startOf('day').fromNow();%></small
                     >
-                    <h6 class=""><%=reviewData.content%></h6>
+                    <h6 class="ml-1"><%=reviewData.content%></h6>
                   </div>
                 </div>
               </div>
