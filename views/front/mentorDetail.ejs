@@ -7,12 +7,23 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
-          <img src="/<%=mentor.profilepicture%>" style="width: 23%;" class="mb-3">
+          <img
+            src="/<%=mentor.profilepicture%>"
+            style="width: 23%;"
+            class="mb-3"
+          />
           <h3 class="text-uppercase title"><%=mentor.username %></h3>
+          <div
+            style="font-size: 30px; color: orange;"
+            class="rate mx-auto justify-content-center"
+            data-rate-value="<%= mentor.rating%>"
+          ></div>
           <p class="lead text-center"><%=mentor.bio %></p>
           <div class="text-center mt-3">
             <% if (userId=="xxx") { %>
-            <a href="/login" class="badge badge-primary pl-4 pr-4 pt-2 pb-2">Hire</a>
+            <a href="/login" class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
+              >Hire</a
+            >
             <% } else { %>
             <a
               class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
@@ -33,8 +44,6 @@
 <!-- JOB DETAILS START -->
 <section class="section">
   <div class="container">
-
-
     <div class="row">
       <div class="col-lg-8 col-md-7">
         <div class="job-detail border rounded p-4">
@@ -62,36 +71,69 @@
           </div>
         </div>
 
-     
-        <div class="row">
-          <div class="col-lg-12">
-            <h5 class="text-dark mt-4">Skill Set :</h5>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-12">
+        <!-- TABS -->
+        <ul class="nav nav-pills mb-3 mt-4" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="pills-home-tab"
+              data-toggle="pill"
+              href="#pills-home"
+              role="tab"
+              aria-controls="pills-home"
+              aria-selected="true"
+              >Skill</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="pills-profile-tab"
+              data-toggle="pill"
+              href="#pills-profile"
+              role="tab"
+              aria-controls="pills-profile"
+              aria-selected="false"
+              >Review</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
             <div class="job-detail border rounded mt-2 p-4">
               <div class="job-detail-desc">
-                <% let splitString = voca.split(skillString, ",") %>
-               
-                <% splitString.forEach(skill=>{ %> 
+                <% let splitString = voca.split(skillString, ",") %> <%
+                splitString.forEach(skill=>{ %>
                 <div class="job-details-desc-item">
                   <div class="float-left mr-3">
                     <i class="mdi mdi-send text-primary"></i>
                   </div>
                   <% if (splitString==null || splitString=="") { %>
-                    <p class="text-muted mb-2">Skill Not Set</p>
-                  <% }else{%> 
+                  <p class="text-muted mb-2">Skill Not Set</p>
+                  <% }else{%>
                   <p class="text-muted mb-2"><%=skill%></p>
-                  <% } %> 
+                  <% } %>
                 </div>
-                
-                <% }) %> 
+
+                <% }) %>
               </div>
             </div>
           </div>
+          <div
+            class="tab-pane fade"
+            id="pills-profile"
+            role="tabpanel"
+            aria-labelledby="pills-profile-tab"
+          >
+            Review
+          </div>
         </div>
+        <!-- END TAB -->
       </div>
 
       <div class="col-lg-4 col-md-5 mt-4 mt-sm-0">
@@ -101,8 +143,6 @@
           </h5>
 
           <div class="job-detail-location pt-4 border-top">
-        
-
             <div class="job-details-desc-item">
               <div class="float-left mr-2">
                 <i class="mdi mdi-email text-muted"></i>
@@ -126,9 +166,11 @@
 
             <div class="job-details-desc-item">
               <div class="float-left mr-2 text-muted">
-               Rp :
+                Rp :
               </div>
-              <p class="text-muted mb-2"><%=currency(mentor.price,{precision:0}).format() %></p>
+              <p class="text-muted mb-2">
+                <%=currency(mentor.price,{precision:0}).format() %>
+              </p>
             </div>
 
             <div class="job-details-desc-item">
@@ -138,21 +180,28 @@
               <p class="text-muted mb-2">: <%=mentor.experience%></p>
             </div>
 
-
             <h6 class="text-dark f-17 mt-3 mb-0">Share Job :</h6>
             <ul class="social-icon list-inline mt-3 mb-0">
               <li class="list-inline-item">
-                <a href=" https://www.facebook.com/" class="rounded"><i class="mdi mdi-facebook"></i></a>
+                <a href=" https://www.facebook.com/" class="rounded"
+                  ><i class="mdi mdi-facebook"></i
+                ></a>
               </li>
               <li class="list-inline-item">
-                <a href="https://twitter.com/" class="rounded"><i class="mdi mdi-twitter"></i></a>
+                <a href="https://twitter.com/" class="rounded"
+                  ><i class="mdi mdi-twitter"></i
+                ></a>
               </li>
-              
+
               <li class="list-inline-item">
-                <a href="https://web.whatsapp.com/" class="rounded"><i class="mdi mdi-whatsapp"></i></a>
+                <a href="https://web.whatsapp.com/" class="rounded"
+                  ><i class="mdi mdi-whatsapp"></i
+                ></a>
               </li>
               <li class="list-inline-item">
-                <a href="linkedin.com" class="rounded"><i class="mdi mdi-linkedin"></i></a>
+                <a href="linkedin.com" class="rounded"
+                  ><i class="mdi mdi-linkedin"></i
+                ></a>
               </li>
             </ul>
           </div>
@@ -166,13 +215,12 @@
           <div class="job-detail-time border-top pt-2">
             <ul class="list-inline mb-0">
               <% if(schedule.length < 1) { %>
-              <li class="clearfix text-muted border-bottom mt-3 ">
+              <li class="clearfix text-muted border-bottom mt-3">
                 <div class="text-center">
                   <p>No Schedule</p>
                 </div>
               </li>
-              <% } else { %> 
-              <% schedule.forEach(scheduleData=>{ %>
+              <% } else { %> <% schedule.forEach(scheduleData=>{ %>
               <li class="clearfix text-muted border-bottom pb-2 pt-2">
                 <div class="float-left">
                   <h6>
@@ -180,7 +228,7 @@
                   </h6>
                 </div>
                 <div class="float-right">
-                  <h6 class="f-13 mb-0"></h5>
+                  <h6 class="f-13 mb-0">
                     <%=moment(scheduleData.datetime).format('LT') %>
                   </h6>
                 </div>
@@ -189,19 +237,19 @@
             </ul>
           </div>
         </div>
-        
-        
+
         <div class="job-detail border rounded mt-4">
-        <% if (userId=="xxx") { %>
-          <a href="/login" class="btn btn-primary btn-block" 
+          <% if (userId=="xxx") { %>
+          <a href="/login" class="btn btn-primary btn-block">Hire Mentor</a>
+          <% }else{ %>
+          <a
+            href="#"
+            class="btn btn-primary btn-block"
+            data-toggle="modal"
+            data-target="#paymentModal"
             >Hire Mentor</a
           >
-        <% }else{ %>
-          <a href="#" class="btn btn-primary btn-block" data-toggle="modal"
-              data-target="#paymentModal"
-            >Hire Mentor</a
-          >
-        <% } %>  
+          <% } %>
         </div>
       </div>
     </div>
@@ -297,16 +345,26 @@
   </div>
 </div>
 
+<!-- footer start -->
+<%-include('../layouts/home/footer.ejs')%>
+<script src="/back/assets/js/rater.js"></script>
 <!-- Button -->
 <script>
-  (function() {
+  let option = {
+    max_value: 10,
+    readonly: true,
+  };
+  $(".rate").rate(option);
+</script>
+<script>
+  (function () {
     var options = {
       whatsapp: "<%=mentor.phone%>", // WhatsApp number
       call: "<%=mentor.phone%>", // Call phone number
       call_to_action: "Chat Mentor", // Call to action
       button_color: "#666666", // Color of button
       position: "right", // Position may be 'right' or 'left'
-      order: "whatsapp,call" // Order of buttons
+      order: "whatsapp,call", // Order of buttons
     };
     var proto = document.location.protocol,
       host = "getbutton.io",
@@ -315,13 +373,10 @@
     s.type = "text/javascript";
     s.async = true;
     s.src = url + "/widget-send-button/js/init.js";
-    s.onload = function() {
+    s.onload = function () {
       WhWidgetSendButton.init(host, proto, options);
     };
     var x = document.getElementsByTagName("script")[0];
     x.parentNode.insertBefore(s, x);
   })();
 </script>
-
-<!-- footer start -->
-<%-include('../layouts/home/footer.ejs')%>
