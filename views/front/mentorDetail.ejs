@@ -72,7 +72,11 @@
         </div>
 
         <!-- TABS -->
-        <ul class="nav nav-pills mb-3 mt-4" id="pills-tab" role="tablist">
+        <ul
+          class="nav nav-pills mb-3 mt-4 border"
+          id="pills-tab"
+          role="tablist"
+        >
           <li class="nav-item">
             <a
               class="nav-link active"
@@ -119,7 +123,6 @@
                   <p class="text-muted mb-2"><%=skill%></p>
                   <% } %>
                 </div>
-
                 <% }) %>
               </div>
             </div>
@@ -130,7 +133,45 @@
             role="tabpanel"
             aria-labelledby="pills-profile-tab"
           >
-            Review
+            <div class="job-detail border rounded mt-2 p-4">
+              <%if (review.length<1){%>
+              <div class="row text-center mx-auto justify-content-center">
+                <div class="text-center">
+                  <h4 class="text-muted">No Review</h4>
+                </div>
+              </div>
+              <%}else{%> <%review.forEach(reviewData=>{%>
+              <div class="job-detail-desc mb-3 border-bottom">
+                <div class="row">
+                  <div class="col-sm-2">
+                    <img
+                      src="/<%=reviewData.user.profilepicture%>"
+                      style="width: 50px;"
+                      class="mb-1 float-left"
+                    />
+                  </div>
+                  <div class="col-sm-10">
+                    <div
+                      style="font-size: 30px; color: orange;"
+                      class="review float-left"
+                      data-rate-value="<%= reviewData.rating%>"
+                    ></div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-2">
+                    <h5><%=reviewData.user.username%></h5>
+                  </div>
+                  <div class="col-sm-10">
+                    <small
+                      ><%=moment(reviewData.datetime).startOf('day').fromNow();%></small
+                    >
+                    <h6 class=""><%=reviewData.content%></h6>
+                  </div>
+                </div>
+              </div>
+              <%})%> <%}%>
+            </div>
           </div>
         </div>
         <!-- END TAB -->
@@ -355,28 +396,29 @@
     readonly: true,
   };
   $(".rate").rate(option);
+  $(".review").rate(option);
 </script>
 <script>
-  (function () {
-    var options = {
-      whatsapp: "<%=mentor.phone%>", // WhatsApp number
-      call: "<%=mentor.phone%>", // Call phone number
-      call_to_action: "Chat Mentor", // Call to action
-      button_color: "#666666", // Color of button
-      position: "right", // Position may be 'right' or 'left'
-      order: "whatsapp,call", // Order of buttons
-    };
-    var proto = document.location.protocol,
-      host = "getbutton.io",
-      url = proto + "//static." + host;
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = url + "/widget-send-button/js/init.js";
-    s.onload = function () {
-      WhWidgetSendButton.init(host, proto, options);
-    };
-    var x = document.getElementsByTagName("script")[0];
-    x.parentNode.insertBefore(s, x);
-  })();
+  // (function () {
+  //   var options = {
+  //     whatsapp: "xxxx", // WhatsApp number
+  //     call: "xxx", // Call phone number
+  //     call_to_action: "Chat Mentor", // Call to action
+  //     button_color: "#666666", // Color of button
+  //     position: "right", // Position may be 'right' or 'left'
+  //     order: "whatsapp,call", // Order of buttons
+  //   };
+  //   var proto = document.location.protocol,
+  //     host = "getbutton.io",
+  //     url = proto + "//static." + host;
+  //   var s = document.createElement("script");
+  //   s.type = "text/javascript";
+  //   s.async = true;
+  //   s.src = url + "/widget-send-button/js/init.js";
+  //   s.onload = function () {
+  //     WhWidgetSendButton.init(host, proto, options);
+  //   };
+  //   var x = document.getElementsByTagName("script")[0];
+  //   x.parentNode.insertBefore(s, x);
+  // })();
 </script>

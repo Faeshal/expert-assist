@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const Review = require("../models/Review");
 const Schedule = require("../models/Schedule");
 const chalk = require("chalk");
 const currency = require("currency.js");
@@ -142,15 +143,21 @@ exports.getDetailMentor = (req, res, next) => {
         .sort({ datetime: 1 })
         .then((schedule) => {
           let skillString = mentor.skill;
-          res.render("front/mentorDetail", {
-            mentor: mentor,
-            userId: userId,
-            schedule: schedule,
-            moment: moment,
-            voca: voca,
-            skillString: skillString,
-            currency: currency,
-          });
+          Review.find({ mentor: id })
+            .populate("user", "username profilepicture")
+            .limit(5)
+            .then((review) => {
+              res.render("front/mentorDetail", {
+                mentor: mentor,
+                userId: userId,
+                schedule: schedule,
+                moment: moment,
+                voca: voca,
+                skillString: skillString,
+                currency: currency,
+                review: review,
+              });
+            });
         });
     })
     .catch((err) => console.log(err));
