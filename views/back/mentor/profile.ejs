@@ -7,6 +7,21 @@
   <%-include('../../layouts/back/mentor/topNav.ejs')%>
   <!-- Header -->
   <!-- Header -->
+  <% if(!mentor.coverpicture){ %>
+  <div
+    class="header pb-6 d-flex align-items-center"
+    style="
+      min-height: 370px;
+      background-image: url(https://images.pexels.com/photos/2043739/pexels-photo-2043739.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+      background-size: cover;
+      background-position: center top;
+    "
+  >
+    <!-- Mask -->
+    <span class="mask bg-gradient-default opacity-2"></span>
+    <!-- Header container -->
+  </div>
+  <% }else{%>
   <div
     class="header pb-6 d-flex align-items-center"
     style="
@@ -20,6 +35,7 @@
     <span class="mask bg-gradient-default opacity-2"></span>
     <!-- Header container -->
   </div>
+  <% } %>
   <!-- Page content -->
   <div class="container-fluid mt--6 justify-content-center mx-auto">
     <div class="row">
@@ -29,10 +45,17 @@
             <div class="col-lg-3 order-lg-2">
               <div class="card-profile-image">
                 <a href="#">
+                  <% if(!mentor.profilepicture){ %>
                   <img
-                    src="/<%=mentor.profilepicture%>"
+                    src="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Man-6-512.png"
                     class="rounded-circle"
                   />
+                  <% }else{ %>
+                  <img
+                    src="/<%= mentor.profilepicture %> "
+                    class="rounded-circle"
+                  />
+                  <% } %>
                 </a>
               </div>
             </div>
