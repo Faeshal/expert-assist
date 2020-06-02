@@ -11,7 +11,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+    // cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
     cb(null, Date.now() + "_" + file.originalname);
   },
 });
@@ -28,7 +28,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
+const upload = multer({
+  storage: fileStorage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1000000, // 1 mb in bytes
+  },
+});
 
 // * Dashboard
 router.get("/user/dashboard", isAuth, userController.getDashboard);

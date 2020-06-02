@@ -29,10 +29,17 @@
             <div class="col-lg-3 order-lg-2">
               <div class="card-profile-image">
                 <a href="#">
+                  <% if(!user.profilepicture){ %>
+                  <img
+                    src="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Man-6-512.png"
+                    class="rounded-circle"
+                  />
+                  <% }else{ %>
                   <img
                     src="/<%= user.profilepicture %> "
                     class="rounded-circle"
                   />
+                  <% } %>
                 </a>
               </div>
             </div>
@@ -103,7 +110,7 @@
                 <%= user.bio == null ? "Not Set" : bio.toUpperCase() %>
               </div>
             </div>
-            <hr>
+            <hr />
             <div class="row mt-3 text-center mx-auto justify-content-center">
               <div class="col-md-3">
                 <i class="fas fa-phone mr-2 fa-lg"></i><%= user.phone %>
@@ -243,15 +250,15 @@
                       />
                     </div>
                   </div>
-                    <div class="col-sm-6">
+                  <div class="col-sm-6">
                     <div class="form-group">
                       <input type="hidden" name="id" class="id" />
                       <label for="recipient-name" class="col-form-label"
                         >Profile Picture</label
                       >
-                       <input
+                      <input
                         type="file"
-                        class="form-control form-control-sm profilepicture "
+                        class="form-control form-control-sm profilepicture"
                         name="profilepicture"
                       />
                     </div>
@@ -348,7 +355,7 @@
                     </div>
                   </div>
                 </div>
-               
+
                 <div class="modal-footer justify-content-center mx-auto">
                   <button
                     id="buttonAlert"

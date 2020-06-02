@@ -78,7 +78,9 @@ exports.updateProfile = (req, res, next) => {
       user.linkedin = linkedin;
 
       if (profilepicture) {
-        // fileHelper.deleteFile(user.profilepicture);
+        fileHelper.deleteFile(user.profilepicture);
+        user.profilepicture = profilepicture.path.replace("\\", "/");
+      } else {
         user.profilepicture = profilepicture.path.replace("\\", "/");
       }
 
