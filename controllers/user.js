@@ -300,7 +300,8 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ user: session._id }).populate("mentor", "username")
+      Schedule.findOne({ user: session._id })
+        .populate("mentor", "username")
         .sort({ _id: -1 })
         .then((schedule) => {
           let dateTimeSchedule = "";
@@ -341,9 +342,10 @@ exports.getMentoring = (req, res, next) => {
 exports.getLive = (req, res, next) => {
   const id = req.session.user._id;
   Schedule.findOne({ user: id })
+    .sort({ datetime: -1 })
     .then((schedule) => {
       const dateTimeSchedule = schedule.datetime;
-      console.log(schedule);
+      console.log(chalk.red.inverse(schedule));
       console.log("MASUK");
       if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");
