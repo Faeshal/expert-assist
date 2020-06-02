@@ -9,6 +9,7 @@ const v = require("voca");
 const axios = require("axios");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const currency = require("currency.js");
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -504,6 +505,7 @@ exports.getPayment = (req, res, next) => {
   Payment.find({})
     .populate({ path: "user", select: ["username", "email"] })
     .populate({ path: "mentor", select: ["username", "email"] })
+    .sort({ _id: -1 })
     .exec()
     .then((payment) => {
       console.log(payment);
@@ -512,6 +514,7 @@ exports.getPayment = (req, res, next) => {
         pageTitle: "All Payment",
         moment: moment,
         v: v,
+        currency: currency,
       });
     });
 };
@@ -536,6 +539,7 @@ exports.getMentoring = (req, res, next) => {
 exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
     .populate({ path: "mentor", select: ["username", "email", "bankaccount"] })
+    .sort({ _id: -1 })
     .exec()
     .then((withdraw) => {
       console.log(chalk.yellow(withdraw));
@@ -543,6 +547,7 @@ exports.getwithdraw = (req, res, next) => {
         moment: moment,
         pageTitle: "Money Withdraw",
         withdraw: withdraw,
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));

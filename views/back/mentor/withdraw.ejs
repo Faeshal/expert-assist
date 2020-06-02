@@ -223,7 +223,7 @@
                   >
                     <td class="table-user">
                       <b
-                        ><%=currency(withdrawData.total,{separator:",",precision:0}).format()
+                        >Rp <%=currency(withdrawData.total,{separator:",",precision:0}).format()
                         %>
                       </b>
                     </td>
@@ -248,8 +248,9 @@
                       </span>
                       <% } %>
                     </td>
-                    <% if(withdrawData.status==false) { %>
+                   
                     <td class="text-center">
+                     <% if(withdrawData.status==false) { %>
                       <form
                         id="deleteForm"
                         action="/mentor/withdraw/delete"
@@ -275,8 +276,11 @@
                           <i class="fas fa-trash"></i>
                         </button>
                       </form>
+                       <% } else{ %>
+                        <i class="fas fa-check-circle text-success"></i>
+                       <%}%>
                     </td>
-                    <% } %>
+                   
                   </tr>
                   <% }) %>
                 </tbody>
