@@ -519,3 +519,17 @@ exports.getPayment = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.getPaymentJson = (req, res, next) => {
+  const session = req.session.user;
+  Payment.find({ $and: [{ user: session._id }, { status: true }] })
+    .countDocuments()
+    .then((payment) => {
+      if (payment) {
+        res.status(200).json({ message: "Success", total: payment });
+      } else {
+        res.json({ message: "Data Not Found", total: 0 });
+      }
+    })
+    .catch((err) => console.log(err));
+};
