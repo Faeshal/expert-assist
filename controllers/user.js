@@ -302,7 +302,7 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ user: session._id })
+      Schedule.findOne({ $and: [{ user: session._id }, { approve: "true" }] })
         .populate("mentor", "username")
         .sort({ _id: -1 })
         .then((schedule) => {

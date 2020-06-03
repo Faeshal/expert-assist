@@ -100,6 +100,7 @@
                         />
                         <input
                           class="pl-2 form-control"
+                          id="mentorName"
                           placeholder="User"
                           type="text"
                           readonly="true"
@@ -251,17 +252,11 @@
                     </td>
                     <td class="table-actions text-center">
                       <% if (scheduleData.status == false) { %>
-                      <span class="badge badge-danger text-dark"
-                        >Progress</span
-                      >
+                      <span class="badge badge-danger text-dark">Progress</span>
                       <% } else if(scheduleData.approve == "reject") { %>
-                      <span class="badge badge-dark text-white"
-                        >Cancel</span
-                      >
+                      <span class="badge badge-dark text-white">Cancel</span>
                       <% }else{ %>
-                      <span class="badge badge-success text-dark"
-                        >Finish</span
-                      >
+                      <span class="badge badge-success text-dark">Finish</span>
                       <% } %>
                     </td>
                     <td class="text-center">
@@ -369,5 +364,36 @@
       });
     </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
+    <script>
+      $(document).ready(() => {
+        $.get("/api/user/payments", (data) => {
+          let paymentChecker = "pay_" + "<%-session.username%>";
+
+          let oldPayment = localStorage.getItem(paymentChecker);
+          let newPayment = JSON.stringify(data.total);
+
+          if (!oldPayment) {
+            localStorage.setItem(paymentChecker, newPayment);
+          } else {
+            if (oldPayment == newPayment) {
+              $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
+              $("#buttonAlert").prop("disabled", true).text("Need Payment");
+              $("#mentorName").val("No New Payment Found..");
+              $("#note").prop("disabled", true);
+              $("#datetime").prop("disabled", true);
+            }
+          }
+          $("#scheduleForm").submit(() => {
+            localStorage.removeItem(paymentChecker);
+          });
+        })
+          .done((res) => {
+            console.log(res);
+          })
+          .fail(() => {
+            alert("error:");
+          });
+      });
+    </script>
   </div>
 </div>
