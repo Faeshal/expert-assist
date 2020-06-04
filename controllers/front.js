@@ -232,3 +232,41 @@ exports.getMentorListJson = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.getFilter = (req, res, next) => {
+  let expertise = req.query.expertise;
+  let totalMentors;
+  let page = 1;
+  let rating = req.query.rating;
+  let gte = 0;
+  let lte = 10;
+  if (rating == "standard") {
+    gte = 0;
+    lte = 4;
+  } else if (rating == "good") {
+    gte = 5;
+    lte = 7;
+  } else if (rating == "excelent") {
+    gte = 8;
+    lte = 10;
+  }
+  Mentor.find({
+    $and: [{ expertise: expertise }, { rating: { $gte: gte, $lte: lte } }],
+  })
+    .then((mentor) => {
+      Mentor.countDocuments().then(() => {
+        res.render("front/mentorList", {
+          mentor: mentor,
+          currency: currency,
+          totalMentors: totalMentors,
+          currentPage: 1,
+          hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+          hasPreviousPage: page > 1,
+          nextPage: 0,
+          previousPage: page - 1,
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+};
