@@ -23,11 +23,22 @@ const auth = {
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then((admin) => {
-      res.render("back/admin/dashboard", {
-        admin: admin,
-        pageTitle: "Welcome Admin",
-      });
-      console.log(req.session);
+      User.find({ status: "true" })
+        .countDocuments()
+        .then((totalUser) => {
+          Mentor.find({
+            $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+          })
+            .countDocuments()
+            .then((totalMentor) => {
+              res.render("back/admin/dashboard", {
+                admin: admin,
+                pageTitle: "Welcome Admin",
+                totalUser: totalUser,
+                totalMentor: totalMentor,
+              });
+            });
+        });
     })
     .catch((err) => console.log(err));
 };
