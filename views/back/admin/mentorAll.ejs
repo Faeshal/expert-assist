@@ -62,7 +62,7 @@
       </div>
       <!-- Light table -->
       <div class="table-responsive">
-        <table  id="mytable"  class="table align-items-center table-flush">
+        <table id="mytable" class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr>
               <th>Username</th>
@@ -99,8 +99,13 @@
                   :mentorData.expertise %></b
                 >
               </td>
-              <td class="table-user">
-                <b class="text-success"><%=mentorData.mentorstatus%></b>
+
+              <td class="table-user text-center">
+                <% if(mentorData.mentorstatus=="true"){ %>
+                <span class="badge badge-success text-dark">Active</span>
+                <% } else{ %>
+                <span class="badge badge-dark text-white">Off</span>
+                <%} %>
               </td>
               <td class="table-actions text-center myTd">
                 <a
@@ -155,7 +160,7 @@
               <div class="form-group">
                 <label for="username">Action</label>
                 <select
-                  class="form-control target text-dark font-weight-bold "
+                  class="form-control target text-dark font-weight-bold"
                   name="mentorstatus"
                   required
                 >
@@ -177,8 +182,8 @@
     </div>
     <!-- jquery -->
     <script>
-      $(document).ready(function() {
-        $(".myTd").on("click", ".edit", function() {
+      $(document).ready(function () {
+        $(".myTd").on("click", ".edit", function () {
           var id = $(this).data("id");
           console.log(id);
           var username = $(this).data("username");

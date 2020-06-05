@@ -100,10 +100,12 @@
                 >
               </td>
 
-              <td class="table-User">
-                <span class="text-success"
-                  ><%= v.capitalize(userData.status) %>
-                </span>
+              <td class="table-User text-center">
+                <% if(userData.status=="true"){ %>
+                <span class="badge badge-success text-dark">Active</span>
+                <% } else{ %>
+                <span class="badge badge-dark text-white">Off</span>
+                <%} %>
               </td>
               <td class="table-actions text-center myTd">
                 <a
@@ -157,7 +159,7 @@
               <div class="form-group">
                 <label for="username">Action</label>
                 <select
-                  class="form-control target text-dark font-weight-bold "
+                  class="form-control target text-dark font-weight-bold"
                   name="status"
                   required
                 >
@@ -177,11 +179,11 @@
         </div>
       </div>
     </div>
-   
+
     <!-- jquery -->
     <script>
-      $(document).ready(function() {
-        $(".myTd").on("click", ".edit", function() {
+      $(document).ready(function () {
+        $(".myTd").on("click", ".edit", function () {
           var id = $(this).data("id");
           console.log(id);
           var username = $(this).data("username");
