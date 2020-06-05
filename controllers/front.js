@@ -234,10 +234,12 @@ exports.getMentorListJson = (req, res, next) => {
 };
 
 exports.getFilter = (req, res, next) => {
-  let expertise = req.query.expertise;
   let totalMentors;
   let page = 1;
+  let expertise = req.query.expertise || "";
   let rating = req.query.rating;
+  let fPrice = 0;
+  let lPrice = 10000000;
   let gte = 0;
   let lte = 10;
   if (rating == "standard") {
@@ -250,10 +252,26 @@ exports.getFilter = (req, res, next) => {
     gte = 8;
     lte = 10;
   }
-  Mentor.find({
-    $and: [{ expertise: expertise }, { rating: { $gte: gte, $lte: lte } }],
-  })
-    .then((mentor) => {
+  let price = req.query.price;
+  if (price == "below100") {
+    fPrice = 0;
+    lPrice = 99000;
+  } else if (price == "100to200") {
+    fPrice = 100000;
+    lPrice = 200000;
+  } else if (price == "above200") {
+    fPrice = 200001;
+    lPrice = 10000000;
+  }
+  if (expertise == "") {
+    Mentor.find({
+      $and: [
+        {
+          rating: { $gte: gte, $lte: lte },
+          price: { $gte: fPrice, $lte: lPrice },
+        },
+      ],
+    }).then((mentor) => {
       Mentor.countDocuments().then(() => {
         res.render("front/mentorList", {
           mentor: mentor,
@@ -267,6 +285,32 @@ exports.getFilter = (req, res, next) => {
           lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
         });
       });
+    });
+  } else {
+    Mentor.find({
+      $and: [
+        { expertise: expertise },
+        {
+          rating: { $gte: gte, $lte: lte },
+          price: { $gte: fPrice, $lte: lPrice },
+        },
+      ],
     })
-    .catch((err) => console.log(err));
+      .then((mentor) => {
+        Mentor.countDocuments().then(() => {
+          res.render("front/mentorList", {
+            mentor: mentor,
+            currency: currency,
+            totalMentors: totalMentors,
+            currentPage: 1,
+            hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+            hasPreviousPage: page > 1,
+            nextPage: 0,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+          });
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 };

@@ -106,70 +106,63 @@
               <div class="card mt-4 rounded border-bottom-0">
                 <a
                   data-toggle="collapse"
-                  href="#collapsetwo"
+                  href="#collapseTwo"
                   class="job-list"
                   aria-expanded="true"
-                  aria-controls="collapsetwo"
+                  aria-controls="collapseTwo"
                 >
-                  <div class="card-header" id="headingtwo">
+                  <div class="card-header" id="headingOne">
                     <h6 class="mb-0 text-dark">Range Price</h6>
                   </div>
                 </a>
                 <div
-                  id="collapsetwo"
+                  id="collapseTwo"
                   class="collapse show"
-                  aria-labelledby="headingtwo"
+                  aria-labelledby="headingOne"
                 >
                   <div class="card-body p-0">
-                    <div class="custom-control custom-checkbox">
+                    <div class="custom-control custom-radio">
                       <input
-                        type="checkbox"
+                        type="radio"
+                        id="price1"
+                        name="price"
                         class="custom-control-input"
-                        id="customCheck7"
+                        value="below100"
                       />
                       <label
                         class="custom-control-label ml-1 text-muted"
-                        for="customCheck7"
-                        >10K To 50K</label
-                      >
+                        for="price1"
+                        >0K To 100K
+                      </label>
                     </div>
 
-                    <div class="custom-control custom-checkbox">
+                    <div class="custom-control custom-radio">
                       <input
-                        type="checkbox"
+                        type="radio"
+                        id="price2"
+                        name="price"
                         class="custom-control-input"
-                        id="customCheck8"
+                        value="100to200"
                       />
                       <label
                         class="custom-control-label ml-1 text-muted"
-                        for="customCheck8"
-                        >51K To 100K</label
-                      >
+                        for="price2"
+                        >100K To 200K
+                      </label>
                     </div>
 
-                    <div class="custom-control custom-checkbox">
+                    <div class="custom-control custom-radio">
                       <input
-                        type="checkbox"
+                        type="radio"
+                        id="price3"
+                        name="price"
                         class="custom-control-input"
-                        id="customCheck3"
+                        value="above200"
                       />
                       <label
                         class="custom-control-label ml-1 text-muted"
-                        for="customCheck3"
-                        >101K To 150K</label
-                      >
-                    </div>
-
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="customCheck4"
-                      />
-                      <label
-                        class="custom-control-label ml-1 text-muted"
-                        for="customCheck4"
-                        >Up to 151K</label
+                        for="price3"
+                        >Above 200K</label
                       >
                     </div>
                   </div>
@@ -241,7 +234,7 @@
                 </div>
               </div>
 
-              <div class="card">
+              <div class="text-center mx-auto">
                 <button
                   class="mt-4 text-center btn btn-primary btn-sm"
                   type="submit"
@@ -398,12 +391,6 @@
 <%-include('../layouts/home/footer.ejs')%>
 <script src="/back/assets/js/rater.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
-<!-- tidio -->
-<script
-  src="//code.tidio.co/glhh0f3zpmyzo77zonzc3i3d6a6ghjne.js"
-  async
-></script>
 
 <script>
   $(document).ready(() => {
