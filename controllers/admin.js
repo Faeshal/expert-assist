@@ -308,6 +308,8 @@ exports.getNews = (req, res, next) => {
       res.render("back/admin/news", {
         news: news,
         pageTitle: "Admin - News",
+        moment: moment,
+        v: v,
       });
     })
     .catch((err) => console.log(err));
