@@ -30,18 +30,20 @@
           <div class="float-left">
             <h5 class="text-dark mb-0 pt-2">Showing Results : 1-9 of 300</h5>
           </div>
-          <div class="sort-button float-right">
-            <ul class="list-inline mb-0">
-              <li class="list-inline-item mb-0 mr-3">
-                <select class="nice-select rounded" id="selectBy">
-                  <option data-display="Sort By">Nothing</option>
-                  <option value="1">New Mentor</option>
-                  <option value="2">Senior Mentor</option>
-                  <option value="3">Highest Rating</option>
-                </select>
-              </li>
-            </ul>
-          </div>
+          <form action="/sort" method="GET" id="formSort">
+            <div class="sort-button float-right">
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item mb-0 mr-3">
+                  <select class="nice-select rounded" id="sortBy" name="sort">
+                    <option data-display="Sort By">Nothing</option>
+                    <option value="_id">New Mentor</option>
+                    <option value="rating">Highest Rating</option>
+                    <option value="price">Highest Price</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -259,9 +261,9 @@
               alt=""
               style="width: 25%;"
             />
-            <h5 class="text-center mt-2 text-muted">
-              Ooops No Mentor Found .....
-            </h5>
+            <h4 class="text-center mt-2 text-muted">
+              Ooops, No Mentor Found .....
+            </h4>
           </div>
           <% } %>
           <div class="row">
@@ -413,6 +415,10 @@
       readonly: true,
     };
     $(".rate").rate(option);
+
+    $("#sortBy").change(() => {
+      $("#formSort").submit();
+    });
 
     // $(
     //   "#selectBy,#sortBy,#customRadio1,#customRadio2,#customRadio3,#customRadio4,#customRadio5,#customCheck7,#customCheck8,#customCheck9,#customCheck10,#customCheck3,#customCheck4,#customRadio7,#customRadio12,#customRadio13,#customRadio14,#customRadio15"

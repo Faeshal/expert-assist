@@ -314,3 +314,27 @@ exports.getFilter = (req, res, next) => {
       .catch((err) => console.log(err));
   }
 };
+
+exports.getSort = (req, res, next) => {
+  let sort = req.query.sort;
+  let totalMentors;
+  let page = 1;
+  Mentor.find()
+    .sort({ [sort]: -1 })
+    .then((mentor) => {
+      Mentor.countDocuments().then(() => {
+        res.render("front/mentorList", {
+          mentor: mentor,
+          currency: currency,
+          totalMentors: totalMentors,
+          currentPage: 1,
+          hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+          hasPreviousPage: page > 1,
+          nextPage: 0,
+          previousPage: page - 1,
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+};

@@ -16,6 +16,7 @@ router.get("/mdetail/:id", frontController.getDetailMentor);
 router.get("/mlist", frontController.getMentorList);
 router.get("/api/mlists", frontController.getMentorListJson);
 router.get("/filter", frontController.getFilter);
+router.get("/sort", frontController.getSort);
 
 // FAQ
 router.get("/faq", frontController.getFaq);
