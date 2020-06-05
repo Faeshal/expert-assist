@@ -20,6 +20,15 @@ const auth = {
   },
 };
 
+// ** Query Grouping
+// db.payments.aggregate([
+//   {"$group" : {_id:{ $dateToString: { format: "%d-%m-%Y", date: "$datetime" } }, count:{$sum:1}}}, { $limit : 7 },  { $sort : { _id : -1 } }
+// ])
+
+// db.withdraws.aggregate([
+//   {"$group" : {_id:{ $week:{date: "$datetime" }}, count:{$sum:1}}}, { $limit : 7 },  { $sort : { _id : -1 } }
+// ])
+
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then((admin) => {
