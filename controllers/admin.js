@@ -23,8 +23,15 @@ const auth = {
 
 // ** Query Grouping
 // db.payments.aggregate([
-//   {"$group" : {_id:{ $dateToString: { format: "%d-%m-%Y", date: "$datetime" } }, count:{$sum:1}}}, { $limit : 7 },  { $sort : { _id : -1 } }
-// ])
+//   {
+//     $group: {
+//       _id: { $dateToString: { format: "%d-%m-%Y", date: "$datetime" } },
+//       count: { $sum: 1 },
+//     },
+//   },
+//   { $limit: 7 },
+//   { $sort: { _id: -1 } },
+// ]);
 
 // db.withdraws.aggregate([
 //   {"$group" : {_id:{ $week:{date: "$datetime" }}, count:{$sum:1}}}, { $limit : 7 },  { $sort : { _id : -1 } }
@@ -540,6 +547,30 @@ exports.getPayment = (req, res, next) => {
         currency: currency,
       });
     });
+};
+
+exports.getPaymentJson = (req, res, next) => {
+  Payment.aggregate([
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: "%d-%m-%Y",
+            date: "$datetime",
+          },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $limit: 7 },
+    { $sort: { _id: -1 } },
+  ]).then((paymentData) => {
+    if (paymentData) {
+      res.status(200).json({ message: "true", data: paymentData });
+    } else {
+      res.status(404).json({ message: "false", data: "no data" });
+    }
+  });
 };
 
 exports.getMentoring = (req, res, next) => {
