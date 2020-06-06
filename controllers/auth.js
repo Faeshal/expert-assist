@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const dotenv = require("dotenv");
 dotenv.config({ path: "../config.env" });
 const crypto = require("crypto");

@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
