@@ -48,12 +48,21 @@ exports.getDashboard = (req, res, next) => {
           })
             .countDocuments()
             .then((totalMentor) => {
-              res.render("back/admin/dashboard", {
-                admin: admin,
-                pageTitle: "Welcome Admin",
-                totalUser: totalUser,
-                totalMentor: totalMentor,
-              });
+              Mentor.find({
+                $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+              })
+                .sort({ rating: -1 })
+                .limit(4)
+                .then((bestMentor) => {
+                  res.render("back/admin/dashboard", {
+                    admin: admin,
+                    pageTitle: "Welcome Admin",
+                    totalUser: totalUser,
+                    totalMentor: totalMentor,
+                    bestMentor: bestMentor,
+                    currency: currency,
+                  });
+                });
             });
         });
     })
