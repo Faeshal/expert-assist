@@ -174,8 +174,9 @@
               style="position: relative; height: 100%; width: 100%;"
             >
               <canvas
-                id="myChart"
+                id="paymentChart"
                 class="chart-canvas"
+                height="330px"
                 style="width: 100%; position: relative;"
               ></canvas>
             </div>
@@ -188,16 +189,24 @@
             <div class="row align-items-center">
               <div class="col">
                 <h6 class="text-uppercase text-muted ls-1 mb-1">
-                  Total Payments
+                  Total Income
                 </h6>
-                <h5 class="h3 mb-0">Last 7 Days</h5>
+                <h5 class="h3 mb-0">Last 6 Month</h5>
               </div>
             </div>
           </div>
           <div class="card-body">
             <!-- Chart -->
-            <div class="chart">
-              <canvas id="chart-bars" class="chart-canvas"></canvas>
+            <div
+              class="chart"
+              style="position: relative; height: 100%; width: 100%;"
+            >
+              <canvas
+                id="withdrawChart"
+                class="chart-canvas"
+                height="330px"
+                style="width: 100%; position: relative;"
+              ></canvas>
             </div>
           </div>
         </div>
@@ -581,7 +590,7 @@
           return e.count;
         });
 
-        let ctx = document.getElementById("myChart").getContext("2d");
+        let ctx = document.getElementById("paymentChart").getContext("2d");
         let chart = new Chart(ctx, {
           // The type of chart we want to create
           type: "line",
@@ -591,7 +600,7 @@
             labels: datetime,
             datasets: [
               {
-                label: "Payment In",
+                label: "Payment",
                 backgroundColor: "rgb(245,245,245)",
                 borderColor: "rgb(37,45,89)",
                 hoverBackgroundColor: "rgb(65,105,225)",
@@ -603,9 +612,43 @@
               },
             ],
           },
+        });
+      })
+      .fail((err) => {
+        alert(err);
+      });
+    $.get("/api/admin/withdraws")
+      .done((data) => {
+        let res = data.data;
 
-          // Configuration options go here
-          options: {},
+        let month = res.map(function (e) {
+          return moment(e._id, "M").format("MMMM");
+        });
+        let income = res.map(function (e) {
+          return e.income;
+        });
+
+        let ctx = document.getElementById("withdrawChart").getContext("2d");
+        let chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: "bar",
+
+          // The data for our dataset
+          data: {
+            labels: month,
+            datasets: [
+              {
+                label: "Income",
+                backgroundColor: "rgb(65,105,225)",
+                borderColor: "rgb(169,169,169)",
+                borderWidth: 3,
+                hoverBackgroundColor: "rgb(65,105,225)",
+                hoverBorderColor: "rgb(105,105,105)",
+                hoverBorderWidth: 5,
+                data: income,
+              },
+            ],
+          },
         });
       })
       .fail((err) => {

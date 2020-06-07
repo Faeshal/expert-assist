@@ -608,14 +608,28 @@ exports.getwithdraw = (req, res, next) => {
 };
 
 exports.getwithdrawJson = (req, res, next) => {
-  Withdraw.countDocuments()
-    .then((withdraw) => {
-      if (withdraw) {
-        res.status(200).json({ message: "success", withdraw: withdraw });
-      } else {
-        res.json({ message: "No Withdraw Found" });
-      }
+  Withdraw.aggregate([
+    {
+      $group: {
+        _id: { $month: "$datetime" },
+        income: { $sum: "$adminincome" },
+      },
+    },
+    { $sort: { _id: -1 } },
+    { $limit: 6 },
+  ])
+    .then((data) => {
+      Withdraw.countDocuments().then((total) => {
+        if (total) {
+          res
+            .status(200)
+            .json({ message: "success", data: data, total: total });
+        } else {
+          res.json({ message: "No Withdraw Found" });
+        }
+      });
     })
+
     .catch((err) => console.log(err));
 };
 
