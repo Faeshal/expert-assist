@@ -555,15 +555,15 @@ exports.getPaymentJson = (req, res, next) => {
       $group: {
         _id: {
           $dateToString: {
-            format: "%d-%m-%Y",
+            format: "%Y-%m-%d",
             date: "$datetime",
           },
         },
         count: { $sum: 1 },
       },
     },
-    { $limit: 7 },
     { $sort: { _id: -1 } },
+    { $limit: 7 },
   ]).then((paymentData) => {
     if (paymentData) {
       res.status(200).json({ message: "true", data: paymentData });
