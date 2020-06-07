@@ -156,54 +156,28 @@
   <div class="container-fluid mt--6">
     <div class="row">
       <div class="col-xl-8">
-        <div class="card bg-default">
+        <div class="card">
           <div class="card-header bg-transparent">
             <div class="row align-items-center">
               <div class="col">
-                <h6 class="text-light text-uppercase ls-1 mb-1">Overview</h6>
-                <h5 class="h3 text-white mb-0">Sales value</h5>
-              </div>
-              <div class="col">
-                <ul class="nav nav-pills justify-content-end">
-                  <li
-                    class="nav-item mr-2 mr-md-0"
-                    data-toggle="chart"
-                    data-target="#chart-sales-dark"
-                    data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}'
-                    data-prefix="$"
-                    data-suffix="k"
-                  >
-                    <a
-                      href="#"
-                      class="nav-link py-2 px-3 active"
-                      data-toggle="tab"
-                    >
-                      <span class="d-none d-md-block">Month</span>
-                      <span class="d-md-none">M</span>
-                    </a>
-                  </li>
-                  <li
-                    class="nav-item"
-                    data-toggle="chart"
-                    data-target="#chart-sales-dark"
-                    data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}'
-                    data-prefix="$"
-                    data-suffix="k"
-                  >
-                    <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                      <span class="d-none d-md-block">Week</span>
-                      <span class="d-md-none">W</span>
-                    </a>
-                  </li>
-                </ul>
+                <h6 class="text-uppercase text-muted ls-1 mb-1">
+                  Total Payments
+                </h6>
+                <h5 class="h3 mb-0">Last 7 Payment</h5>
               </div>
             </div>
           </div>
           <div class="card-body">
             <!-- Chart -->
-            <div class="chart">
-              <!-- Chart wrapper -->
-              <canvas id="chart-sales-dark" class="chart-canvas"></canvas>
+            <div
+              class="chart"
+              style="position: relative; height: 100%; width: 100%;"
+            >
+              <canvas
+                id="myChart"
+                class="chart-canvas"
+                style="width: 100%; position: relative;"
+              ></canvas>
             </div>
           </div>
         </div>
@@ -213,8 +187,10 @@
           <div class="card-header bg-transparent">
             <div class="row align-items-center">
               <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                <h5 class="h3 mb-0">Total orders</h5>
+                <h6 class="text-uppercase text-muted ls-1 mb-1">
+                  Total Payments
+                </h6>
+                <h5 class="h3 mb-0">Last 7 Days</h5>
               </div>
             </div>
           </div>
@@ -584,13 +560,6 @@
       </div>
     </div>
 
-    <div class="row mx-auto text-center justify-content-center">
-      <div class="col-sm-12">
-        <div class="card">
-          <canvas id="myChart"></canvas>
-        </div>
-      </div>
-    </div>
     <!-- Footer -->
 
     <%-include('../../layouts/back/admin/footer.ejs')%>
@@ -615,7 +584,7 @@
         let ctx = document.getElementById("myChart").getContext("2d");
         let chart = new Chart(ctx, {
           // The type of chart we want to create
-          type: "bar",
+          type: "line",
 
           // The data for our dataset
           data: {
@@ -623,8 +592,13 @@
             datasets: [
               {
                 label: "Payment In",
-                backgroundColor: "rgb(255, 99, 132)",
-                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(245,245,245)",
+                borderColor: "rgb(37,45,89)",
+                hoverBackgroundColor: "rgb(65,105,225)",
+                hoverBorderColor: "rgb(65,105,225)",
+                hoverBorderWidth: 7,
+                pointRadius: 5,
+                fill: false,
                 data: total,
               },
             ],
