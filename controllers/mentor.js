@@ -111,21 +111,34 @@ exports.getPayment = (req, res, next) => {
 
 exports.getPaymentJson = (req, res, next) => {
   const session = req.session.mentor;
-  if (session) {
-    Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
-      .countDocuments()
-      .then((payment) => {
-        if (payment) {
-          res.status(200).json({ message: "true", payment: payment });
-        } else {
-          res.json({ message: "No Mentor Data", payment: 0 });
-        }
-      })
-      .catch((err) => console.log(err));
-  } else {
-    res.json({ status: "no payment json data" });
-    console.log("Payment JSON Data not found");
-  }
+  Payment.aggregate([
+    {
+      $match: { mentor: session._id },
+    },
+    {
+      $group: {
+        _id: { $month: "$datetime" },
+        income: { $sum: "$total" },
+      },
+    },
+    { $sort: { _id: -1 } },
+    { $limit: 6 },
+  ])
+    .then((paymentData) => {
+      Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
+        .countDocuments()
+        .then((total) => {
+          if (total) {
+            res
+              .status(200)
+              .json({ message: "true", data: paymentData, total: total });
+          } else {
+            res.json({ message: "No Mentor Data", payment: 0 });
+          }
+        });
+    })
+
+    .catch((err) => console.log(err));
 };
 
 exports.getUpdateProfile = (req, res, next) => {
