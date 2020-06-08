@@ -169,13 +169,21 @@
         </div>
         <div class="card-body">
           <!-- Chart -->
-          <div class="chart">
+          <div
+            class="chart"
+            style="position: relative; height: 100%; width: 100%;"
+          >
             <!-- Chart wrapper -->
-            <canvas id="chart-sales" class="chart-canvas"></canvas>
+            <canvas
+              id="paymentChart"
+              height="420px"
+              class="chart-canvas"
+              style="width: 100%; position: relative;"
+            ></canvas>
           </div>
         </div>
       </div>
-      
+
       <!-- Progress track -->
       <div class="card">
         <!-- Card header -->
@@ -211,7 +219,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- Modals -->
     <% if (mentor.mentorstatus == "new") { %>
@@ -279,48 +286,46 @@
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script>
-      var ctx = document.getElementById("myChart").getContext("2d");
-      var myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [
-            {
-              label: "# of Votes",
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-              ],
-              borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)",
-              ],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
+      $.get("/api/mentor/payments")
+        .done((data) => {
+          let res = data.data;
+
+          let month = res.map(function (e) {
+            return moment(e._id, "M").format("MMMM");
+          });
+          let income = res.map(function (e) {
+            return e.income;
+          });
+
+          let ctx = document.getElementById("paymentChart").getContext("2d");
+          let chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: "line",
+
+            // The data for our dataset
+            data: {
+              labels: month,
+              datasets: [
+                {
+                  label: "Payment",
+                  backgroundColor: "rgb(245,245,245)",
+                  borderColor: "rgb(37,45,89)",
+                  hoverBackgroundColor: "rgb(65,105,225)",
+                  hoverBorderColor: "rgb(65,105,225)",
+                  hoverBorderWidth: 7,
+                  pointRadius: 5,
+                  fill: false,
+                  data: income,
                 },
-              },
-            ],
-          },
-        },
-      });
+              ],
+            },
+          });
+        })
+        .fail((err) => {
+          alert(err);
+        });
     </script>
   </div>
 </div>
