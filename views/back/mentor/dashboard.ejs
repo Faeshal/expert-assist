@@ -161,11 +161,11 @@
         </div>
       </div>
     </div>
-    <div class="card-deck flex-column flex-xl-row">
+    <div class="card-deck flex-column flex-xl-row h-25">
       <div class="card">
         <div class="card-header bg-transparent">
           <h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-          <h2 class="h3 mb-0">Payment Stats</h2>
+          <h2 class="h3 mb-0">Income Stats</h2>
         </div>
         <div class="card-body">
           <!-- Chart -->
@@ -176,10 +176,26 @@
             <!-- Chart wrapper -->
             <canvas
               id="paymentChart"
-              height="420px"
+              height="450px"
               class="chart-canvas"
               style="width: 100%; position: relative;"
             ></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-transparent">
+          <h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
+          <h2 class="h3 mb-0">Mentor Stats</h2>
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <div
+            class="chart"
+            style="position: relative; height: 100%; width: 100%;"
+          >
+            <!-- Chart wrapper -->
+            <p>test1</p>
           </div>
         </div>
       </div>
@@ -196,7 +212,7 @@
               <h5 class="h3 mb-0">Mentoring Track</h5>
             </div>
             <div class="col-4 text-right">
-              <a href="#!" class="btn btn-sm btn-neutral">Action</a>
+              <a href="/schedule" class="btn btn-sm btn-neutral">Action</a>
             </div>
           </div>
         </div>
@@ -287,6 +303,7 @@
     <%-include('../../layouts/back/mentor/footer.ejs')%>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+    <script src="https://unpkg.com/currency.js@1.2.2/dist/currency.min.js"></script>
     <script>
       $.get("/api/mentor/payments")
         .done((data) => {
@@ -302,7 +319,7 @@
           let ctx = document.getElementById("paymentChart").getContext("2d");
           let chart = new Chart(ctx, {
             // The type of chart we want to create
-            type: "line",
+            type: "bar",
 
             // The data for our dataset
             data: {
@@ -310,16 +327,27 @@
               datasets: [
                 {
                   label: "Payment",
-                  backgroundColor: "rgb(245,245,245)",
-                  borderColor: "rgb(37,45,89)",
+                  backgroundColor: "rgb(65,105,225)",
+                  borderColor: "rgb(169,169,169)",
+                  borderWidth: 3,
                   hoverBackgroundColor: "rgb(65,105,225)",
-                  hoverBorderColor: "rgb(65,105,225)",
-                  hoverBorderWidth: 7,
-                  pointRadius: 5,
-                  fill: false,
+                  hoverBorderColor: "rgb(105,105,105)",
+                  hoverBorderWidth: 5,
                   data: income,
                 },
               ],
+            },
+            options: {
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      suggestedMin: 10000,
+                      suggestedMax: 300000,
+                    },
+                  },
+                ],
+              },
             },
           });
         })
