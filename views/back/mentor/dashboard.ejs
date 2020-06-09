@@ -342,8 +342,17 @@
                 yAxes: [
                   {
                     ticks: {
-                      suggestedMin: 10000,
-                      suggestedMax: 300000,
+                      suggestedMin: 50,
+                      suggestedMax: 1000,
+                      callback: function (value, index, values) {
+                        return (
+                          "Rp " +
+                          currency(value, {
+                            separator: ",",
+                            precision: 0,
+                          }).format()
+                        );
+                      },
                     },
                   },
                 ],
