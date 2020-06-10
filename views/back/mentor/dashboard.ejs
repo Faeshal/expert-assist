@@ -188,7 +188,7 @@
           <h6 class="text-muted text-uppercase ls-1 mb-1">Pending Client</h6>
           <h2 class="h3 mb-0">User Stats</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body position-relative">
           <!-- Chart -->
           <div
             class="chart"
@@ -210,9 +210,11 @@
               </div>
             </div>
             <% }%> <% userData.forEach(userData=>{ %>
-            <ul class="list-group list-group-flush list my--3">
+            <ul
+              class="list-group list-group-flush list my--3 position-relative"
+            >
               <li class="list-group-item px-0">
-                <div class="row align-items-center mb-2">
+                <div class="row align-items-center mb-3">
                   <div class="col-auto">
                     <!-- Avatar -->
                     <a href="/schedule" class="avatar rounded-circle">
@@ -224,7 +226,9 @@
                   </div>
                   <div class="col ml--2">
                     <h4 class="mb-0">
-                      <a href="#!"><%= userData.user.username %></a>
+                      <a href="/mentor/schedule"
+                        ><%= userData.user.username %></a
+                      >
                     </h4>
                     <span class="text-success">◾</span>
                     <% if(userData.approve==false){ %>
@@ -242,7 +246,7 @@
 
                   <div class="col-auto">
                     <a
-                      href="https://api.whatsapp.com/send?phone=0&text=Hello%20,%20This%20is%20Expert%20Assist%20Admin..."
+                      href="https://api.whatsapp.com/send?phone=<%=userData.user.phone%>&text=Hello,%20This%20is%20mentor%20<%=session.username%>%20from%20Expert%20Assist%20.%20"
                       class="btn btn-sm btn-primary"
                       target="_blank"
                     >
@@ -254,6 +258,11 @@
             </ul>
             <% }) %>
           </div>
+        </div>
+        <div class="text-center mx-auto mb-4">
+          <small class="text-muted"
+            >Next Mentoring on<b> 25 April 2020</b></small
+          >
         </div>
       </div>
 
@@ -268,16 +277,13 @@
               <!-- Title -->
               <h5 class="h3 mb-0">Mentor Stats</h5>
             </div>
-            <div class="col-4 text-right">
-              <a href="/schedule" class="btn btn-sm btn-neutral">Action</a>
-            </div>
           </div>
         </div>
         <!-- Card body -->
-        <div class="card-body">
+        <div class="card-body position-relative">
           <!-- List group -->
           <div class="pb-1 pt-2">
-            <ul class="list-group">
+            <ul class="list-group position-relative">
               <li
                 class="list-group-item d-flex justify-content-between align-items-center"
               >
