@@ -30,16 +30,44 @@ exports.getDashboard = (req, res, next) => {
             .limit(4)
             .sort({ datetime: 1 })
             .then((userData) => {
-              res.render("back/mentor/dashboard", {
-                mentor: mentor,
-                currency: currency,
-                session: session,
-                totalClient: totalClient,
-                totalReview: totalReview,
-                voca: voca,
-                userData: userData,
-                moment: moment,
-              });
+              Schedule.find({
+                $and: [{ mentor: session._id }, { approve: "false" }],
+              })
+                .countDocuments()
+                .then((waitingSchedule) => {
+                  Schedule.find({
+                    $and: [{ mentor: session._id }, { approve: "false" }],
+                  })
+                    .countDocuments()
+                    .then((rejectSchedule) => {
+                      Withdraw.find({
+                        $and: [{ mentor: session._id }, { status: false }],
+                      })
+                        .countDocuments()
+                        .then((waitingWithdraw) => {
+                          Withdraw.find({
+                            $and: [{ mentor: session._id }, { status: true }],
+                          })
+                            .countDocuments()
+                            .then((withdrawSuccess) => {
+                              res.render("back/mentor/dashboard", {
+                                mentor: mentor,
+                                currency: currency,
+                                session: session,
+                                totalClient: totalClient,
+                                totalReview: totalReview,
+                                voca: voca,
+                                userData: userData,
+                                moment: moment,
+                                waitingSchedule: waitingSchedule,
+                                rejectSchedule: rejectSchedule,
+                                waitingWithdraw: waitingWithdraw,
+                                withdrawSuccess: withdrawSuccess,
+                              });
+                            });
+                        });
+                    });
+                });
             });
         });
       });
