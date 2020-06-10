@@ -176,8 +176,8 @@
             <!-- Chart wrapper -->
             <canvas
               id="paymentChart"
-              height="450px"
               class="chart-canvas"
+              height="280%"
               style="width: 100%; position: relative;"
             ></canvas>
           </div>
@@ -185,8 +185,8 @@
       </div>
       <div class="card">
         <div class="card-header bg-transparent">
-          <h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-          <h2 class="h3 mb-0">Mentor Stats</h2>
+          <h6 class="text-muted text-uppercase ls-1 mb-1">Pending Client</h6>
+          <h2 class="h3 mb-0">User Stats</h2>
         </div>
         <div class="card-body">
           <!-- Chart -->
@@ -194,8 +194,65 @@
             class="chart"
             style="position: relative; height: 100%; width: 100%;"
           >
-            <!-- Chart wrapper -->
-            <p>test1</p>
+            <% if(userData.length<1){ %>
+            <div class="row mt-4 pt-2 text-center justify-content-center">
+              <div class="col">
+                <img
+                  class="img-fluid"
+                  alt="Responsive image"
+                  src="../../front/images/notfound.svg"
+                  alt=""
+                  style="width: 60%;"
+                />
+                <h4 class="text-center mb-4 text-primary pt-4">
+                  you dont have any pending user
+                </h4>
+              </div>
+            </div>
+            <% }%> <% userData.forEach(userData=>{ %>
+            <ul class="list-group list-group-flush list my--3">
+              <li class="list-group-item px-0">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <!-- Avatar -->
+                    <a href="/schedule" class="avatar rounded-circle">
+                      <img
+                        alt="Image placeholder"
+                        src="/<%-userData.user.profilepicture%>"
+                      />
+                    </a>
+                  </div>
+                  <div class="col ml--2">
+                    <h4 class="mb-0">
+                      <a href="#!"><%= userData.user.username %></a>
+                    </h4>
+                    <span class="text-success">◾</span>
+                    <% if(userData.approve==false){ %>
+                    <small>Status : Pending</small>
+                    <% }else if(userData.approve=="true"){ %>
+                    <small
+                      >Status :
+                      <%=moment(userData.datetime).endOf('day').fromNow();
+                      %></small
+                    >
+                    <% }else if(userData.approve=="reject"){ %>
+                    <small>Status : Reject</small>
+                    <% } %>
+                  </div>
+
+                  <div class="col-auto">
+                    <a
+                      href="https://api.whatsapp.com/send?phone=0&text=Hello%20,%20This%20is%20Expert%20Assist%20Admin..."
+                      class="btn btn-sm btn-primary"
+                      target="_blank"
+                    >
+                      <i class="fab fa-whatsapp fa-lg mr-1"></i>Chat
+                    </a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <% }) %>
           </div>
         </div>
       </div>
@@ -209,7 +266,7 @@
               <!-- Surtitle -->
               <h6 class="surtitle">0/0 projects</h6>
               <!-- Title -->
-              <h5 class="h3 mb-0">Mentoring Track</h5>
+              <h5 class="h3 mb-0">Mentor Stats</h5>
             </div>
             <div class="col-4 text-right">
               <a href="/schedule" class="btn btn-sm btn-neutral">Action</a>
@@ -219,18 +276,39 @@
         <!-- Card body -->
         <div class="card-body">
           <!-- List group -->
-          <div class="text-center pb-1 pt-2 pr-2 pl-2">
-            <img
-              class="img-fluid"
-              alt="Responsive image"
-              src="../../back/assets/img/custom/welcome.png"
-              alt=""
-            />
-            <hr />
-            <h3 class="text-left text-primary">
-              News
-            </h3>
-            <p class="h5 mt-4">No News Found</p>
+          <div class="pb-1 pt-2">
+            <ul class="list-group">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Pending Client
+                <span class="badge badge-primary badge-pill">14</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Total Withdraw
+                <span class="badge badge-primary badge-pill">2</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Total Message
+                <span class="badge badge-primary badge-pill">2</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Total Pending
+                <span class="badge badge-primary badge-pill">2</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Morbi leo risus
+                <span class="badge badge-primary badge-pill">1</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -345,13 +423,10 @@
                       suggestedMin: 50,
                       suggestedMax: 1000,
                       callback: function (value, index, values) {
-                        return (
-                          "Rp " +
-                          currency(value, {
-                            separator: ",",
-                            precision: 0,
-                          }).format()
-                        );
+                        return currency(value, {
+                          separator: ",",
+                          precision: 0,
+                        }).format();
                       },
                     },
                   },

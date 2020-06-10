@@ -16,21 +16,31 @@ const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
-
   Mentor.findOne({ _id: session._id })
     .then((mentor) => {
       Payment.countDocuments({
         $and: [{ mentor: session._id }, { status: true }],
       }).then((totalClient) => {
         Review.countDocuments({ mentor: session._id }).then((totalReview) => {
-          res.render("back/mentor/dashboard", {
-            mentor: mentor,
-            currency: currency,
-            session: session,
-            totalClient: totalClient,
-            totalReview: totalReview,
-            voca: voca,
-          });
+          Schedule.find({ $and: [{ mentor: session._id }, { status: false }] })
+            .populate({
+              path: "user",
+              select: ["username", "email", "profilepicture"],
+            })
+            .limit(4)
+            .sort({ datetime: 1 })
+            .then((userData) => {
+              res.render("back/mentor/dashboard", {
+                mentor: mentor,
+                currency: currency,
+                session: session,
+                totalClient: totalClient,
+                totalReview: totalReview,
+                voca: voca,
+                userData: userData,
+                moment: moment,
+              });
+            });
         });
       });
     })
@@ -335,7 +345,6 @@ exports.getSchedule = (req, res, next) => {
     .populate({ path: "user", select: ["username", "email"] })
     .sort({ _id: -1 })
     .then((schedule) => {
-      console.log(schedule[0].user.username);
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/schedule", {
           mentor: mentor,
@@ -351,25 +360,28 @@ exports.getSchedule = (req, res, next) => {
 
 exports.getScheduleJson = (req, res, next) => {
   const session = req.session.mentor;
-  // Schedule.aggregate([
-  //   { $match: { mentor: session._id } },
-
-  //   {
-  //     $count: "total",
-  //   },
-  // ])
-  Schedule.find({ mentor: session._id })
-    .countDocuments()
-    .then((schedule) => {
-      console.log(schedule);
-      if (schedule) {
-        res
-          .status(200)
-          .json({ status: "schedule Fetched", schedule: schedule });
-      } else {
-        res.json({ status: "No Schedule Found", schedule: 0 });
-      }
+  Schedule.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  })
+    .limit(6)
+    .sort({ datetime: 1 })
+    .populate("user", "username phone")
+    .then((userData) => {
+      Schedule.find({ mentor: session._id })
+        .countDocuments()
+        .then((schedule) => {
+          if (schedule) {
+            res.status(200).json({
+              status: "schedule Fetched",
+              data: userData,
+              schedule: schedule,
+            });
+          } else {
+            res.json({ status: "No Schedule Found" });
+          }
+        });
     })
+
     .catch((err) => console.log(err));
 };
 
