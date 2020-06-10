@@ -82,7 +82,9 @@
                 <h5 class="card-title text-uppercase text-muted mb-0">
                   Schedule
                 </h5>
-                <span class="h2 font-weight-bold mb-0">0</span>
+                <span class="h2 font-weight-bold mb-0"
+                  ><%=incomingSchedule%></span
+                >
               </div>
               <div class="col-auto">
                 <div
@@ -96,7 +98,7 @@
               <span class="text-success mr-2"
                 ><i class="fa fa-arrow-up"></i> 0%</span
               >
-              <span class="text-nowrap">Since now</span>
+              <span class="text-nowrap">incoming schedule</span>
             </p>
           </div>
         </div>
@@ -231,11 +233,11 @@
                       >
                     </h4>
                     <span class="text-success">◾</span>
-                    <% if(userData.approve==false){ %>
+                    <% if(userData.approve=="false"){ %>
                     <small>Status : Pending</small>
                     <% }else if(userData.approve=="true"){ %>
                     <small
-                      >Status :
+                      >Incoming
                       <%=moment(userData.datetime).endOf('day').fromNow();
                       %></small
                     >
@@ -259,11 +261,16 @@
             <% }) %>
           </div>
         </div>
+
+        <% if (nextMentoring !== null){ %>
         <div class="text-center mx-auto mb-4">
-          <small class="text-muted"
-            >Next Mentoring on<b> 25 April 2020</b></small
+          <small class="text-muted h3"
+            >▶ Next Mentoring on<b>
+              <%=moment(nextMentoring.datetime).format("d MMMM YYYY")%></b
+            ></small
           >
         </div>
+        <% } %>
       </div>
 
       <!-- Progress track -->
@@ -319,10 +326,10 @@
               <li
                 class="list-group-item d-flex justify-content-between align-items-center"
               >
-                Next Mentoring
+                Total Withdraw
                 <span class="badge badge-primary badge-pill"
-                  ><%= userData.length<1 ? 0 :
-                  moment(userData[0].datetime).format('l')%></span
+                  >Rp. <%=currency(totalWithdraw,{separator: ",", precision:
+                  0}).format()%></span
                 >
               </li>
             </ul>
@@ -403,13 +410,19 @@
       $.get("/api/mentor/payments")
         .done((data) => {
           let res = data.data;
-
-          let month = res.map(function (e) {
-            return moment(e._id, "M").format("MMMM");
-          });
-          let income = res.map(function (e) {
-            return e.income;
-          });
+          let month;
+          let income;
+          if (res == 0) {
+            month = ["You dont have any client's payment"];
+            income = [0];
+          } else {
+            month = res.map(function (e) {
+              return moment(e._id, "M").format("MMMM");
+            });
+            income = res.map(function (e) {
+              return e.income;
+            });
+          }
 
           let ctx = document.getElementById("paymentChart").getContext("2d");
           let chart = new Chart(ctx, {
@@ -453,7 +466,7 @@
           });
         })
         .fail((err) => {
-          alert(err);
+          console.log(err);
         });
     </script>
   </div>

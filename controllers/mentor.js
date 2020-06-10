@@ -36,7 +36,7 @@ exports.getDashboard = (req, res, next) => {
                 .countDocuments()
                 .then((waitingSchedule) => {
                   Schedule.find({
-                    $and: [{ mentor: session._id }, { approve: "false" }],
+                    $and: [{ mentor: session._id }, { approve: "reject" }],
                   })
                     .countDocuments()
                     .then((rejectSchedule) => {
@@ -59,23 +59,61 @@ exports.getDashboard = (req, res, next) => {
                               })
                                 .sort({ datetime: 1 })
                                 .then((nextMentoring) => {
-                                  console.log(
-                                    chalk.green.inverse(nextMentoring)
-                                  );
-                                  res.render("back/mentor/dashboard", {
-                                    mentor: mentor,
-                                    currency: currency,
-                                    session: session,
-                                    totalClient: totalClient,
-                                    totalReview: totalReview,
-                                    voca: voca,
-                                    userData: userData,
-                                    moment: moment,
-                                    waitingSchedule: waitingSchedule,
-                                    rejectSchedule: rejectSchedule,
-                                    waitingWithdraw: waitingWithdraw,
-                                    withdrawSuccess: withdrawSuccess,
-                                    nextMentoring: nextMentoring,
+                                  console.log(nextMentoring);
+                                  Withdraw.aggregate([
+                                    {
+                                      $match: {
+                                        $and: [
+                                          { mentor: session._id },
+                                          { status: true },
+                                        ],
+                                      },
+                                    },
+                                    {
+                                      $group: {
+                                        _id: null,
+                                        total: { $sum: "$total" },
+                                      },
+                                    },
+                                  ]).then((totalWithdrawData) => {
+                                    console.log(totalWithdrawData);
+                                    let totalWithdraw;
+                                    if (
+                                      totalWithdrawData.length < 1 ||
+                                      totalWithdraw == undefined
+                                    ) {
+                                      totalWithdraw = 0;
+                                    } else if (totalWithdrawData > 0) {
+                                      totalWithdraw =
+                                        totalWithdrawData[0].total;
+                                    }
+                                    Schedule.find({
+                                      $and: [
+                                        { mentor: session._id },
+                                        { approve: "true" },
+                                        { status: false },
+                                      ],
+                                    })
+                                      .countDocuments()
+                                      .then((incomingSchedule) => {
+                                        res.render("back/mentor/dashboard", {
+                                          mentor: mentor,
+                                          currency: currency,
+                                          session: session,
+                                          totalClient: totalClient,
+                                          totalReview: totalReview,
+                                          voca: voca,
+                                          userData: userData,
+                                          moment: moment,
+                                          waitingSchedule: waitingSchedule,
+                                          rejectSchedule: rejectSchedule,
+                                          waitingWithdraw: waitingWithdraw,
+                                          withdrawSuccess: withdrawSuccess,
+                                          nextMentoring: nextMentoring,
+                                          totalWithdraw: totalWithdraw,
+                                          incomingSchedule: incomingSchedule,
+                                        });
+                                      });
                                   });
                                 });
                             });
@@ -185,7 +223,7 @@ exports.getPaymentJson = (req, res, next) => {
               .status(200)
               .json({ message: "true", data: paymentData, total: total });
           } else {
-            res.json({ message: "No Mentor Data", payment: 0 });
+            res.json({ message: "No Mentor Data", data: 0 });
           }
         });
     })
