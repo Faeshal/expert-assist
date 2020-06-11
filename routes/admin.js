@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const express = require("express");
 const router = express.Router();
 const adminContoller = require("../controllers/admin");
@@ -51,6 +52,7 @@ router.get("/admin/user/block", adminContoller.getBlockUser);
 
 // * Payment
 router.get("/admin/payment", isAuth, adminContoller.getPayment);
+router.get("/api/admin/payments", isAuth, adminContoller.getPaymentJson);
 
 // * Mentoring
 router.get("/admin/mentoring", adminContoller.getMentoring);

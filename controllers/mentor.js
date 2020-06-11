@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
 const Review = require("../models/Review");
@@ -15,21 +16,108 @@ const { validationResult } = require("express-validator");
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
-
   Mentor.findOne({ _id: session._id })
     .then((mentor) => {
       Payment.countDocuments({
         $and: [{ mentor: session._id }, { status: true }],
       }).then((totalClient) => {
         Review.countDocuments({ mentor: session._id }).then((totalReview) => {
-          res.render("back/mentor/dashboard", {
-            mentor: mentor,
-            currency: currency,
-            session: session,
-            totalClient: totalClient,
-            totalReview: totalReview,
-            voca: voca,
-          });
+          Schedule.find({ $and: [{ mentor: session._id }, { status: false }] })
+            .populate({
+              path: "user",
+              select: ["username", "email", "profilepicture", "phone"],
+            })
+            .limit(3)
+            .sort({ datetime: 1 })
+            .then((userData) => {
+              Schedule.find({
+                $and: [{ mentor: session._id }, { approve: "false" }],
+              })
+                .countDocuments()
+                .then((waitingSchedule) => {
+                  Schedule.find({
+                    $and: [{ mentor: session._id }, { approve: "reject" }],
+                  })
+                    .countDocuments()
+                    .then((rejectSchedule) => {
+                      Withdraw.find({
+                        $and: [{ mentor: session._id }, { status: false }],
+                      })
+                        .countDocuments()
+                        .then((waitingWithdraw) => {
+                          Withdraw.find({
+                            $and: [{ mentor: session._id }, { status: true }],
+                          })
+                            .countDocuments()
+                            .then((withdrawSuccess) => {
+                              Schedule.findOne({
+                                $and: [
+                                  { mentor: session._id },
+                                  { approve: "true" },
+                                  { status: false },
+                                ],
+                              })
+                                .sort({ datetime: 1 })
+                                .then((nextMentoring) => {
+                                  Withdraw.aggregate([
+                                    {
+                                      $match: {
+                                        $and: [
+                                          { mentor: session._id },
+                                          { status: true },
+                                        ],
+                                      },
+                                    },
+                                    {
+                                      $group: {
+                                        _id: null,
+                                        total: { $sum: "$total" },
+                                      },
+                                    },
+                                  ]).then((totalWithdrawData) => {
+                                    console.log(totalWithdrawData);
+                                    let totalWithdraw;
+                                    if (totalWithdrawData.length == 0) {
+                                      totalWithdraw = 0;
+                                    } else {
+                                      totalWithdraw =
+                                        totalWithdrawData[0].total;
+                                    }
+                                    console.log("xx" + totalWithdraw);
+                                    Schedule.find({
+                                      $and: [
+                                        { mentor: session._id },
+                                        { approve: "true" },
+                                        { status: false },
+                                      ],
+                                    })
+                                      .countDocuments()
+                                      .then((incomingSchedule) => {
+                                        res.render("back/mentor/dashboard", {
+                                          mentor: mentor,
+                                          currency: currency,
+                                          session: session,
+                                          totalClient: totalClient,
+                                          totalReview: totalReview,
+                                          voca: voca,
+                                          userData: userData,
+                                          moment: moment,
+                                          waitingSchedule: waitingSchedule,
+                                          rejectSchedule: rejectSchedule,
+                                          waitingWithdraw: waitingWithdraw,
+                                          withdrawSuccess: withdrawSuccess,
+                                          nextMentoring: nextMentoring,
+                                          totalWithdraw: totalWithdraw,
+                                          incomingSchedule: incomingSchedule,
+                                        });
+                                      });
+                                  });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
       });
     })
@@ -92,6 +180,7 @@ exports.getPayment = (req, res, next) => {
   const session = req.session.mentor;
   Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
     .populate("user", "username email")
+    .sort({ _id: -1 })
     .then((payment) => {
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/payment", {
@@ -109,21 +198,34 @@ exports.getPayment = (req, res, next) => {
 
 exports.getPaymentJson = (req, res, next) => {
   const session = req.session.mentor;
-  if (session) {
-    Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
-      .countDocuments()
-      .then((payment) => {
-        if (payment) {
-          res.status(200).json({ message: "true", payment: payment });
-        } else {
-          res.json({ message: "No Mentor Data", payment: 0 });
-        }
-      })
-      .catch((err) => console.log(err));
-  } else {
-    res.json({ status: "no payment json data" });
-    console.log("Payment JSON Data not found");
-  }
+  Payment.aggregate([
+    {
+      $match: { mentor: session._id },
+    },
+    {
+      $group: {
+        _id: { $month: "$datetime" },
+        income: { $sum: "$total" },
+      },
+    },
+    { $sort: { _id: -1 } },
+    { $limit: 6 },
+  ])
+    .then((paymentData) => {
+      Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
+        .countDocuments()
+        .then((total) => {
+          if (total) {
+            res
+              .status(200)
+              .json({ message: "true", data: paymentData, total: total });
+          } else {
+            res.json({ message: "No Mentor Data", data: 0 });
+          }
+        });
+    })
+
+    .catch((err) => console.log(err));
 };
 
 exports.getUpdateProfile = (req, res, next) => {
@@ -173,7 +275,12 @@ exports.updateProfile = (req, res, next) => {
       mentor.job = job;
 
       if (profilepicture) {
-        // fileHelper.deleteFile(mentor.profilepicture);
+        fileHelper.deleteFile(mentor.profilepicture);
+        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+          "\\",
+          "/"
+        );
+      } else {
         mentor.profilepicture = req.files["profilepicture"][0].path.replace(
           "\\",
           "/"
@@ -182,6 +289,11 @@ exports.updateProfile = (req, res, next) => {
 
       if (coverpicture) {
         // fileHelper.deleteFile(mentor.coverpicture);
+        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
+          "\\",
+          "/"
+        );
+      } else {
         mentor.coverpicture = req.files["coverpicture"][0].path.replace(
           "\\",
           "/"
@@ -308,8 +420,8 @@ exports.getSchedule = (req, res, next) => {
   const session = req.session.mentor;
   Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
+    .sort({ _id: -1 })
     .then((schedule) => {
-      console.log(schedule[0].user.username);
       Mentor.findById(session._id).then((mentor) => {
         res.render("back/mentor/schedule", {
           mentor: mentor,
@@ -325,36 +437,29 @@ exports.getSchedule = (req, res, next) => {
 
 exports.getScheduleJson = (req, res, next) => {
   const session = req.session.mentor;
-  // Schedule.aggregate([
-  //   { $match: { mentor: session._id } },
-
-  //   {
-  //     $count: "total",
-  //   },
-  // ])
-  Schedule.find({ mentor: session._id })
-    .countDocuments()
-    .then((schedule) => {
-      console.log(schedule);
-      if (schedule) {
-        res
-          .status(200)
-          .json({ status: "schedule Fetched", schedule: schedule });
-      } else {
-        res.json({ status: "No Schedule Found", schedule: 0 });
-      }
+  Schedule.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  })
+    .limit(6)
+    .sort({ datetime: 1 })
+    .populate("user", "username phone")
+    .then((userData) => {
+      Schedule.find({ mentor: session._id })
+        .countDocuments()
+        .then((schedule) => {
+          if (schedule) {
+            res.status(200).json({
+              status: "schedule Fetched",
+              data: userData,
+              schedule: schedule,
+            });
+          } else {
+            res.json({ status: "No Schedule Found" });
+          }
+        });
     })
+
     .catch((err) => console.log(err));
-};
-
-exports.postDeleteSchedule = (req, res, next) => {
-  const id = req.body.id;
-  Schedule.findByIdAndDelete(id)
-    .then((result) => {
-      console.log(result);
-      res.redirect("/mentor/schedule");
-    })
-    .catch((er) => console.log(err));
 };
 
 exports.postUpdateSchedule = (req, res, next) => {
@@ -378,8 +483,11 @@ exports.postUpdateSchedule = (req, res, next) => {
 exports.getMentoring = (req, res, next) => {
   const session = req.session.mentor;
   const dateTimeNow = new Date();
-  Schedule.findOne({ mentor: session._id })
-    .sort({ _id: -1 })
+  Schedule.findOne({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  })
+    .populate("user", "username")
+    .sort({ datetime: 1 })
     .then((schedule) => {
       let dateTimeSchedule = "";
       if (schedule) {
@@ -388,7 +496,7 @@ exports.getMentoring = (req, res, next) => {
       } else {
         console.log(chalk.redBright.inverse("Array Schedule Kosong"));
       }
-      console.log(chalk.blue.inverse(dateTimeNow + "--" + dateTimeSchedule));
+      console.log(chalk.blueBright.inverse(schedule));
       res.render("back/mentor/mentoring", {
         schedule: schedule,
         mentor: req.session.mentor._id,
@@ -423,10 +531,10 @@ exports.getLive = (req, res, next) => {
     .then((schedule) => {
       console.log(chalk.blue.inverse(schedule));
       const dateTimeSchedule = schedule.datetime;
-      if (schedule.approve == false) {
+      if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");
         console.log("Not Auhtorize");
-      } else if (schedule.approve == true) {
+      } else if (schedule.approve == "true") {
         res.render("back/mentor/live", {
           schedule: schedule,
           mentor: req.session.mentor._id,

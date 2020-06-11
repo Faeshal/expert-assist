@@ -74,7 +74,9 @@
                   <tr>
                     <th>User</th>
                     <th>Mentor</th>
-                    <th>Total</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Hour</th>
+                    <th class="text-center">Total</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Status</th>
@@ -89,9 +91,21 @@
                     <td class="table-user">
                       <b><%= paymentData.mentor.username%></b>
                     </td>
-                    <td>
+                    <td class="text-center">
                       <a href="#!" class="font-weight-bold">
-                        <%=paymentData.total%></a
+                        Rp.<%= currency(paymentData.price, { precision: 0
+                        }).format()%></a
+                      >
+                    </td>
+                    <td class="text-center">
+                      <a href="#!" class="font-weight-bold">
+                        <%=paymentData.duration%></a
+                      >
+                    </td>
+                    <td class="text-center">
+                      <a href="#!" class="font-weight-bold">
+                        Rp.<%= currency(paymentData.total, { precision: 0
+                        }).format()%></a
                       >
                     </td>
                     <td>

@@ -74,7 +74,7 @@
                   <div class="col-md-12">
                     <div class="form-group position-relative">
                       <label>Role<span class="text-danger">*</span></label>
-                      <select class="custom-select" name="level">
+                      <select class="<%= validationErrors.find(e => e.param === "level") ? "custom-select border border-danger" : "custom-select" %>" name="level" required>
                         <option value="" selected>Select One</option>
                         <option value="user">User</option>
                         <option value="mentor">Mentor</option>

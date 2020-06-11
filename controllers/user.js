@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
@@ -78,7 +79,9 @@ exports.updateProfile = (req, res, next) => {
       user.linkedin = linkedin;
 
       if (profilepicture) {
-        // fileHelper.deleteFile(user.profilepicture);
+        fileHelper.deleteFile(user.profilepicture);
+        user.profilepicture = profilepicture.path.replace("\\", "/");
+      } else {
         user.profilepicture = profilepicture.path.replace("\\", "/");
       }
 
@@ -300,7 +303,8 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ user: session._id })
+      Schedule.findOne({ $and: [{ user: session._id }, { approve: "true" }] })
+        .populate("mentor", "username")
         .sort({ _id: -1 })
         .then((schedule) => {
           let dateTimeSchedule = "";
@@ -309,7 +313,19 @@ exports.getMentoring = (req, res, next) => {
           } else {
             schedule = 0;
           }
-          console.log(chalk.yellowBright.inverse(schedule));
+
+          var now = moment().format();
+          var finish = moment(dateTimeSchedule).format();
+
+          let newdate = new Date();
+          let hasil = Math.abs(dateTimeSchedule - newdate);
+          let incoming = moment.utc(hasil).format("LTS");
+
+          console.log(toString);
+          console.log(incoming);
+          console.log(chalk.magenta.inverse(newdate));
+          console.log(chalk.magenta.inverse(dateTimeSchedule));
+
           res.render("back/user/mentoring", {
             payment: payment,
             schedule: schedule,
@@ -317,6 +333,8 @@ exports.getMentoring = (req, res, next) => {
             dateTimeNow: dateTimeNow,
             dateTimeSchedule: dateTimeSchedule,
             moment: moment,
+            now: now,
+            incoming: incoming,
           });
         })
         .catch((err) => console.log(err));
@@ -327,13 +345,15 @@ exports.getMentoring = (req, res, next) => {
 exports.getLive = (req, res, next) => {
   const id = req.session.user._id;
   Schedule.findOne({ user: id })
+    .sort({ datetime: -1 })
     .then((schedule) => {
       const dateTimeSchedule = schedule.datetime;
-      console.log(schedule);
-      if (schedule.approve == false) {
+      console.log(chalk.red.inverse(schedule));
+      console.log("MASUK");
+      if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");
         console.log("Not Auhtorize");
-      } else if (schedule.approve == true) {
+      } else if (schedule.approve == "true") {
         res.render("back/user/live", {
           schedule: schedule,
           user: req.session.user._id,
@@ -497,6 +517,20 @@ exports.getPayment = (req, res, next) => {
         lastPaymentId: lastPaymentId,
         lastDatetime: lastDatetime,
       });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getPaymentJson = (req, res, next) => {
+  const session = req.session.user;
+  Payment.find({ $and: [{ user: session._id }, { status: true }] })
+    .countDocuments()
+    .then((payment) => {
+      if (payment) {
+        res.status(200).json({ message: "Success", total: payment });
+      } else {
+        res.json({ message: "Data Not Found", total: 0 });
+      }
     })
     .catch((err) => console.log(err));
 };

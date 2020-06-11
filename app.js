@@ -18,6 +18,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const flash = require("connect-flash");
 const chalk = require("chalk");
 const morgan = require("morgan");
+require("pretty-error").start();
 
 // * Security
 app.use(helmet());
@@ -27,15 +28,16 @@ app.use(cors());
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
-// Set 'views' directory for any views
-// being rendered res.render()
-app.set("views", path.join(__dirname, "views"));
 
 // ** Template
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+// ** Loger
 app.use(morgan("dev"));
+
+// ** Body Parser
 app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
@@ -67,7 +69,6 @@ app.use((req, res, next) => {
 });
 
 // * Routing
-
 app.use(frontRoutes);
 app.use(authRoutes);
 app.use(adminRoutes);

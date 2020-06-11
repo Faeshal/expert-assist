@@ -85,22 +85,22 @@
                     <% for (var i=0;i<news.length;i++) { %>
                     <% var newsdata = news[i]; %>
                     <td class="table-user">
-                      <b><%= newsdata.title %></b>
+                      <b><%= v.prune(newsdata.title,40) %></b>
                     </td>
                     <td>
-                      <span class="text-muted"><%= newsdata.desc %></span>
+                      <span class="text-muted"><%= v.prune(newsdata.desc,30) %></span>
                     </td>
                     <td class="text-center">
                       <span class="text-muted font-weight-bold"
                         ><%= newsdata.target %></span
-                      >
+                      > 
                     </td>
                     <td>
                       <span class="text-muted"><%= newsdata.content %></span>
                     </td>
                     <td>
                       <a href="#!" class="font-weight-bold"
-                        ><%= newsdata.date %></a
+                        ><%= moment(newsdata.date).format("LL") %></a
                       >
                     </td>
                     <td class="table-actions">

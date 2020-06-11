@@ -100,6 +100,7 @@
                         />
                         <input
                           class="pl-2 form-control"
+                          id="mentorName"
                           placeholder="User"
                           type="text"
                           readonly="true"
@@ -206,10 +207,11 @@
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
-                    <th class="text-center">Hours</th>
+                    <th class="text-center">D</th>
                     <th>Date</th>
                     <th>Start</th>
-                    <th>Approve</th>
+                    <th class="text-center">Approve</th>
+                    <th class="text-center">Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -234,18 +236,40 @@
                       >
                     </td>
                     <td class="table-actions">
-                      <% if (scheduleData.approve == false) { %>
+                      <% if (scheduleData.approve == "false") { %>
                       <span class="badge badge-pill badge-warning text-dark"
                         >Waiting</span
                       >
-                      <% } else{ %>
+                      <% } else if(scheduleData.approve == "reject"){ %>
+                      <span class="badge badge-pill badge-dark text-white"
+                        >Reject</span
+                      >
+                      <% } else { %>
                       <span class="badge badge-pill badge-success text-dark"
                         >Approve</span
                       >
                       <% } %>
                     </td>
+                    <td class="table-actions text-center">
+                     <% if (scheduleData.approve == "true"  && scheduleData.status==false ) { %>
+                      <span class="badge  badge-primary text-dark"
+                        >Incoming</span
+                      >
+                      <% } else if(scheduleData.approve == "reject"  && scheduleData.status==false) { %>
+                      <span class="badge  badge-dark text-white"
+                        >Cancel</span
+                      >
+                      <% }else if(scheduleData.approve=="false"  && scheduleData.status==false){ %>
+                      <span class="badge  badge-danger text-dark"
+                        >Pending</span>
+                      <%}else if(scheduleData.approve=="true" && scheduleData.status==true) {%> 
+                        <span class="badge  badge-success text-dark"
+                        >Finish</span>
+                      <% } %> 
+                    </td>
                     <td class="text-center">
-                      <% if (scheduleData.approve==true){ %>
+                      <% if (scheduleData.approve=="true"
+                      ||scheduleData.approve=="reject"){ %>
                       <i class="fas fa-check-circle text-success"></i>
                       <% }else{ %>
                       <button
@@ -348,5 +372,36 @@
       });
     </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
+    <script>
+      $(document).ready(() => {
+        $.get("/api/user/payments", (data) => {
+          let paymentChecker = "pay_" + "<%-session.username%>";
+
+          let oldPayment = localStorage.getItem(paymentChecker);
+          let newPayment = JSON.stringify(data.total);
+
+          if (!oldPayment) {
+            localStorage.setItem(paymentChecker, newPayment);
+          } else {
+            if (oldPayment == newPayment) {
+              $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
+              $("#buttonAlert").prop("disabled", true).text("Need Payment");
+              $("#mentorName").val("No New Payment Found..");
+              $("#note").prop("disabled", true);
+              $("#datetime").prop("disabled", true);
+            }
+          }
+          $("#scheduleForm").submit(() => {
+            localStorage.removeItem(paymentChecker);
+          });
+        })
+          .done((res) => {
+            console.log(res);
+          })
+          .fail(() => {
+            alert("error:");
+          });
+      });
+    </script>
   </div>
 </div>

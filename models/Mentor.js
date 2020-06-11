@@ -10,14 +10,8 @@ const MentorSchema = new mongoose.Schema({
   title: String,
   username: String,
   level: String,
-  profilepicture: {
-    type: String,
-    default: "images/default_avatar.png",
-  },
-  coverpicture: {
-    type: String,
-    default: "images/default_cover.jpg",
-  },
+  profilepicture: String,
+  coverpicture: String,
   bio: String,
   price: Number,
   city: String,

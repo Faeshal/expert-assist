@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -11,7 +12,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+    // cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
     cb(null, Date.now() + "_" + file.originalname);
   },
 });
@@ -28,7 +29,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
+const upload = multer({
+  storage: fileStorage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1000000, // 1 mb in bytes
+  },
+});
 
 // * Dashboard
 router.get("/user/dashboard", isAuth, userController.getDashboard);
@@ -57,6 +64,7 @@ router.post("/pay", userController.postPayment);
 router.get("/stripe/:id", userController.getStripe);
 router.get("/payment/success/:id", userController.postStripeSuccess);
 router.get("/payment/cancel/:id", userController.postStripeCancel);
+router.get("/api/user/payments", isAuth, userController.getPaymentJson);
 
 // User Dashboard
 router.get("/user/payment", isAuth, userController.getPayment);

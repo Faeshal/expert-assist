@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const express = require("express");
 const router = express.Router();
 const mentorController = require("../controllers/mentor");
@@ -11,7 +12,6 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
     cb(null, Date.now() + "_" + file.originalname);
   },
 });
@@ -28,7 +28,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
+const upload = multer({
+  storage: fileStorage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1000000, // 1 mb in bytes
+  },
+});
 
 // * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);
@@ -80,11 +86,6 @@ router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 // * Schedule
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
 router.get("/api/mentor/schedules", isAuth, mentorController.getScheduleJson);
-router.post(
-  "/mentor/schedule/delete",
-  isAuth,
-  mentorController.postDeleteSchedule
-);
 router.post(
   "/mentor/schedule/update",
   isAuth,

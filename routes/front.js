@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const express = require("express");
 const router = express.Router();
 const frontController = require("../controllers/front");
@@ -15,6 +16,8 @@ router.get("/mdetail/:id", frontController.getDetailMentor);
 
 router.get("/mlist", frontController.getMentorList);
 router.get("/api/mlists", frontController.getMentorListJson);
+router.get("/filter", frontController.getFilter);
+router.get("/sort", frontController.getSort);
 
 // FAQ
 router.get("/faq", frontController.getFaq);

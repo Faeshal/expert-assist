@@ -127,7 +127,7 @@
 
           let newData1 = JSON.stringify(data1[0].schedule);
           let newData2 = JSON.stringify(data2[0].withdraw);
-          let newData3 = JSON.stringify(data3[0].payment);
+          let newData3 = JSON.stringify(data3[0].total);
           let newData4 = JSON.stringify(data4[0].review);
 
           let oldData1 = localStorage.getItem(scheduleKey);
@@ -135,10 +135,10 @@
           let oldData3 = localStorage.getItem(paymentKey);
           let oldData4 = localStorage.getItem(reviewKey);
 
-          console.log(`Schedule: ${oldData1} = ${newData1}`);
-          console.log(`Withdraw: ${oldData2} = ${newData2}`);
-          console.log(`Payment: ${oldData3} = ${newData3}`);
-          console.log(`Review: ${oldData4} = ${newData4}`);
+          // console.log(`Schedule: ${oldData1} = ${newData1}`);
+          // console.log(`Withdraw: ${oldData2} = ${newData2}`);
+          // console.log(`Payment: ${oldData3} = ${newData3}`);
+          // console.log(`Review: ${oldData4} = ${newData4}`);
 
           if (!oldData1) {
             localStorage.setItem(scheduleKey, newData1);

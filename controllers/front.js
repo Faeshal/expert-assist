@@ -1,5 +1,7 @@
+require("pretty-error").start();
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
+const Review = require("../models/Review");
 const Schedule = require("../models/Schedule");
 const chalk = require("chalk");
 const currency = require("currency.js");
@@ -142,15 +144,21 @@ exports.getDetailMentor = (req, res, next) => {
         .sort({ datetime: 1 })
         .then((schedule) => {
           let skillString = mentor.skill;
-          res.render("front/mentorDetail", {
-            mentor: mentor,
-            userId: userId,
-            schedule: schedule,
-            moment: moment,
-            voca: voca,
-            skillString: skillString,
-            currency: currency,
-          });
+          Review.find({ mentor: id })
+            .populate("user", "username profilepicture")
+            .limit(5)
+            .then((review) => {
+              res.render("front/mentorDetail", {
+                mentor: mentor,
+                userId: userId,
+                schedule: schedule,
+                moment: moment,
+                voca: voca,
+                skillString: skillString,
+                currency: currency,
+                review: review,
+              });
+            });
         });
     })
     .catch((err) => console.log(err));
@@ -221,6 +229,112 @@ exports.getMentorListJson = (req, res, next) => {
         } else {
           res.json({ message: "No Mentor Data", total: 0 });
         }
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getFilter = (req, res, next) => {
+  let totalMentors;
+  let page = 1;
+  let expertise = req.query.expertise || "";
+  let rating = req.query.rating;
+  let fPrice = 0;
+  let lPrice = 10000000;
+  let gte = 0;
+  let lte = 10;
+  if (rating == "standard") {
+    gte = 0;
+    lte = 4;
+  } else if (rating == "good") {
+    gte = 5;
+    lte = 7;
+  } else if (rating == "excelent") {
+    gte = 8;
+    lte = 10;
+  }
+  let price = req.query.price;
+  if (price == "below100") {
+    fPrice = 0;
+    lPrice = 99000;
+  } else if (price == "100to200") {
+    fPrice = 100000;
+    lPrice = 200000;
+  } else if (price == "above200") {
+    fPrice = 200001;
+    lPrice = 10000000;
+  }
+  if (expertise == "") {
+    Mentor.find({
+      $and: [
+        {
+          rating: { $gte: gte, $lte: lte },
+          price: { $gte: fPrice, $lte: lPrice },
+        },
+      ],
+    }).then((mentor) => {
+      Mentor.countDocuments().then(() => {
+        res.render("front/mentorList", {
+          mentor: mentor,
+          currency: currency,
+          totalMentors: totalMentors,
+          currentPage: 1,
+          hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+          hasPreviousPage: page > 1,
+          nextPage: 0,
+          previousPage: page - 1,
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+        });
+      });
+    });
+  } else {
+    Mentor.find({
+      $and: [
+        { expertise: expertise },
+        {
+          rating: { $gte: gte, $lte: lte },
+          price: { $gte: fPrice, $lte: lPrice },
+        },
+      ],
+    })
+      .then((mentor) => {
+        Mentor.countDocuments().then(() => {
+          res.render("front/mentorList", {
+            mentor: mentor,
+            currency: currency,
+            totalMentors: totalMentors,
+            currentPage: 1,
+            hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+            hasPreviousPage: page > 1,
+            nextPage: 0,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+          });
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+};
+
+exports.getSort = (req, res, next) => {
+  let sort = req.query.sort;
+  let totalMentors;
+  let page = 1;
+  Mentor.find()
+    .sort({ [sort]: -1 })
+    .then((mentor) => {
+      Mentor.countDocuments().then(() => {
+        res.render("front/mentorList", {
+          mentor: mentor,
+          currency: currency,
+          totalMentors: totalMentors,
+          currentPage: 1,
+          hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+          hasPreviousPage: page > 1,
+          nextPage: 0,
+          previousPage: page - 1,
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+        });
       });
     })
     .catch((err) => console.log(err));

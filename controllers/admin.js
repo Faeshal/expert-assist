@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
@@ -9,6 +10,7 @@ const v = require("voca");
 const axios = require("axios");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const currency = require("currency.js");
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -19,14 +21,147 @@ const auth = {
   },
 };
 
+// ** Query Grouping
+// db.payments.aggregate([
+//   {
+//     $group: {
+//       _id: { $dateToString: { format: "%d-%m-%Y", date: "$datetime" } },
+//       count: { $sum: 1 },
+//     },
+//   },
+//   { $limit: 7 },
+//   { $sort: { _id: -1 } },
+// ]);
+
+// db.withdraws.aggregate([
+//   {"$group" : {_id:{ $week:{date: "$datetime" }}, count:{$sum:1}}}, { $limit : 7 },  { $sort : { _id : -1 } }
+// ])
+
 exports.getDashboard = (req, res, next) => {
   Admin.findById(req.session.admin)
     .then((admin) => {
-      res.render("back/admin/dashboard", {
-        admin: admin,
-        pageTitle: "Welcome Admin",
-      });
-      console.log(req.session);
+      User.find({ status: "true" })
+        .countDocuments()
+        .then((totalUser) => {
+          Mentor.find({
+            $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+          })
+            .countDocuments()
+            .then((totalMentor) => {
+              Mentor.find({
+                $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+              })
+                .sort({ rating: -1 })
+                .limit(3)
+                .then((bestMentor) => {
+                  Payment.aggregate([
+                    {
+                      $match: {
+                        $and: [{ status: true }],
+                      },
+                    },
+                    {
+                      $group: {
+                        _id: null,
+                        total: { $sum: "$total" },
+                      },
+                    },
+                  ]).then((totalPaymentData) => {
+                    let totalPayment;
+                    if (totalPaymentData.length < 1) {
+                      totalPayment = 0;
+                    } else {
+                      totalPayment = totalPaymentData[0].total;
+                    }
+                    Withdraw.aggregate([
+                      {
+                        $match: {
+                          $and: [{ status: true }],
+                        },
+                      },
+                      {
+                        $group: {
+                          _id: null,
+                          income: { $sum: "$adminincome" },
+                        },
+                      },
+                    ]).then((totalIncomeData) => {
+                      let totalIncome;
+                      if (totalIncomeData.length < 1) {
+                        totalIncome = 0;
+                      } else {
+                        totalIncome = totalIncomeData[0].income;
+                      }
+                      Withdraw.find({ status: false })
+                        .countDocuments()
+                        .then((waitingWithdraw) => {
+                          Withdraw.find({ status: true })
+                            .countDocuments()
+                            .then((successwithdraw) => {
+                              Withdraw.aggregate([
+                                {
+                                  $match: {
+                                    $and: [{ status: true }],
+                                  },
+                                },
+                                {
+                                  $group: {
+                                    _id: null,
+                                    total: { $sum: "$total" },
+                                  },
+                                },
+                              ]).then((totalWithdrawData) => {
+                                let totalWithdraw;
+                                if (totalWithdrawData.length < 1) {
+                                  totalWithdraw = 0;
+                                } else {
+                                  totalWithdraw = totalWithdrawData[0].total;
+                                }
+                                Mentor.find({
+                                  examstatus: true,
+                                  mentorstatus: "false",
+                                })
+                                  .countDocuments()
+                                  .then((waitingExam) => {
+                                    Payment.find({ status: true })
+                                      .limit(3)
+                                      .sort({ _id: -1 })
+                                      .populate(
+                                        "user",
+                                        "username profilepicture"
+                                      )
+                                      .populate("mentor", "username")
+                                      .then((lastTransaction) => {
+                                        Payment.find({ status: true })
+                                          .countDocuments()
+                                          .then((successPayment) => {
+                                            res.render("back/admin/dashboard", {
+                                              admin: admin,
+                                              pageTitle: "Welcome Admin",
+                                              totalUser: totalUser,
+                                              totalMentor: totalMentor,
+                                              bestMentor: bestMentor,
+                                              currency: currency,
+                                              totalPayment: totalPayment,
+                                              totalIncome: totalIncome,
+                                              waitingWithdraw: waitingWithdraw,
+                                              successwithdraw: successwithdraw,
+                                              totalWithdraw: totalWithdraw,
+                                              waitingExam: waitingExam,
+                                              lastTransaction: lastTransaction,
+                                              successPayment: successPayment,
+                                            });
+                                          });
+                                      });
+                                  });
+                              });
+                            });
+                        });
+                    });
+                  });
+                });
+            });
+        });
     })
     .catch((err) => console.log(err));
 };
@@ -307,6 +442,8 @@ exports.getNews = (req, res, next) => {
       res.render("back/admin/news", {
         news: news,
         pageTitle: "Admin - News",
+        moment: moment,
+        v: v,
       });
     })
     .catch((err) => console.log(err));
@@ -504,6 +641,7 @@ exports.getPayment = (req, res, next) => {
   Payment.find({})
     .populate({ path: "user", select: ["username", "email"] })
     .populate({ path: "mentor", select: ["username", "email"] })
+    .sort({ _id: -1 })
     .exec()
     .then((payment) => {
       console.log(payment);
@@ -512,8 +650,33 @@ exports.getPayment = (req, res, next) => {
         pageTitle: "All Payment",
         moment: moment,
         v: v,
+        currency: currency,
       });
     });
+};
+
+exports.getPaymentJson = (req, res, next) => {
+  Payment.aggregate([
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: "$datetime",
+          },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: -1 } },
+    { $limit: 7 },
+  ]).then((paymentData) => {
+    if (paymentData) {
+      res.status(200).json({ message: "true", data: paymentData });
+    } else {
+      res.status(404).json({ message: "false", data: "no data" });
+    }
+  });
 };
 
 exports.getMentoring = (req, res, next) => {
@@ -536,6 +699,7 @@ exports.getMentoring = (req, res, next) => {
 exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
     .populate({ path: "mentor", select: ["username", "email", "bankaccount"] })
+    .sort({ _id: -1 })
     .exec()
     .then((withdraw) => {
       console.log(chalk.yellow(withdraw));
@@ -543,20 +707,35 @@ exports.getwithdraw = (req, res, next) => {
         moment: moment,
         pageTitle: "Money Withdraw",
         withdraw: withdraw,
+        currency: currency,
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getwithdrawJson = (req, res, next) => {
-  Withdraw.countDocuments()
-    .then((withdraw) => {
-      if (withdraw) {
-        res.status(200).json({ message: "success", withdraw: withdraw });
-      } else {
-        res.json({ message: "No Withdraw Found" });
-      }
+  Withdraw.aggregate([
+    {
+      $group: {
+        _id: { $month: "$datetime" },
+        income: { $sum: "$adminincome" },
+      },
+    },
+    { $sort: { _id: -1 } },
+    { $limit: 6 },
+  ])
+    .then((data) => {
+      Withdraw.countDocuments().then((total) => {
+        if (total) {
+          res
+            .status(200)
+            .json({ message: "success", data: data, total: total });
+        } else {
+          res.json({ message: "No Withdraw Found" });
+        }
+      });
     })
+
     .catch((err) => console.log(err));
 };
 

@@ -1,3 +1,4 @@
+require("pretty-error").start();
 const dotenv = require("dotenv");
 dotenv.config({ path: "../config.env" });
 const crypto = require("crypto");
@@ -328,7 +329,6 @@ exports.postLoginAdmin = (req, res, next) => {
         req.flash("error", "Invalid email or password.");
         return res.redirect("/loginAdmin");
       }
-      console.log(chalk.blue(admin));
       bcrypt
         .compare(password, admin.password)
         .then((doMatch) => {

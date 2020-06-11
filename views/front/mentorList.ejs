@@ -30,446 +30,376 @@
           <div class="float-left">
             <h5 class="text-dark mb-0 pt-2">Showing Results : 1-9 of 300</h5>
           </div>
-          <div class="sort-button float-right">
-            <ul class="list-inline mb-0">
-              <li class="list-inline-item mb-0 mr-3">
-                <select class="nice-select rounded" id="selectBy">
-                  <option data-display="Sort By">Nothing</option>
-                  <option value="1">FrontEnd Developer</option>
-                  <option value="2">BackEnd Developer</option>
-                  <option value="3">English Teacher</option>
-                </select>
-              </li>
-
-              <li class="list-inline-item" id="sortBy">
-                <select class="nice-select rounded">
-                  <option data-display="Default">Nothing</option>
-                  <option value="1">Backend Developer</option>
-                  <option value="2">Frontend Developer</option>
-                  <option value="3">English Teacher</option>
-                </select>
-              </li>
-            </ul>
-          </div>
+          <form action="/sort" method="GET" id="formSort">
+            <div class="sort-button float-right">
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item mb-0 mr-3">
+                  <select class="nice-select rounded" id="sortBy" name="sort">
+                    <option data-display="Sort By">Nothing</option>
+                    <option value="_id">New Mentor</option>
+                    <option value="rating">Highest Rating</option>
+                    <option value="price">Highest Price</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-lg-3 col-md-4 pt-2">
-        <div class="left-sidebar">
-          <div class="accordion" id="accordionExample">
-            <div class="card mt-4 rounded border-bottom-0">
-              <a
-                data-toggle="collapse"
-                href="#collapseOne"
-                class="job-list"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                <div class="card-header" id="headingOne">
-                  <h6 class="mb-0 text-dark">Last Activity</h6>
-                </div>
-              </a>
-              <div
-                id="collapseOne"
-                class="collapse show"
-                aria-labelledby="headingOne"
-              >
-                <div class="card-body p-0">
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio1"
-                      name="customRadio"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio1"
-                      >Last Hour</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio2"
-                      name="customRadio"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio2"
-                      >Last 24 hours</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio3"
-                      name="customRadio"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio3"
-                      >Last 7 days</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio4"
-                      name="customRadio"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio4"
-                      >Last 14 days</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio5"
-                      name="customRadio"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio5"
-                      >Last 30 days</label
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- collapse one end -->
-            <div class="card mt-4 rounded border-bottom-0">
-              <a
-                data-toggle="collapse"
-                href="#collapsetwo"
-                class="job-list"
-                aria-expanded="true"
-                aria-controls="collapsetwo"
-              >
-                <div class="card-header" id="headingtwo">
-                  <h6 class="mb-0 text-dark">Range Price</h6>
-                </div>
-              </a>
-              <div
-                id="collapsetwo"
-                class="collapse show"
-                aria-labelledby="headingtwo"
-              >
-                <div class="card-body p-0">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customCheck7"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customCheck7"
-                      >10K To 50K</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customCheck8"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customCheck8"
-                      >51K To 100K</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customCheck3"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customCheck3"
-                      >101K To 150K</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customCheck4"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customCheck4"
-                      >Up to 151K</label
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- collapse one end -->
-            <div class="card mt-4 rounded border-bottom-0">
-              <a
-                data-toggle="collapse"
-                href="#collapsethree"
-                class="job-list"
-                aria-expanded="true"
-                aria-controls="collapsethree"
-              >
-                <div class="card-header" id="headingthree">
-                  <h6 class="mb-0 text-dark">Categories</h6>
-                </div>
-              </a>
-              <div
-                id="collapsethree"
-                class="collapse show"
-                aria-labelledby="headingthree"
-              >
-                <div class="card-body p-0">
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio7"
-                      name="customRadio1"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio7"
-                      >Web Developer</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio12"
-                      name="customRadio1"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio12"
-                      >English Teacher</label
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card mt-4 rounded border-bottom-0">
-              <a
-                data-toggle="collapse"
-                href="#collapsefour"
-                class="job-list"
-                aria-expanded="true"
-                aria-controls="collapsefour"
-              >
-                <div class="card-header" id="headingfour">
-                  <h6 class="mb-0 text-dark">Gender</h6>
-                </div>
-              </a>
-              <div
-                id="collapsefour"
-                class="collapse show"
-                aria-labelledby="headingfour"
-              >
-                <div class="card-body p-0">
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio13"
-                      name="customRadio3"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio13"
-                      >Male</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio14"
-                      name="customRadio3"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio14"
-                      >Female</label
-                    >
-                  </div>
-
-                  <div class="custom-control custom-radio">
-                    <input
-                      type="radio"
-                      id="customRadio15"
-                      name="customRadio3"
-                      class="custom-control-input"
-                    />
-                    <label
-                      class="custom-control-label ml-1 text-muted"
-                      for="customRadio15"
-                      >Others</label
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- collapse one end -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Loop from here -->
-
-      <div class="col-lg-9 col-md-8">
-        <div class="row">
-          <% mentor.forEach(mentorData=>{ %>
-          <div class="col-lg-4 col-md-6 mt-4 pt-2">
-            <div
-              class="employers-list position-relative pb-3 pt-3 pl-2 pr-2 border rounded"
-            >
-              <img
-                src="<%= mentorData.profilepicture %>"
-                alt=""
-                class="mx-auto d-block shadow border rounded-circle img-fluid mx-auto d-bloc"
-                height="90"
-                style="width: 50%;"
-              />
-              <div class="grid-list-desc text-center mt-3">
-                <h5 class="mb-2">
-                  <a href="#" class="text-dark name"
-                    ><%= mentorData.username %>
-                  </a>
-                </h5>
-                <p class="text-muted mb-0"><%= mentorData.job %></p>
-                <p class="text-muted mb-0">
-                  <i class="mdi mdi-map-marker mr-2"></i><%= mentorData.city %>
-                </p>
-                <ul class="employers-icons list-inline mb-1">
-                  <div
-                    style="font-size: 17px; color: orange;"
-                    class="rate mx-auto justify-content-center"
-                    data-rate-value="<%= mentorData.rating%>"
-                  ></div>
-                  <p class="text-warning font-weight-bold">
-                    <%= mentorData.rating %>
-                  </p>
-                </ul>
-              </div>
-              <div class="apply-button text-center mt-3">
+    <!-- Filtering -->
+    <form action="/filter" method="GET">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 pt-2">
+          <div class="left-sidebar">
+            <div class="accordion" id="accordionExample">
+              <div class="card mt-4 rounded border-bottom-0">
                 <a
-                  href="mdetail/<%=mentorData._id%>"
-                  class="btn btn-primary btn-sm"
-                  >View Profile</a
+                  data-toggle="collapse"
+                  href="#collapseOne"
+                  class="job-list"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
                 >
+                  <div class="card-header" id="headingOne">
+                    <h6 class="mb-0 text-dark">Expertise</h6>
+                  </div>
+                </a>
+                <div
+                  id="collapseOne"
+                  class="collapse show"
+                  aria-labelledby="headingOne"
+                >
+                  <div class="card-body p-0">
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="expertise1"
+                        name="expertise"
+                        class="custom-control-input"
+                        value="english"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="expertise1"
+                        >English</label
+                      >
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="expertise2"
+                        name="expertise"
+                        class="custom-control-input"
+                        value="software development"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="expertise2"
+                        >Software Development</label
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="fav-collection fav-icon">
-                <i class="mdi mdi-heart" title="Collect Now"></i>
+              <!-- collapse one end -->
+              <div class="card mt-4 rounded border-bottom-0">
+                <a
+                  data-toggle="collapse"
+                  href="#collapseTwo"
+                  class="job-list"
+                  aria-expanded="true"
+                  aria-controls="collapseTwo"
+                >
+                  <div class="card-header" id="headingOne">
+                    <h6 class="mb-0 text-dark">Range Price</h6>
+                  </div>
+                </a>
+                <div
+                  id="collapseTwo"
+                  class="collapse show"
+                  aria-labelledby="headingOne"
+                >
+                  <div class="card-body p-0">
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="price1"
+                        name="price"
+                        class="custom-control-input"
+                        value="below100"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="price1"
+                        >0K To 100K
+                      </label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="price2"
+                        name="price"
+                        class="custom-control-input"
+                        value="100to200"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="price2"
+                        >100K To 200K
+                      </label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="price3"
+                        name="price"
+                        class="custom-control-input"
+                        value="above200"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="price3"
+                        >Above 200K</label
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!-- collapse one end -->
+              <div class="card mt-4 rounded border-bottom-0">
+                <a
+                  data-toggle="collapse"
+                  href="#collapsethree"
+                  class="job-list"
+                  aria-expanded="true"
+                  aria-controls="collapsethree"
+                >
+                  <div class="card-header" id="headingthree">
+                    <h6 class="mb-0 text-dark">Rating</h6>
+                  </div>
+                </a>
+                <div
+                  id="collapsethree"
+                  class="collapse show"
+                  aria-labelledby="headingthree"
+                >
+                  <div class="card-body p-0">
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="customRadio7"
+                        name="rating"
+                        class="custom-control-input"
+                        value="standard"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="customRadio7"
+                        >Standard</label
+                      >
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="customRadio12"
+                        name="rating"
+                        value="good"
+                        class="custom-control-input"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="customRadio12"
+                        >Good</label
+                      >
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="customRadio13"
+                        name="rating"
+                        value="excelent"
+                        class="custom-control-input"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="customRadio13"
+                        >Excelent</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center mx-auto">
+                <button
+                  class="mt-4 text-center btn btn-primary btn-sm"
+                  type="submit"
+                >
+                  Filter
+                </button>
+              </div>
+              <!-- collapse one end -->
             </div>
           </div>
-          <% }) %>
-          <!-- end of card -->
+        </div>
 
-          <% if(nextPage>0){ %>
+        <!-- Loop from here -->
 
-          <!-- Pagination -->
-          <div class="col-lg-12 mt-4 pt-2">
-            <nav aria-label="Page navigation example">
-              <ul class="pagination job-pagination mb-0 justify-content-center">
-                <% if(hasPreviousPage) { %>
-                <li class="page-item">
-                  <a
-                    class="page-link"
-                    href="?page=<%=previousPage%>"
-                    tabindex="-1"
-                    aria-disabled="true"
-                  >
-                    <i class="mdi mdi-chevron-double-left"></i>
-                  </a>
-                </li>
-                <%}%> <% if(currentPage!==1 && previousPage!==1){%>
-                <li class="page-item">
-                  <a class="page-link" href="?page=1">1</a>
-                </li>
-                <% } %> <% if (hasPreviousPage) { %>
-                <li class="page-item">
-                  <a class="page-link" href="?page=<%=previousPage%>"
-                    ><%=previousPage%></a
-                  >
-                </li>
-                <% } %>
-
-                <li class="page-item active">
-                  <a class="page-link" href="?page=<%=currentPage%>"
-                    ><%=currentPage%></a
-                  >
-                </li>
-
-                <% if(hasNextPage) { %>
-                <li class="page-item">
-                  <a class="page-link" href="?page=<%=nextPage%>"
-                    ><%=nextPage%></a
-                  >
-                </li>
-                <% } %> <% if(lastPage !== currentPage && nextPage !== lastPage)
-                { %>
-                <li class="page-item">
-                  <a class="page-link" href="?page=<%=lastPage%>"
-                    ><%=lastPage%></a
-                  >
-                </li>
-                <% } %> <% if(hasNextPage) { %>
-                <li class="page-item">
-                  <a class="page-link" href="?page=<%=nextPage%>">
-                    <i class="mdi mdi-chevron-double-right"></i>
-                  </a>
-                </li>
-                <%}%>
-              </ul>
-            </nav>
+        <div class="col-lg-9 col-md-8">
+          <%if(mentor.length==0){%>
+          <div class="div mx-auto justify-content-center text-center mt-4">
+            <img
+              class="img-fluid mt-4 pt-4"
+              alt="Responsive image"
+              src="../../front/images/notfound.svg"
+              alt=""
+              style="width: 25%;"
+            />
+            <h4 class="text-center mt-2 text-muted">
+              Ooops, No Mentor Found .....
+            </h4>
           </div>
-          <%}else {%>
-          <div class="col-lg-12 mt-4 pt-2">
-            <nav aria-label="Page navigation example">
-              <ul class="pagination job-pagination mb-0 justify-content-center">
-                <li class="page-item active">
+          <% } %>
+          <div class="row">
+            <% mentor.forEach(mentorData=>{ %>
+            <div class="col-lg-4 col-md-6 mt-4 pt-2">
+              <div
+                class="employers-list position-relative pb-3 pt-3 pl-2 pr-2 border rounded"
+              >
+                <img
+                  src="<%= mentorData.profilepicture %>"
+                  alt=""
+                  class="mx-auto d-block shadow border rounded-circle img-fluid mx-auto d-bloc"
+                  height="90"
+                  style="width: 50%;"
+                />
+                <div class="grid-list-desc text-center mt-3">
+                  <h5 class="mb-2">
+                    <a href="#" class="text-dark name"
+                      ><%= mentorData.username %>
+                    </a>
+                  </h5>
+                  <p class="text-muted mb-0"><%= mentorData.job %></p>
+                  <p class="text-muted mb-0">
+                    <i class="mdi mdi-map-marker mr-2"></i><%= mentorData.city
+                    %>
+                  </p>
+                  <ul class="employers-icons list-inline mb-1">
+                    <div
+                      style="font-size: 17px; color: orange;"
+                      class="rate mx-auto justify-content-center"
+                      data-rate-value="<%= mentorData.rating%>"
+                    ></div>
+                    <p class="text-warning font-weight-bold">
+                      <%= currency(mentorData.rating,{precision:1}).format() %>
+                    </p>
+                  </ul>
+                </div>
+                <div class="apply-button text-center mt-3">
                   <a
-                    class="page-link"
-                    href="/mlist%>"
-                    tabindex="-1"
-                    aria-disabled="true"
+                    href="mdetail/<%=mentorData._id%>"
+                    class="btn btn-primary btn-sm"
+                    >View Profile</a
                   >
-                    <i class="mdi mdi-rotate-3d"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+                </div>
+                <div class="fav-collection fav-icon">
+                  <i class="mdi mdi-heart" title="Collect Now"></i>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+            <!-- end of card -->
+
+            <% if(nextPage>0){ %>
+
+            <!-- Pagination -->
+            <div class="col-lg-12 mt-4 pt-2">
+              <nav aria-label="Page navigation example">
+                <ul
+                  class="pagination job-pagination mb-0 justify-content-center"
+                >
+                  <% if(hasPreviousPage) { %>
+                  <li class="page-item">
+                    <a
+                      class="page-link"
+                      href="?page=<%=previousPage%>"
+                      tabindex="-1"
+                      aria-disabled="true"
+                    >
+                      <i class="mdi mdi-chevron-double-left"></i>
+                    </a>
+                  </li>
+                  <%}%> <% if(currentPage!==1 && previousPage!==1){%>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=1">1</a>
+                  </li>
+                  <% } %> <% if (hasPreviousPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%=previousPage%>"
+                      ><%=previousPage%></a
+                    >
+                  </li>
+                  <% } %>
+
+                  <li class="page-item active">
+                    <a class="page-link" href="?page=<%=currentPage%>"
+                      ><%=currentPage%></a
+                    >
+                  </li>
+
+                  <% if(hasNextPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%=nextPage%>"
+                      ><%=nextPage%></a
+                    >
+                  </li>
+                  <% } %> <% if(lastPage !== currentPage && nextPage !==
+                  lastPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%=lastPage%>"
+                      ><%=lastPage%></a
+                    >
+                  </li>
+                  <% } %> <% if(hasNextPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%=nextPage%>">
+                      <i class="mdi mdi-chevron-double-right"></i>
+                    </a>
+                  </li>
+                  <%}%>
+                </ul>
+              </nav>
+            </div>
+            <%}else {%>
+            <div class="col-lg-12 mt-4 pt-2">
+              <nav aria-label="Page navigation example">
+                <ul
+                  class="pagination job-pagination mb-0 justify-content-center"
+                >
+                  <li class="page-item active">
+                    <a
+                      class="page-link"
+                      href="/mlist%>"
+                      tabindex="-1"
+                      aria-disabled="true"
+                    >
+                      <i class="mdi mdi-rotate-3d"></i>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <%}%>
           </div>
-          <%}%>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </section>
 
@@ -477,12 +407,6 @@
 <%-include('../layouts/home/footer.ejs')%>
 <script src="/back/assets/js/rater.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
-<!-- tidio -->
-<script
-  src="//code.tidio.co/glhh0f3zpmyzo77zonzc3i3d6a6ghjne.js"
-  async
-></script>
 
 <script>
   $(document).ready(() => {
@@ -492,15 +416,19 @@
     };
     $(".rate").rate(option);
 
-    $(
-      "#selectBy,#sortBy,#customRadio1,#customRadio2,#customRadio3,#customRadio4,#customRadio5,#customCheck7,#customCheck8,#customCheck9,#customCheck10,#customCheck3,#customCheck4,#customRadio7,#customRadio12,#customRadio13,#customRadio14,#customRadio15"
-    ).change(() => {
-      Swal.fire({
-        icon: "warning",
-        title: "Oops.. Under Development",
-        text:
-          "Sorry We're on Deadline, This Feature is not ready to use. But You can use our search bar",
-      });
+    $("#sortBy").change(() => {
+      $("#formSort").submit();
     });
+
+    // $(
+    //   "#selectBy,#sortBy,#customRadio1,#customRadio2,#customRadio3,#customRadio4,#customRadio5,#customCheck7,#customCheck8,#customCheck9,#customCheck10,#customCheck3,#customCheck4,#customRadio7,#customRadio12,#customRadio13,#customRadio14,#customRadio15"
+    // ).change(() => {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Oops.. Under Development",
+    //     text:
+    //       "Sorry We're on Deadline, This Feature is not ready to use. But You can use our search bar",
+    //   });
+    // });
   });
 </script>
