@@ -201,7 +201,9 @@ exports.getMentorList = (req, res, next) => {
   Mentor.countDocuments()
     .then((numMentors) => {
       totalMentors = numMentors;
-      return Mentor.find()
+      return Mentor.find({
+        $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+      })
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })
