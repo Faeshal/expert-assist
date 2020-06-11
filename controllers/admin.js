@@ -132,24 +132,26 @@ exports.getDashboard = (req, res, next) => {
                                       )
                                       .populate("mentor", "username")
                                       .then((lastTransaction) => {
-                                        console.log(
-                                          chalk.green.inverse(lastTransaction)
-                                        );
-                                        res.render("back/admin/dashboard", {
-                                          admin: admin,
-                                          pageTitle: "Welcome Admin",
-                                          totalUser: totalUser,
-                                          totalMentor: totalMentor,
-                                          bestMentor: bestMentor,
-                                          currency: currency,
-                                          totalPayment: totalPayment,
-                                          totalIncome: totalIncome,
-                                          waitingWithdraw: waitingWithdraw,
-                                          successwithdraw: successwithdraw,
-                                          totalWithdraw: totalWithdraw,
-                                          waitingExam: waitingExam,
-                                          lastTransaction: lastTransaction,
-                                        });
+                                        Payment.find({ status: true })
+                                          .countDocuments()
+                                          .then((successPayment) => {
+                                            res.render("back/admin/dashboard", {
+                                              admin: admin,
+                                              pageTitle: "Welcome Admin",
+                                              totalUser: totalUser,
+                                              totalMentor: totalMentor,
+                                              bestMentor: bestMentor,
+                                              currency: currency,
+                                              totalPayment: totalPayment,
+                                              totalIncome: totalIncome,
+                                              waitingWithdraw: waitingWithdraw,
+                                              successwithdraw: successwithdraw,
+                                              totalWithdraw: totalWithdraw,
+                                              waitingExam: waitingExam,
+                                              lastTransaction: lastTransaction,
+                                              successPayment: successPayment,
+                                            });
+                                          });
                                       });
                                   });
                               });
