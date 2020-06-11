@@ -313,8 +313,6 @@ exports.updateProfile = (req, res, next) => {
       mentor.bankname = bankname;
       mentor.bankaccount = bankaccount;
 
-      console.log(mentor.coverpicture);
-
       return mentor.save();
     })
     .then((result) => {

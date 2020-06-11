@@ -200,6 +200,7 @@ exports.getMentorList = (req, res, next) => {
   let totalMentors;
   Mentor.countDocuments()
     .then((numMentors) => {
+      // ! Bug Disini , mentor yang belum kompeten muncul di list
       totalMentors = numMentors;
       return Mentor.find({
         $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
