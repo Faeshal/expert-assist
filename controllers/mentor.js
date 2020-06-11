@@ -59,7 +59,6 @@ exports.getDashboard = (req, res, next) => {
                               })
                                 .sort({ datetime: 1 })
                                 .then((nextMentoring) => {
-                                  console.log(nextMentoring);
                                   Withdraw.aggregate([
                                     {
                                       $match: {
@@ -78,15 +77,13 @@ exports.getDashboard = (req, res, next) => {
                                   ]).then((totalWithdrawData) => {
                                     console.log(totalWithdrawData);
                                     let totalWithdraw;
-                                    if (
-                                      totalWithdrawData.length < 1 ||
-                                      totalWithdraw == undefined
-                                    ) {
+                                    if (totalWithdrawData.length == 0) {
                                       totalWithdraw = 0;
-                                    } else if (totalWithdrawData > 0) {
+                                    } else {
                                       totalWithdraw =
                                         totalWithdrawData[0].total;
                                     }
+                                    console.log("xx" + totalWithdraw);
                                     Schedule.find({
                                       $and: [
                                         { mentor: session._id },
