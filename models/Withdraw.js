@@ -12,8 +12,8 @@ const WithdrawSchema = new mongoose.Schema({
     default: Date.now,
   },
   status: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "false",
   },
   adminincome: Number,
   mentorincome: Number,
