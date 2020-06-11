@@ -8,7 +8,6 @@ const fileHelper = require("../util/file");
 const { validationResult } = require("express-validator");
 const moment = require("moment");
 const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
-const axios = require("axios");
 const voca = require("voca");
 const currency = require("currency.js");
 const chalk = require("chalk");
@@ -24,17 +23,58 @@ exports.getDashboard = (req, res, next) => {
           $and: [{ user: session._id }, { approve: true }, { status: false }],
         }).then((failedPayment) => {
           Schedule.countDocuments({
-            $and: [{ user: session._id }, { approve: true }, { status: false }],
+            $and: [
+              { user: session._id },
+              { approve: "true" },
+              { status: false },
+            ],
           }).then((incomingSchedule) => {
             Review.countDocuments({ user: session._id }).then((totalReview) => {
-              res.render("back/user/dashboard", {
-                user: user,
-                session: session,
-                totalPayment: totalPayment,
-                failedPayment: failedPayment,
-                incomingSchedule: incomingSchedule,
-                totalReview: totalReview,
-              });
+              Schedule.find({
+                $and: [{ user: session._id }, { approve: "false" }],
+              })
+                .countDocuments()
+                .then((waitingSchedule) => {
+                  Schedule.find({
+                    $and: [{ user: session._id }, { approve: "reject" }],
+                  })
+                    .countDocuments()
+                    .then((rejectedSchedule) => {
+                      Schedule.findOne({
+                        $and: [
+                          { user: session._id },
+                          { approve: "true" },
+                          { status: false },
+                        ],
+                      })
+                        .sort({ datetime: 1 })
+                        .then((nextMentoring) => {
+                          Schedule.find({
+                            $and: [
+                              { user: session._id },
+                              { approve: "true" },
+                              { status: true },
+                            ],
+                          })
+                            .countDocuments()
+                            .then((finishedMentoring) => {
+                              res.render("back/user/dashboard", {
+                                user: user,
+                                session: session,
+                                moment: moment,
+                                totalPayment: totalPayment,
+                                failedPayment: failedPayment,
+                                incomingSchedule: incomingSchedule,
+                                totalReview: totalReview,
+                                waitingSchedule: waitingSchedule,
+                                rejectedSchedule: rejectedSchedule,
+                                nextMentoring: nextMentoring,
+                                finishedMentoring: finishedMentoring,
+                              });
+                            });
+                        });
+                    });
+                });
             });
           });
         });
