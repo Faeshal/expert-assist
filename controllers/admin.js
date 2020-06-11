@@ -52,15 +52,110 @@ exports.getDashboard = (req, res, next) => {
                 $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
               })
                 .sort({ rating: -1 })
-                .limit(4)
+                .limit(3)
                 .then((bestMentor) => {
-                  res.render("back/admin/dashboard", {
-                    admin: admin,
-                    pageTitle: "Welcome Admin",
-                    totalUser: totalUser,
-                    totalMentor: totalMentor,
-                    bestMentor: bestMentor,
-                    currency: currency,
+                  Payment.aggregate([
+                    {
+                      $match: {
+                        $and: [{ status: true }],
+                      },
+                    },
+                    {
+                      $group: {
+                        _id: null,
+                        total: { $sum: "$total" },
+                      },
+                    },
+                  ]).then((totalPaymentData) => {
+                    let totalPayment;
+                    if (totalPaymentData.length < 1) {
+                      totalPayment = 0;
+                    } else {
+                      totalPayment = totalPaymentData[0].total;
+                    }
+                    Withdraw.aggregate([
+                      {
+                        $match: {
+                          $and: [{ status: true }],
+                        },
+                      },
+                      {
+                        $group: {
+                          _id: null,
+                          income: { $sum: "$adminincome" },
+                        },
+                      },
+                    ]).then((totalIncomeData) => {
+                      let totalIncome;
+                      if (totalIncomeData.length < 1) {
+                        totalIncome = 0;
+                      } else {
+                        totalIncome = totalIncomeData[0].income;
+                      }
+                      Withdraw.find({ status: false })
+                        .countDocuments()
+                        .then((waitingWithdraw) => {
+                          Withdraw.find({ status: true })
+                            .countDocuments()
+                            .then((successwithdraw) => {
+                              Withdraw.aggregate([
+                                {
+                                  $match: {
+                                    $and: [{ status: true }],
+                                  },
+                                },
+                                {
+                                  $group: {
+                                    _id: null,
+                                    total: { $sum: "$total" },
+                                  },
+                                },
+                              ]).then((totalWithdrawData) => {
+                                let totalWithdraw;
+                                if (totalWithdrawData.length < 1) {
+                                  totalWithdraw = 0;
+                                } else {
+                                  totalWithdraw = totalWithdrawData[0].total;
+                                }
+                                Mentor.find({
+                                  examstatus: true,
+                                  mentorstatus: "false",
+                                })
+                                  .countDocuments()
+                                  .then((waitingExam) => {
+                                    Payment.find({ status: true })
+                                      .limit(3)
+                                      .sort({ _id: -1 })
+                                      .populate(
+                                        "user",
+                                        "username profilepicture"
+                                      )
+                                      .populate("mentor", "username")
+                                      .then((lastTransaction) => {
+                                        console.log(
+                                          chalk.green.inverse(lastTransaction)
+                                        );
+                                        res.render("back/admin/dashboard", {
+                                          admin: admin,
+                                          pageTitle: "Welcome Admin",
+                                          totalUser: totalUser,
+                                          totalMentor: totalMentor,
+                                          bestMentor: bestMentor,
+                                          currency: currency,
+                                          totalPayment: totalPayment,
+                                          totalIncome: totalIncome,
+                                          waitingWithdraw: waitingWithdraw,
+                                          successwithdraw: successwithdraw,
+                                          totalWithdraw: totalWithdraw,
+                                          waitingExam: waitingExam,
+                                          lastTransaction: lastTransaction,
+                                        });
+                                      });
+                                  });
+                              });
+                            });
+                        });
+                    });
                   });
                 });
             });

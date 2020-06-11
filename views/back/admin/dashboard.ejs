@@ -38,9 +38,11 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      Total traffic
+                      Mentor
                     </h5>
-                    <span class="h2 font-weight-bold mb-0">350,897</span>
+                    <span class="h2 font-weight-bold mb-0"
+                      ><%=totalMentor%></span
+                    >
                   </div>
                   <div class="col-auto">
                     <div
@@ -94,10 +96,10 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      Mentor
+                      Payment
                     </h5>
                     <span class="h2 font-weight-bold mb-0"
-                      ><%=totalMentor%></span
+                      ><%=currency(totalPayment,{separator:".",precision:0}).format()%></span
                     >
                   </div>
                   <div class="col-auto">
@@ -126,7 +128,9 @@
                     <h5 class="card-title text-uppercase text-muted mb-0">
                       Income
                     </h5>
-                    <span class="h3 font-weight-bold mb-0">Rp15.000.000</span>
+                    <span class="h3 font-weight-bold mb-0"
+                      ><%=currency(totalIncome,{separator:".",precision:0}).format()%></span
+                    >
                   </div>
                   <div class="col-auto">
                     <div
@@ -261,72 +265,51 @@
         </div>
       </div>
       <div class="col-xl-4">
-        <!-- Checklist -->
+        <!-- Members list group card -->
         <div class="card">
           <!-- Card header -->
           <div class="card-header">
             <!-- Title -->
-            <h5 class="h3 mb-0">Container</h5>
+            <h5 class="h3 mb-0">Last Transaction</h5>
           </div>
           <!-- Card body -->
-          <div class="card-body p-0">
+          <div class="card-body">
             <!-- List group -->
-            <ul class="list-group list-group-flush" data-toggle="checklist">
-              <li
-                class="checklist-entry list-group-item flex-column align-items-start py-4 px-4"
-              >
-                <div class="checklist-item checklist-item-success">
-                  <div class="checklist-info">
-                    <h5 class="checklist-title mb-0">Portainer</h5>
-                    <small>10:30 AM</small>
-                  </div>
-                  <div>
-                    <div
-                      class="custom-control custom-checkbox custom-checkbox-success"
-                    >
-                      <input
-                        class="custom-control-input"
-                        id="chk-todo-task-1"
-                        type="checkbox"
-                        checked
+            <ul class="list-group list-group-flush list my--3">
+              <% lastTransaction.forEach(lastTransaction=>{ %>
+              <li class="list-group-item px-0">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <!-- Avatar -->
+                    <a href="#" class="avatar rounded-circle">
+                      <img
+                        alt="Image placeholder"
+                        src="/<%=lastTransaction.user.profilepicture%>"
                       />
-                      <label
-                        class="custom-control-label"
-                        for="chk-todo-task-1"
-                      ></label>
-                    </div>
+                    </a>
+                  </div>
+                  <div class="col ml--2">
+                    <h4 class="mb-0">
+                      <a href="#!"><%=lastTransaction.user.username%></a>
+                    </h4>
+                    <span class="text-primary">▶</span>
+                    <small
+                      >To : <%=lastTransaction.mentor.username%> -
+                      <%=lastTransaction.duration %> hours</small
+                    >
+                  </div>
+                  <div class="col-auto">
+                    <h4>
+                      <%=currency (lastTransaction.total,{precision:0}).format()
+                      %>
+                    </h4>
                   </div>
                 </div>
               </li>
-              <li
-                class="checklist-entry list-group-item flex-column align-items-start py-4 px-4"
-              >
-                <div class="checklist-item checklist-item-warning">
-                  <div class="checklist-info">
-                    <h5 class="checklist-title mb-0">Boatswain</h5>
-                    <small>10:30 AM</small>
-                  </div>
-                  <div>
-                    <div
-                      class="custom-control custom-checkbox custom-checkbox-warning"
-                    >
-                      <input
-                        class="custom-control-input"
-                        id="chk-todo-task-2"
-                        type="checkbox"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="chk-todo-task-2"
-                      ></label>
-                    </div>
-                  </div>
-                </div>
-              </li>
+              <% }) %>
             </ul>
           </div>
         </div>
-        
       </div>
       <div class="col-xl-4">
         <!-- Progress track -->
@@ -334,46 +317,49 @@
           <!-- Card header -->
           <div class="card-header">
             <!-- Title -->
-            <h5 class="h3 mb-0">Progress track</h5>
+            <h5 class="h3 mb-0">Summary track</h5>
           </div>
           <!-- Card body -->
           <div class="card-body">
             <!-- List group -->
-            <ul class="list-group list-group-flush list my--3">
+            <ul class="list-group list-group-flush list my--4">
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
-                Cras justo odio
-                <span class="badge badge-primary badge-pill">14</span>
+                Waiting Withdraws
+                <span class="badge badge-primary badge-pill"
+                  ><%= waitingWithdraw %>
+                </span>
               </li>
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
-                Dapibus ac facilisis in
-                <span class="badge badge-primary badge-pill">2</span>
+                Success Withdraws
+                <span class="badge badge-primary badge-pill"
+                  ><%= successwithdraw %></span
+                >
               </li>
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
-                Morbi leo risus
-                <span class="badge badge-primary badge-pill">1</span>
+                Total Withdraws
+                <span class="badge badge-primary badge-pill"
+                  >Rp. <%=currency(
+                  totalWithdraw,{separator:".",precision:0}).format() %>
+                </span>
               </li>
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
-                Morbi leo risus
-                <span class="badge badge-primary badge-pill">1</span>
+                Waiting Exam Score
+                <span class="badge badge-primary badge-pill"
+                  ><%= waitingExam %>
+                </span>
               </li>
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
-                Morbi leo risus
-                <span class="badge badge-primary badge-pill">1</span>
-              </li>
-              <li
-                class="list-group-item px-0 d-flex justify-content-between align-items-center"
-              >
-                Morbi leo risus
+                xxxx
                 <span class="badge badge-primary badge-pill">1</span>
               </li>
             </ul>
