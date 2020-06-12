@@ -268,10 +268,11 @@
                       <% } %>
                     </td>
                     <td class="text-center">
-                      <% if (scheduleData.approve=="true"
-                      ||scheduleData.approve=="reject"){ %>
+                      <% if (scheduleData.approve=="true"){ %>
                       <i class="fas fa-check-circle text-success"></i>
-                      <% }else{ %>
+                      <% }else if (scheduleData.approve=="reject"){%>
+                      <i class="fas fa-check-circle text-dark"></i>
+                      <%} else{ %>
                       <button
                         type="button"
                         onclick=""
