@@ -251,21 +251,21 @@
                       <% } %>
                     </td>
                     <td class="table-actions text-center">
-                     <% if (scheduleData.approve == "true"  && scheduleData.status==false ) { %>
-                      <span class="badge  badge-primary text-dark"
+                      <% if (scheduleData.approve == "true" &&
+                      scheduleData.status==false ) { %>
+                      <span class="badge badge-primary text-dark"
                         >Incoming</span
                       >
-                      <% } else if(scheduleData.approve == "reject"  && scheduleData.status==false) { %>
-                      <span class="badge  badge-dark text-white"
-                        >Cancel</span
-                      >
-                      <% }else if(scheduleData.approve=="false"  && scheduleData.status==false){ %>
-                      <span class="badge  badge-danger text-dark"
-                        >Pending</span>
-                      <%}else if(scheduleData.approve=="true" && scheduleData.status==true) {%> 
-                        <span class="badge  badge-success text-dark"
-                        >Finish</span>
-                      <% } %> 
+                      <% } else if(scheduleData.approve == "reject" &&
+                      scheduleData.status==false) { %>
+                      <span class="badge badge-dark text-white">Cancel</span>
+                      <% }else if(scheduleData.approve=="false" &&
+                      scheduleData.status==false){ %>
+                      <span class="badge badge-danger text-dark">Pending</span>
+                      <%}else if(scheduleData.approve=="true" &&
+                      scheduleData.status==true) {%>
+                      <span class="badge badge-success text-dark">Finish</span>
+                      <% } %>
                     </td>
                     <td class="text-center">
                       <% if (scheduleData.approve=="true"
@@ -355,9 +355,9 @@
       $(document).ready(function () {
         if ("<%=approveStatus%>" == "false") {
           $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
-          $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
-          $("#note").prop("disabled", true);
-          $("#datetime").prop("disabled", true);
+          $("#buttonAlert").prop("disabled", false).text("Approve Waiting");
+          $("#note").prop("disabled", false);
+          $("#datetime").prop("disabled", false);
         }
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
@@ -383,7 +383,7 @@
           if (!oldPayment) {
             localStorage.setItem(paymentChecker, newPayment);
           } else {
-            if (oldPayment == newPayment) {
+            if (oldPayment == newPayment && "<%=approveStatus%>" !== "reject") {
               $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
               $("#buttonAlert").prop("disabled", true).text("Need Payment");
               $("#mentorName").val("No New Payment Found..");

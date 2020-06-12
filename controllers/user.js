@@ -304,18 +304,29 @@ exports.postSchedule = (req, res, next) => {
   const duration = req.body.duration;
   const datetime = req.body.datetime;
   const note = req.body.note;
-  const schedule = new Schedule({
-    user: user,
-    mentor: mentor,
-    duration: duration,
-    datetime: datetime,
-    note: note,
-  });
-  return schedule
-    .save()
-    .then((result) => {
-      console.log(result);
-      res.redirect("/user/schedule");
+  Schedule.findOne({
+    $and: [{ approve: "true" }, { datetime: datetime }],
+  })
+    .then((isEqual) => {
+      console.log(isEqual);
+      if (isEqual) {
+        console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
+        return res.redirect("/user/schedule?failed");
+      }
+      const schedule = new Schedule({
+        user: user,
+        mentor: mentor,
+        duration: duration,
+        datetime: datetime,
+        note: note,
+      });
+      return schedule
+        .save()
+        .then((result) => {
+          console.log(chalk.yellow.inverse(result));
+          res.redirect("/user/schedule");
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 };
