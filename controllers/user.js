@@ -268,14 +268,21 @@ exports.getSchedule = (req, res, next) => {
           if (schedule.length > 0) {
             approveStatus = schedule[0].approve;
           }
-
-          res.render("back/user/schedule", {
-            payment: payment,
-            schedule: schedule,
-            moment: moment,
-            session: session,
-            approveStatus: approveStatus,
-          });
+          Schedule.findOne({
+            $and: [{ user: session._id }, { approve: "reject" }],
+          })
+            .populate("mentor", "username")
+            .then((rejectSchedule) => {
+              console.log(chalk.yellow.inverse(rejectSchedule));
+              res.render("back/user/schedule", {
+                payment: payment,
+                schedule: schedule,
+                moment: moment,
+                session: session,
+                approveStatus: approveStatus,
+                rejectSchedule: rejectSchedule,
+              });
+            });
         })
         .catch((err) => console.log(err));
     })

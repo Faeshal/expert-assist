@@ -354,11 +354,19 @@
 
     <script>
       $(document).ready(function () {
+        let rejectSchedule = "<%=rejectSchedule%>";
+        let mentorUsername = "<%rejectSchedule.mentor.username%>";
+        // if (rejectSchedule !== null) {
+        //   $("#mentorName").val(mentorUsername);
+        //   $("#note").prop("disabled", false);
+        //   $("#datetime").prop("disabled", false);
+        //   alert("BISA");
+        // }
         if ("<%=approveStatus%>" == "false") {
           $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
-          $("#buttonAlert").prop("disabled", false).text("Approve Waiting");
-          $("#note").prop("disabled", false);
-          $("#datetime").prop("disabled", false);
+          $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
+          $("#note").prop("disabled", true);
+          $("#datetime").prop("disabled", true);
         }
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
@@ -377,14 +385,13 @@
       $(document).ready(() => {
         $.get("/api/user/payments", (data) => {
           let paymentChecker = "pay_" + "<%-session.username%>";
-
           let oldPayment = localStorage.getItem(paymentChecker);
           let newPayment = JSON.stringify(data.total);
 
           if (!oldPayment) {
             localStorage.setItem(paymentChecker, newPayment);
           } else {
-            if (oldPayment == newPayment && "<%=approveStatus%>" !== "reject") {
+            if (oldPayment == newPayment && "<%=rejectSchedule%>" == null) {
               $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
               $("#buttonAlert").prop("disabled", true).text("Need Payment");
               $("#mentorName").val("No New Payment Found..");
@@ -399,8 +406,8 @@
           .done((res) => {
             console.log(res);
           })
-          .fail(() => {
-            alert("error:");
+          .fail((err) => {
+            console.log(err);
           });
       });
     </script>
