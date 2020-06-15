@@ -273,6 +273,16 @@ exports.getSchedule = (req, res, next) => {
           })
             .populate("mentor", "username")
             .then((rejectSchedule) => {
+              let userId;
+              let mentorId;
+              let duration;
+              let mentorUsername;
+              if (rejectSchedule !== null) {
+                userId = rejectSchedule.user;
+                mentorId = rejectSchedule.mentor._id;
+                duration = rejectSchedule.duration;
+                mentorUsername = rejectSchedule.mentor.username;
+              }
               console.log(chalk.yellow.inverse(rejectSchedule));
               res.render("back/user/schedule", {
                 payment: payment,
@@ -281,6 +291,10 @@ exports.getSchedule = (req, res, next) => {
                 session: session,
                 approveStatus: approveStatus,
                 rejectSchedule: rejectSchedule,
+                userId: userId,
+                mentorId: mentorId,
+                duration: duration,
+                mentorUsername: mentorUsername,
               });
             });
         })
@@ -331,7 +345,17 @@ exports.postSchedule = (req, res, next) => {
         .save()
         .then((result) => {
           console.log(chalk.yellow.inverse(result));
-          res.redirect("/user/schedule");
+          Schedule.findOne({
+            $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
+          }).then((lastReject) => {
+            if (lastReject) {
+              Schedule.findByIdAndDelete(lastReject._id).then((del) => {
+                console.log(chalk.red.inverse(del));
+                res.redirect("/user/schedule");
+              });
+            }
+            res.redirect("/user/schedule");
+          });
         })
         .catch((err) => console.log(err));
     })
@@ -359,10 +383,11 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ $and: [{ user: session._id }, { approve: "true" }] })
+      Schedule.findOne({ $and: [{ user: session._id }, { approve: "true" }, { status:false }] })
+        .sort({ datetime: 1 })
         .populate("mentor", "username")
-        .sort({ _id: -1 })
         .then((schedule) => {
+          console.log(chalk.green.inverse(schedule));
           let dateTimeSchedule = "";
           if (schedule) {
             dateTimeSchedule = schedule.datetime;
@@ -551,7 +576,6 @@ exports.getPayment = (req, res, next) => {
     .populate("mentor", "username email")
     .exec()
     .then((payment) => {
-      console.log(chalk.black.bgYellow(payment));
       let lastPaymentId = "";
       let lastDatetime = "";
 
@@ -559,7 +583,6 @@ exports.getPayment = (req, res, next) => {
         console.log(chalk.redBright.inverse("Ada isinya"));
         lastPaymentId = payment[0]._id;
         lastDatetime = payment[0].datetime;
-        console.log(chalk.redBright.inverse(lastPaymentId));
       } else {
         console.log(chalk.red.inverse("Payment Array Kosong"));
       }

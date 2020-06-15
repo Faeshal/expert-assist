@@ -86,16 +86,19 @@
                         <input
                           type="hidden"
                           name="user"
+                          id="userId"
                           value="<%=payment.user._id%>"
                         />
                         <input
                           type="hidden"
                           name="mentor"
+                          id="mentorId"
                           value="<%=payment.mentor._id%>"
                         />
                         <input
                           type="hidden"
                           name="duration"
+                          id="duration"
                           value="<%= payment.duration %>"
                         />
                         <input
@@ -354,14 +357,6 @@
 
     <script>
       $(document).ready(function () {
-        let rejectSchedule = "<%=rejectSchedule%>";
-        let mentorUsername = "<%rejectSchedule.mentor.username%>";
-        // if (rejectSchedule !== null) {
-        //   $("#mentorName").val(mentorUsername);
-        //   $("#note").prop("disabled", false);
-        //   $("#datetime").prop("disabled", false);
-        //   alert("BISA");
-        // }
         if ("<%=approveStatus%>" == "false") {
           $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
           $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
@@ -387,11 +382,22 @@
           let paymentChecker = "pay_" + "<%-session.username%>";
           let oldPayment = localStorage.getItem(paymentChecker);
           let newPayment = JSON.stringify(data.total);
+          console.log(oldPayment+"="+newPayment);
+
+          let rejectSchedule = <%-JSON.stringify(rejectSchedule)%>;
 
           if (!oldPayment) {
             localStorage.setItem(paymentChecker, newPayment);
           } else {
-            if (oldPayment == newPayment && "<%=rejectSchedule%>" == null) {
+            if (oldPayment && rejectSchedule) {
+              $("#mentorName").val(mentorUsername);
+              $("#userId").val(<%-userId%>);
+              $("#mentorId").val(<%-mentorId%>);
+              $("#duration").val(<%-duration%>);
+              $("#note").prop("disabled", false);
+              $("#datetime").prop("disabled", false);
+              alert("BERHASIL");
+            } else if (oldPayment == newPayment) {
               $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
               $("#buttonAlert").prop("disabled", true).text("Need Payment");
               $("#mentorName").val("No New Payment Found..");

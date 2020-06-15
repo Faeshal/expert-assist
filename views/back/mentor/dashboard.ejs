@@ -266,7 +266,7 @@
         <div class="text-center mx-auto mb-4">
           <small class="text-muted h3"
             >▶ Next Mentoring on<b>
-              <%=moment(nextMentoring.datetime).format("d MMMM YYYY")%></b
+              <%=moment(nextMentoring).format("LL")%></b
             ></small
           >
         </div>
@@ -290,7 +290,7 @@
         <div class="card-body position-relative">
           <!-- List group -->
           <div class="pb-1 pt-2">
-            <ul class="list-group  list-group-flush list my--2">
+            <ul class="list-group list-group-flush list my--2">
               <li
                 class="list-group-item px-0 d-flex justify-content-between align-items-center"
               >
@@ -407,67 +407,69 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="https://unpkg.com/currency.js@1.2.2/dist/currency.min.js"></script>
     <script>
-      $.get("/api/mentor/payments")
-        .done((data) => {
-          let res = data.data;
-          let month;
-          let income;
-          if (res == 0) {
-            month = ["You dont have any client's payment"];
-            income = [0];
-          } else {
-            month = res.map(function (e) {
-              return moment(e._id, "M").format("MMMM");
-            });
-            income = res.map(function (e) {
-              return e.income;
-            });
-          }
+      $(document).ready(() => {
+        $.get("/api/mentor/payments")
+          .done((data) => {
+            let res = data.data;
+            let month;
+            let income;
+            if (res == 0) {
+              month = ["You dont have any client's payment"];
+              income = [0];
+            } else {
+              month = res.map(function (e) {
+                return moment(e._id, "M").format("MMMM");
+              });
+              income = res.map(function (e) {
+                return e.income;
+              });
+            }
 
-          let ctx = document.getElementById("paymentChart").getContext("2d");
-          let chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: "bar",
+            let ctx = document.getElementById("paymentChart").getContext("2d");
+            let chart = new Chart(ctx, {
+              // The type of chart we want to create
+              type: "bar",
 
-            // The data for our dataset
-            data: {
-              labels: month,
-              datasets: [
-                {
-                  label: "Payment",
-                  backgroundColor: "rgb(65,105,225)",
-                  borderColor: "rgb(169,169,169)",
-                  borderWidth: 3,
-                  hoverBackgroundColor: "rgb(65,105,225)",
-                  hoverBorderColor: "rgb(105,105,105)",
-                  hoverBorderWidth: 5,
-                  data: income,
-                },
-              ],
-            },
-            options: {
-              scales: {
-                yAxes: [
+              // The data for our dataset
+              data: {
+                labels: month,
+                datasets: [
                   {
-                    ticks: {
-                      suggestedMin: 50,
-                      suggestedMax: 1000,
-                      callback: function (value, index, values) {
-                        return currency(value, {
-                          separator: ",",
-                          precision: 0,
-                        }).format();
-                      },
-                    },
+                    label: "Payment",
+                    backgroundColor: "rgb(65,105,225)",
+                    borderColor: "rgb(169,169,169)",
+                    borderWidth: 3,
+                    hoverBackgroundColor: "rgb(65,105,225)",
+                    hoverBorderColor: "rgb(105,105,105)",
+                    hoverBorderWidth: 5,
+                    data: income,
                   },
                 ],
               },
-            },
+              options: {
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        suggestedMin: 50,
+                        suggestedMax: 1000,
+                        callback: function (value, index, values) {
+                          return currency(value, {
+                            separator: ",",
+                            precision: 0,
+                          }).format();
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            });
+          })
+          .fail((err) => {
+            console.log(err);
           });
-        })
-        .fail((err) => {
-          console.log(err);
-        });
+      });
     </script>
   </div>
 </div>
