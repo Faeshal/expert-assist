@@ -268,7 +268,7 @@ exports.getSchedule = (req, res, next) => {
             .sort({ _id: -1 })
             .then((lastWaitingMentorData) => {
               console.log(chalk.magenta(lastWaitingMentorData));
-              let approveStatus = "true";
+              let approveStatus;
               let lastMentor = payment.mentor;
               let lastWaitingMentor = lastWaitingMentorData.mentor;
               if (lastMentor == lastWaitingMentor) {
@@ -340,7 +340,7 @@ exports.postSchedule = (req, res, next) => {
       console.log(isEqual);
       if (isEqual) {
         console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
-        return res.redirect("/user/schedule");
+        return res.json({ message: false });
       }
       // ** Check ada ga jadwal yang di reject sebelumnya
       Schedule.findOne({
@@ -349,7 +349,6 @@ exports.postSchedule = (req, res, next) => {
         if (lastReject) {
           Schedule.findByIdAndDelete(lastReject._id).then((del) => {
             console.log(chalk.red.inverse(del));
-            res.redirect("/user/schedule");
           });
         }
         // ** Kalau udah lolos semua , baru proses save
@@ -362,8 +361,7 @@ exports.postSchedule = (req, res, next) => {
         });
         return schedule.save().then((result) => {
           console.log(chalk.yellow.inverse(result));
-          let data = JSON.stringify(result);
-          res.json(data);
+          res.json({ message: true });
         });
       });
     })
