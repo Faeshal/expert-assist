@@ -252,7 +252,6 @@ exports.postStripeCancel = (req, res, next) => {
 
 exports.getSchedule = (req, res, next) => {
   const session = req.session.user;
-  let lastSchedule = "";
   Payment.findOne({ user: session._id })
     .sort({ _id: -1 })
     .populate("user", "username")
@@ -264,47 +263,34 @@ exports.getSchedule = (req, res, next) => {
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
-          Schedule.findOne({ user: session._id })
+          Schedule.findOne({
+            $and: [{ user: session._id }, { approve: "reject" }],
+          })
             .sort({ _id: -1 })
-            .then((lastWaitingMentorData) => {
-              console.log(chalk.magenta(lastWaitingMentorData));
-              let approveStatus;
-              let lastMentor = payment.mentor;
-              let lastWaitingMentor = lastWaitingMentorData.mentor;
-              if (lastMentor == lastWaitingMentor) {
-                if (schedule.length > 0) {
-                  approveStatus = "false";
-                }
+            .populate("mentor", "username")
+            .then((rejectSchedule) => {
+              let userId;
+              let mentorId;
+              let duration;
+              let mentorUsername;
+              if (rejectSchedule !== null) {
+                userId = rejectSchedule.user;
+                mentorId = rejectSchedule.mentor._id;
+                duration = rejectSchedule.duration;
+                mentorUsername = rejectSchedule.mentor.username;
               }
-              Schedule.findOne({
-                $and: [{ user: session._id }, { approve: "reject" }],
-              })
-                .populate("mentor", "username")
-                .then((rejectSchedule) => {
-                  let userId;
-                  let mentorId;
-                  let duration;
-                  let mentorUsername;
-                  if (rejectSchedule !== null) {
-                    userId = rejectSchedule.user;
-                    mentorId = rejectSchedule.mentor._id;
-                    duration = rejectSchedule.duration;
-                    mentorUsername = rejectSchedule.mentor.username;
-                  }
-                  console.log(chalk.yellow.inverse(rejectSchedule));
-                  res.render("back/user/schedule", {
-                    payment: payment,
-                    schedule: schedule,
-                    moment: moment,
-                    session: session,
-                    approveStatus: approveStatus,
-                    rejectSchedule: rejectSchedule,
-                    userId: userId,
-                    mentorId: mentorId,
-                    duration: duration,
-                    mentorUsername: mentorUsername,
-                  });
-                });
+              console.log(chalk.yellow.inverse(rejectSchedule));
+              res.render("back/user/schedule", {
+                payment: payment,
+                schedule: schedule,
+                moment: moment,
+                session: session,
+                rejectSchedule: rejectSchedule,
+                userId: userId,
+                mentorId: mentorId,
+                duration: duration,
+                mentorUsername: mentorUsername,
+              });
             });
         })
         .catch((err) => console.log(err));
@@ -347,8 +333,10 @@ exports.postSchedule = (req, res, next) => {
         $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
       }).then((lastReject) => {
         if (lastReject) {
-          Schedule.findByIdAndDelete(lastReject._id).then((del) => {
-            console.log(chalk.red.inverse(del));
+          Schedule.findByIdAndDelete(lastReject._id).then(() => {
+            console.log(
+              chalk.red.inverse("Last Rejected Data Succesfully Deleted")
+            );
           });
         }
         // ** Kalau udah lolos semua , baru proses save

@@ -360,13 +360,7 @@
         let paymentChecker
         let oldPayment;
         let newPayment;
-
-        if ("<%=approveStatus%>" == "false") {
-          $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
-          $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
-          $("#note").prop("disabled", true);
-          $("#datetime").prop("disabled", true);
-        }
+        let alreadyBook=false;
 
         $.get("/api/user/payments", (data) => {
          paymentChecker = "pay_" + "<%-session.username%>";
@@ -386,7 +380,6 @@
               $("#duration").val(<%-duration%>);
               $("#note").prop("disabled", false);
               $("#datetime").prop("disabled", false);
-              alert("BERHASIL");
             } else if (oldPayment == newPayment) {
               $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
               $("#buttonAlert").prop("disabled", true).text("Need Payment");
@@ -395,9 +388,6 @@
               $("#datetime").prop("disabled", true);
             }
           }
-          // $("#scheduleForm").submit(() => {
-          //   localStorage.removeItem(paymentChecker);
-          // });
         })
           .done((res) => {
             console.log(res);
@@ -415,22 +405,23 @@
           let note = $("input[name=note]").val();
           $.post("/user/schedule?_csrf=<%=csrfToken%>", { user: userId, mentor: mentorId,duration:duration,datetime:datetime,note:note })
             .done((data) => {
+              
               let status=data.message;
-              console.log(status);
               if(status == true){
                 Swal.fire({
                   icon: 'success',
-                  title: 'Horeee',
-                  text: 'Data Succesfully Saved',
+                  title: 'Request Schedule Succesfully Sent',
+                  text: 'Please wait until schedule approve by mentor',
                 }).then(()=>{
+                  // !! Bug : bagian ini harus direload 2 kali baru nutup request boxnya
                   localStorage.removeItem(paymentChecker);
-                  location.reload();
+                  location.reload(true);
                 })
               }else{
                 Swal.fire({
                   icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
+                  title: 'Schdule already booked',
+                  text: 'Please request schedule again with different time.',
                 })
               }
             })
