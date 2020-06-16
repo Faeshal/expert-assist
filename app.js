@@ -18,12 +18,20 @@ const mongoSanitize = require("express-mongo-sanitize");
 const flash = require("connect-flash");
 const chalk = require("chalk");
 const morgan = require("morgan");
+const errorHandler = require("strong-error-handler");
 require("pretty-error").start();
 
 // * Security
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors());
+
+app.use(
+  errorHandler({
+    debug: true,
+    log: true,
+  })
+);
 
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
