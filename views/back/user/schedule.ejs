@@ -332,7 +332,7 @@
                             </div>
                             <div class="modal-footer justify-content-center">
                               <button
-                                type="submit"
+                                type="button"
                                 class="btn btn-primary btn-sm"
                               >
                                 Save changes
@@ -378,11 +378,14 @@
     <%-include('../../layouts/back/user/footer.ejs')%>
     <script>
       $(document).ready(() => {
+        let paymentChecker
+        let oldPayment;
+        let newPayment;
         $.get("/api/user/payments", (data) => {
-          let paymentChecker = "pay_" + "<%-session.username%>";
-          let oldPayment = localStorage.getItem(paymentChecker);
-          let newPayment = JSON.stringify(data.total);
-          console.log(oldPayment+"="+newPayment);
+         paymentChecker = "pay_" + "<%-session.username%>";
+         oldPayment = localStorage.getItem(paymentChecker);
+         newPayment = JSON.stringify(data.total);
+         console.log(oldPayment+"="+newPayment);
 
           let rejectSchedule = <%-JSON.stringify(rejectSchedule)%>;
 
@@ -415,6 +418,21 @@
           .fail((err) => {
             console.log(err);
           });
+
+          $("#buttonAlert").click(function (e) {
+          let mentorId = $("input[name=mentor]").val();
+          let userId = $("input[name=user]").val();
+          let duration = $("input[name=duration]").val();
+          let datetime = $("input[name=datetime]").val();
+          let note = $("input[name=note]").val();
+          $.post("/postjson", { user: userId, mentor: mentorId,duration:duration,datetime:datetime,note:note })
+            .done((data) => {
+              alert(JSON.stringify(data));
+              console.log(data);
+            })
+            .fail((err) => console.log(err));
+        });
+
       });
     </script>
   </div>

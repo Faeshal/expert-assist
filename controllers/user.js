@@ -264,45 +264,52 @@ exports.getSchedule = (req, res, next) => {
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
-          let approveStatus;
-          if (schedule.length > 0) {
-            approveStatus = schedule[0].approve;
-          }
-          Schedule.findOne({
-            $and: [{ user: session._id }, { approve: "reject" }],
-          })
-            .populate("mentor", "username")
-            .then((rejectSchedule) => {
-              let userId;
-              let mentorId;
-              let duration;
-              let mentorUsername;
-              if (rejectSchedule !== null) {
-                userId = rejectSchedule.user;
-                mentorId = rejectSchedule.mentor._id;
-                duration = rejectSchedule.duration;
-                mentorUsername = rejectSchedule.mentor.username;
+          Schedule.findOne({ user: session._id })
+            .sort({ _id: -1 })
+            .then((lastWaitingMentorData) => {
+              console.log(chalk.magenta(lastWaitingMentorData));
+              let approveStatus = "true";
+              let lastMentor = payment.mentor;
+              let lastWaitingMentor = lastWaitingMentorData.mentor;
+              if (lastMentor == lastWaitingMentor) {
+                if (schedule.length > 0) {
+                  approveStatus = "false";
+                }
               }
-              console.log(chalk.yellow.inverse(rejectSchedule));
-              res.render("back/user/schedule", {
-                payment: payment,
-                schedule: schedule,
-                moment: moment,
-                session: session,
-                approveStatus: approveStatus,
-                rejectSchedule: rejectSchedule,
-                userId: userId,
-                mentorId: mentorId,
-                duration: duration,
-                mentorUsername: mentorUsername,
-              });
+              Schedule.findOne({
+                $and: [{ user: session._id }, { approve: "reject" }],
+              })
+                .populate("mentor", "username")
+                .then((rejectSchedule) => {
+                  let userId;
+                  let mentorId;
+                  let duration;
+                  let mentorUsername;
+                  if (rejectSchedule !== null) {
+                    userId = rejectSchedule.user;
+                    mentorId = rejectSchedule.mentor._id;
+                    duration = rejectSchedule.duration;
+                    mentorUsername = rejectSchedule.mentor.username;
+                  }
+                  console.log(chalk.yellow.inverse(rejectSchedule));
+                  res.render("back/user/schedule", {
+                    payment: payment,
+                    schedule: schedule,
+                    moment: moment,
+                    session: session,
+                    approveStatus: approveStatus,
+                    rejectSchedule: rejectSchedule,
+                    userId: userId,
+                    mentorId: mentorId,
+                    duration: duration,
+                    mentorUsername: mentorUsername,
+                  });
+                });
             });
         })
         .catch((err) => console.log(err));
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 };
 
 exports.getScheduleJson = (req, res, next) => {
@@ -325,39 +332,40 @@ exports.postSchedule = (req, res, next) => {
   const duration = req.body.duration;
   const datetime = req.body.datetime;
   const note = req.body.note;
+  // ** Check Jadwal Sudah ada yang booking belum
   Schedule.findOne({
-    $and: [{ approve: "true" }, { datetime: datetime }],
+    $and: [{ mentor: mentor }, { approve: "true" }, { datetime: datetime }],
   })
     .then((isEqual) => {
       console.log(isEqual);
       if (isEqual) {
         console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
-        return res.redirect("/user/schedule?failed");
+        return res.redirect("/user/schedule");
       }
-      const schedule = new Schedule({
-        user: user,
-        mentor: mentor,
-        duration: duration,
-        datetime: datetime,
-        note: note,
-      });
-      return schedule
-        .save()
-        .then((result) => {
-          console.log(chalk.yellow.inverse(result));
-          Schedule.findOne({
-            $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
-          }).then((lastReject) => {
-            if (lastReject) {
-              Schedule.findByIdAndDelete(lastReject._id).then((del) => {
-                console.log(chalk.red.inverse(del));
-                res.redirect("/user/schedule");
-              });
-            }
+      // ** Check ada ga jadwal yang di reject sebelumnya
+      Schedule.findOne({
+        $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
+      }).then((lastReject) => {
+        if (lastReject) {
+          Schedule.findByIdAndDelete(lastReject._id).then((del) => {
+            console.log(chalk.red.inverse(del));
             res.redirect("/user/schedule");
           });
-        })
-        .catch((err) => console.log(err));
+        }
+        // ** Kalau udah lolos semua , baru proses save
+        const schedule = new Schedule({
+          user: user,
+          mentor: mentor,
+          duration: duration,
+          datetime: datetime,
+          note: note,
+        });
+        return schedule.save().then((result) => {
+          console.log(chalk.yellow.inverse(result));
+          let data = JSON.stringify(result);
+          res.json(data);
+        });
+      });
     })
     .catch((err) => console.log(err));
 };
@@ -383,7 +391,9 @@ exports.getMentoring = (req, res, next) => {
       if (!payment) {
         console.log("User Not Yet Pay");
       }
-      Schedule.findOne({ $and: [{ user: session._id }, { approve: "true" }, { status:false }] })
+      Schedule.findOne({
+        $and: [{ user: session._id }, { approve: "true" }, { status: false }],
+      })
         .sort({ datetime: 1 })
         .populate("mentor", "username")
         .then((schedule) => {
