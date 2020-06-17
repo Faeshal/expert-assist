@@ -203,7 +203,6 @@ exports.postStripeSuccess = (req, res, next) => {
       return payment
         .save()
         .then((result) => {
-          console.log(chalk.red(result));
           Payment.findOne()
             .sort({ _id: -1 })
             .then((payment) => {
@@ -221,7 +220,6 @@ exports.postStripeSuccess = (req, res, next) => {
                   Mentor.findById(mentorId)
                     .then((mentor) => {
                       // ** sum the last payment with intial income from mentor collection
-                      console.log(chalk.red.inverse(mentor));
                       let income = mentor.income + total;
                       mentor.income = income;
                       return mentor.save();
@@ -328,12 +326,25 @@ exports.postSchedule = (req, res, next) => {
       { approve: "true" },
       { status: false },
       {
-        $and: [
-          { datetime: datetime },
+        $or: [
           {
-            $or: [
-              { datetime: { $gte: datetime } },
-              { endtime: { $lte: finishTime } },
+            $and: [
+              { datetime: { $lte: datetime }, endtime: { $lte: finishTime } },
+            ],
+          },
+          {
+            $and: [
+              { datetime: { $gte: datetime }, endtime: { $gte: finishTime } },
+            ],
+          },
+          {
+            $and: [
+              { datetime: { $gte: datetime }, endtime: { $lte: finishTime } },
+            ],
+          },
+          {
+            $and: [
+              { datetime: { $lte: datetime }, endtime: { $gte: finishTime } },
             ],
           },
         ],
@@ -346,7 +357,6 @@ exports.postSchedule = (req, res, next) => {
         console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
         return res.json({ message: false });
       }
-
       // ** Check ada ga jadwal yang di reject sebelumnya , kalau ada delete data itu
       Schedule.findOne({
         $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
@@ -446,7 +456,6 @@ exports.getLive = (req, res, next) => {
     .sort({ datetime: -1 })
     .then((schedule) => {
       const dateTimeSchedule = schedule.datetime;
-      console.log(chalk.red.inverse(schedule));
       console.log("MASUK");
       if (schedule.approve == "false" || schedule.approve == "reject") {
         res.render("layouts/404");

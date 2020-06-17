@@ -206,7 +206,10 @@
             </div>
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="table_id">
+              <table
+                class="table align-items-center table-flush"
+                id="schedule_table"
+              >
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
@@ -362,6 +365,23 @@
         let newPayment;
         let alreadyBook=false;
 
+        $("#schedule_table").DataTable({
+        pageLength: 4,
+        lengthMenu: [4 , 10, 20],
+        ordering: false,
+        stateSave: true,
+        pagingType: "simple_numbers",
+        language: {
+          paginate: {
+            first: "«",
+            previous: "‹",
+            next: "›",
+            last: "»",
+          },
+        },
+        responsive: true,
+        });
+
         $.get("/api/user/payments", (data) => {
          paymentChecker = "pay_" + "<%-session.username%>";
          oldPayment = localStorage.getItem(paymentChecker);
@@ -405,7 +425,7 @@
           let note = $("input[name=note]").val();
           $.post("/user/schedule?_csrf=<%=csrfToken%>", { user: userId, mentor: mentorId,duration:duration,datetime:datetime,note:note })
             .done((data) => {
-              
+
               let status=data.message;
               if(status == true){
                 Swal.fire({
