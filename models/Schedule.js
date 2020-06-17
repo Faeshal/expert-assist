@@ -13,6 +13,7 @@ const ScheduleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  endtime: Date,
   note: {
     type: String,
     note: "Nothing",

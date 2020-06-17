@@ -263,6 +263,7 @@ exports.getSchedule = (req, res, next) => {
         .populate("mentor", "username")
         .exec()
         .then((schedule) => {
+          // ** Check , Ada ga jadwal yang di reject sebelumnya.
           Schedule.findOne({
             $and: [{ user: session._id }, { approve: "reject" }],
           })
@@ -318,17 +319,35 @@ exports.postSchedule = (req, res, next) => {
   const duration = req.body.duration;
   const datetime = req.body.datetime;
   const note = req.body.note;
+  const finishTime = moment(datetime).add(duration, "hours").toISOString();
+
   // ** Check Jadwal Sudah ada yang booking belum
   Schedule.findOne({
-    $and: [{ mentor: mentor }, { approve: "true" }, { datetime: datetime }],
+    $and: [
+      { mentor: mentor },
+      { approve: "true" },
+      { status: false },
+      {
+        $and: [
+          { datetime: datetime },
+          {
+            $or: [
+              { datetime: { $gte: datetime } },
+              { endtime: { $lte: finishTime } },
+            ],
+          },
+        ],
+      },
+    ],
   })
     .then((isEqual) => {
-      console.log(isEqual);
+      console.log(chalk.whiteBright("isEqual: " + isEqual));
       if (isEqual) {
         console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
         return res.json({ message: false });
       }
-      // ** Check ada ga jadwal yang di reject sebelumnya
+
+      // ** Check ada ga jadwal yang di reject sebelumnya , kalau ada delete data itu
       Schedule.findOne({
         $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
       }).then((lastReject) => {
@@ -340,11 +359,13 @@ exports.postSchedule = (req, res, next) => {
           });
         }
         // ** Kalau udah lolos semua , baru proses save
+
         const schedule = new Schedule({
           user: user,
           mentor: mentor,
           duration: duration,
           datetime: datetime,
+          endtime: finishTime,
           note: note,
         });
         return schedule.save().then((result) => {
