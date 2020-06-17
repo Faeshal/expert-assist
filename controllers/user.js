@@ -328,14 +328,10 @@ exports.postSchedule = (req, res, next) => {
       {
         $or: [
           {
-            $and: [
-              { datetime: { $lte: datetime }, endtime: { $lte: finishTime } },
-            ],
+            $and: [{ endtime: { $gte: datetime, $lte: finishTime } }],
           },
           {
-            $and: [
-              { datetime: { $gte: datetime }, endtime: { $gte: finishTime } },
-            ],
+            $and: [{ datetime: { $gte: datetime, $lte: finishTime } }],
           },
           {
             $and: [
