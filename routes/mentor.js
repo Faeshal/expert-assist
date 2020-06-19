@@ -5,6 +5,7 @@ const mentorController = require("../controllers/mentor");
 const multer = require("multer");
 const isAuth = require("../middleware/is-auth");
 const { body } = require("express-validator");
+const longpoll = require("express-longpoll")(router, { DEBUG: true });
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
@@ -35,6 +36,9 @@ const upload = multer({
     fileSize: 1000000, // 1 mb in bytes
   },
 });
+
+// * Polling For User
+longpoll.create("/pollschedule");
 
 // * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);

@@ -1,4 +1,6 @@
 require("pretty-error").start();
+const express = require("express");
+const app = express();
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
 const Review = require("../models/Review");
@@ -13,6 +15,7 @@ const chalk = require("chalk");
 const bcrypt = require("bcryptjs");
 const voca = require("voca");
 const { validationResult } = require("express-validator");
+const longpoll = require("express-longpoll")(app);
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
@@ -473,7 +476,11 @@ exports.postUpdateSchedule = (req, res, next) => {
       return schedule.save();
     })
     .then((result) => {
-      console.log(result);
+      console.log(chalk.yellow(result));
+      let userId = result.user;
+      return longpoll.publish("/pollschedule", { id: userId, data: result });
+    })
+    .then(() => {
       res.redirect("/mentor/schedule");
     })
     .catch((err) => console.log(err));
