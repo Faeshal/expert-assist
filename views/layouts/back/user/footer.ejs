@@ -62,6 +62,7 @@
 <!-- Data Table -->
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lockr/0.8.5/lockr.js"></script>
 <!-- Data Table Setup -->
 <script>
   $(document).ready(function () {
@@ -92,7 +93,6 @@
           console.log(data);
           let id = data.id;
           let messageId = id.toString();
-          console.log("compare:" + messageId + " --- " + userId);
           if (messageId == userId) {
             setTimeout(function () {
               subscribe(url);
@@ -106,8 +106,6 @@
                 timer: 10000,
               });
             }, 1000);
-          } else {
-            console.log("BUKAN UNTUKMU");
           }
         })
         .fail((error) => {
