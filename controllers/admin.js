@@ -1,4 +1,6 @@
 require("pretty-error").start();
+const express = require("express");
+const app = express();
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
@@ -11,6 +13,7 @@ const axios = require("axios");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const currency = require("currency.js");
+const longpoll = require("express-longpoll")(app, { DEBUG: true });
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -766,6 +769,9 @@ exports.postUpdateWithdraw = (req, res, next) => {
             })
             .then((result2) => {
               console.log(result2);
+              return longpoll.publish("/pollwithdraw", result2);
+            })
+            .then(() => {
               res.redirect("/admin/withdraw");
             })
             .catch((err) => console.log(err));

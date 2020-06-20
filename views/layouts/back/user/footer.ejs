@@ -92,12 +92,13 @@
         .done((data) => {
           console.log(data);
           let id = data.id;
+          let message = data.message;
           let messageId = id.toString();
           if (messageId == userId) {
             setTimeout(function () {
               subscribe(url);
               Swal.fire({
-                title: "Schedule Approve Notification",
+                title: message,
                 width: 400,
                 icon: "success",
                 padding: "3em",

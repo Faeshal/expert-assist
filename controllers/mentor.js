@@ -478,7 +478,11 @@ exports.postUpdateSchedule = (req, res, next) => {
     .then((result) => {
       console.log(chalk.yellow(result));
       let userId = result.user;
-      return longpoll.publish("/pollschedule", { id: userId, data: result });
+      return longpoll.publish("/pollschedule", {
+        id: userId,
+        message: "Schedule Approve Notification",
+        data: result,
+      });
     })
     .then(() => {
       res.redirect("/mentor/schedule");

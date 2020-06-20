@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 const adminContoller = require("../controllers/admin");
 const isAuth = require("../middleware/is-auth");
+const longpoll = require("express-longpoll")(router, { DEBUG: true });
+
+// * Polling
+longpoll.create("/pollwithdraw");
 
 // * Welcome Dashboard
 router.get("/admin/dashboard", isAuth, adminContoller.getDashboard);
