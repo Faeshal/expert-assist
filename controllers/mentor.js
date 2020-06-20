@@ -18,116 +18,89 @@ const { validationResult } = require("express-validator");
 const longpoll = require("express-longpoll")(app);
 const asyncHandler = require("express-async-handler");
 
-exports.getDashboard = (req, res, next) => {
+exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findOne({ _id: session._id })
-    .then((mentor) => {
-      Payment.countDocuments({
-        $and: [{ mentor: session._id }, { status: true }],
-      }).then((totalClient) => {
-        Review.countDocuments({ mentor: session._id }).then((totalReview) => {
-          Schedule.find({ $and: [{ mentor: session._id }, { status: false }] })
-            .populate({
-              path: "user",
-              select: ["username", "email", "profilepicture", "phone"],
-            })
-            .limit(3)
-            .sort({ datetime: 1 })
-            .then((userData) => {
-              Schedule.find({
-                $and: [{ mentor: session._id }, { approve: "false" }],
-              })
-                .countDocuments()
-                .then((waitingSchedule) => {
-                  Schedule.find({
-                    $and: [{ mentor: session._id }, { approve: "reject" }],
-                  })
-                    .countDocuments()
-                    .then((rejectSchedule) => {
-                      Withdraw.find({
-                        $and: [{ mentor: session._id }, { status: false }],
-                      })
-                        .countDocuments()
-                        .then((waitingWithdraw) => {
-                          Withdraw.find({
-                            $and: [{ mentor: session._id }, { status: true }],
-                          })
-                            .countDocuments()
-                            .then((withdrawSuccess) => {
-                              Schedule.findOne({
-                                $and: [
-                                  { mentor: session._id },
-                                  { approve: "true" },
-                                  { status: false },
-                                ],
-                              })
-                                .sort({ datetime: 1 })
-                                .then((nextMentoring) => {
-                                  console.log(chalk.red.inverse(nextMentoring));
-                                  Withdraw.aggregate([
-                                    {
-                                      $match: {
-                                        $and: [
-                                          { mentor: session._id },
-                                          { status: true },
-                                        ],
-                                      },
-                                    },
-                                    {
-                                      $group: {
-                                        _id: null,
-                                        total: { $sum: "$total" },
-                                      },
-                                    },
-                                  ]).then((totalWithdrawData) => {
-                                    console.log(totalWithdrawData);
-                                    let totalWithdraw;
-                                    if (totalWithdrawData.length == 0) {
-                                      totalWithdraw = 0;
-                                    } else {
-                                      totalWithdraw =
-                                        totalWithdrawData[0].total;
-                                    }
-                                    console.log("xx" + totalWithdraw);
-                                    Schedule.find({
-                                      $and: [
-                                        { mentor: session._id },
-                                        { approve: "true" },
-                                        { status: false },
-                                      ],
-                                    })
-                                      .countDocuments()
-                                      .then((incomingSchedule) => {
-                                        res.render("back/mentor/dashboard", {
-                                          mentor: mentor,
-                                          currency: currency,
-                                          session: session,
-                                          totalClient: totalClient,
-                                          totalReview: totalReview,
-                                          voca: voca,
-                                          userData: userData,
-                                          moment: moment,
-                                          waitingSchedule: waitingSchedule,
-                                          rejectSchedule: rejectSchedule,
-                                          waitingWithdraw: waitingWithdraw,
-                                          withdrawSuccess: withdrawSuccess,
-                                          nextMentoring: nextMentoring,
-                                          totalWithdraw: totalWithdraw,
-                                          incomingSchedule: incomingSchedule,
-                                        });
-                                      });
-                                  });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-      });
+  const mentor = await Mentor.findOne({ _id: session._id });
+
+  const totalClient = await Payment.countDocuments({
+    $and: [{ mentor: session._id }, { status: true }],
+  });
+
+  const totalReview = await Review.countDocuments({ mentor: session._id });
+
+  const userData = await Schedule.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  })
+    .populate({
+      path: "user",
+      select: ["username", "email", "profilepicture", "phone"],
     })
-    .catch((err) => console.log(err));
-};
+    .limit(3)
+    .sort({ datetime: 1 });
+
+  const waitingSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "false" }],
+  }).countDocuments();
+
+  const rejectSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "reject" }],
+  }).countDocuments();
+
+  const waitingWithdraw = await Withdraw.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  }).countDocuments();
+
+  const withdrawSuccess = await Withdraw.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
+
+  const nextMentoring = await Schedule.findOne({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).sort({ datetime: 1 });
+
+  const totalWithdrawData = await Withdraw.aggregate([
+    {
+      $match: {
+        $and: [{ mentor: session._id }, { status: true }],
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$total" },
+      },
+    },
+  ]);
+
+  let totalWithdraw;
+  if (totalWithdrawData.length == 0) {
+    totalWithdraw = 0;
+  } else {
+    totalWithdraw = totalWithdrawData[0].total;
+  }
+
+  const incomingSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).countDocuments();
+
+  res.render("back/mentor/dashboard", {
+    mentor: mentor,
+    currency: currency,
+    session: session,
+    totalClient: totalClient,
+    totalReview: totalReview,
+    voca: voca,
+    userData: userData,
+    moment: moment,
+    waitingSchedule: waitingSchedule,
+    rejectSchedule: rejectSchedule,
+    waitingWithdraw: waitingWithdraw,
+    withdrawSuccess: withdrawSuccess,
+    nextMentoring: nextMentoring,
+    totalWithdraw: totalWithdraw,
+    incomingSchedule: incomingSchedule,
+  });
+});
 
 exports.postMentorStatus = (req, res, next) => {
   const session = req.session.mentor;
@@ -323,7 +296,7 @@ exports.getExam = (req, res, next) => {
   Admin.findOne({ level: "admin" })
     .then((admin) => {
       // ! Bug - Handle eror , kalau category exam belum di set admin
-      console.log(admin.category[0].name);
+      // console.log(admin.category[0].name);
 
       if (!admin) {
         console.log("Admin not found");
