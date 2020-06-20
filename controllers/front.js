@@ -1,4 +1,5 @@
 require("pretty-error").start();
+const asyncHandler = require("express-async-handler");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Review = require("../models/Review");
@@ -9,36 +10,29 @@ const ITEMS_PER_PAGE = 9;
 const voca = require("voca");
 const moment = require("moment");
 
-exports.getIndex = (req, res, next) => {
+exports.getIndex = asyncHandler(async (req, res, next) => {
   let session = req.session;
-  Mentor.find({
+  let newMentor = await Mentor.find({
     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
   })
     .limit(7)
-    .sort({ _id: -1 })
-    .then((newMentor) => {
-      Mentor.find({ mentorstatus: "true" })
-        .limit(7)
-        .sort({ rating: -1 })
-        .then((bestMentor) => {
-          Mentor.find({
-            $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-          })
-            .limit(7)
-            .sort({ price: 1 })
-            .then((cheapestMentor) => {
-              res.render("front/index", {
-                session: session,
-                newMentor: newMentor,
-                bestMentor: bestMentor,
-                cheapestMentor: cheapestMentor,
-                currency: currency,
-              });
-            });
-        });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ _id: -1 });
+  let bestMentor = await Mentor.find({ mentorstatus: "true" })
+    .limit(7)
+    .sort({ rating: -1 });
+  let cheapestMentor = await Mentor.find({
+    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+  })
+    .limit(7)
+    .sort({ price: 1 });
+  res.render("front/index", {
+    session: session,
+    newMentor: newMentor,
+    bestMentor: bestMentor,
+    cheapestMentor: cheapestMentor,
+    currency: currency,
+  });
+});
 
 exports.getAllBlog = (req, res, next) => {
   // *FindOne mengembalikan object
