@@ -19,78 +19,56 @@ const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 
-exports.getDashboard = (req, res, next) => {
+exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  User.findById(session._id)
-    .then((user) => {
-      Payment.countDocuments({ user: session._id }).then((totalPayment) => {
-        Payment.countDocuments({
-          $and: [{ user: session._id }, { approve: true }, { status: false }],
-        }).then((failedPayment) => {
-          Schedule.countDocuments({
-            $and: [
-              { user: session._id },
-              { approve: "true" },
-              { status: false },
-            ],
-          }).then((incomingSchedule) => {
-            Review.countDocuments({ user: session._id }).then((totalReview) => {
-              Schedule.find({
-                $and: [{ user: session._id }, { approve: "false" }],
-              })
-                .countDocuments()
-                .then((waitingSchedule) => {
-                  Schedule.find({
-                    $and: [{ user: session._id }, { approve: "reject" }],
-                  })
-                    .countDocuments()
-                    .then((rejectedSchedule) => {
-                      Schedule.findOne({
-                        $and: [
-                          { user: session._id },
-                          { approve: "true" },
-                          { status: false },
-                        ],
-                      })
-                        .sort({ datetime: 1 })
-                        .then((nextMentoring) => {
-                          Schedule.find({
-                            $and: [
-                              { user: session._id },
-                              { approve: "true" },
-                              { status: true },
-                            ],
-                          })
-                            .countDocuments()
-                            .then((finishedMentoring) => {
-                              res.render("back/user/dashboard", {
-                                user: user,
-                                session: session,
-                                moment: moment,
-                                totalPayment: totalPayment,
-                                failedPayment: failedPayment,
-                                incomingSchedule: incomingSchedule,
-                                totalReview: totalReview,
-                                waitingSchedule: waitingSchedule,
-                                rejectedSchedule: rejectedSchedule,
-                                nextMentoring: nextMentoring,
-                                finishedMentoring: finishedMentoring,
-                              });
-                            });
-                        });
-                    });
-                });
-            });
-          });
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const user = await User.findById(session._id);
+
+  const totalPayment = await Payment.countDocuments({ user: session._id });
+
+  const failedPayment = await Payment.countDocuments({
+    $and: [{ user: session._id }, { approve: true }, { status: false }],
+  });
+
+  const incomingSchedule = await Schedule.countDocuments({
+    $and: [{ user: session._id }, { approve: "true" }, { status: false }],
+  });
+
+  const totalReview = await Review.countDocuments({ user: session._id });
+
+  const waitingSchedule = await Schedule.find({
+    $and: [{ user: session._id }, { approve: "false" }],
+  }).countDocuments();
+
+  const rejectedSchedule = await Schedule.find({
+    $and: [{ user: session._id }, { approve: "reject" }],
+  }).countDocuments();
+
+  const nextMentoring = await Schedule.findOne({
+    $and: [{ user: session._id }, { approve: "true" }, { status: false }],
+  }).sort({ datetime: 1 });
+
+  const finishedMentoring = await Schedule.find({
+    $and: [{ user: session._id }, { approve: "true" }, { status: true }],
+  }).countDocuments();
+
+  res.render("back/user/dashboard", {
+    user: user,
+    session: session,
+    moment: moment,
+    totalPayment: totalPayment,
+    failedPayment: failedPayment,
+    incomingSchedule: incomingSchedule,
+    totalReview: totalReview,
+    waitingSchedule: waitingSchedule,
+    rejectedSchedule: rejectedSchedule,
+    nextMentoring: nextMentoring,
+    finishedMentoring: finishedMentoring,
+  });
+});
 
 exports.getProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  const user = await findById(session._id);
+  const user = await User.findById(session._id);
   res.render("back/user/profile", {
     user: user,
     session: session,
@@ -134,7 +112,7 @@ exports.updateProfile = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postPayment = (req, res, next) => {
+exports.postPayment = asyncHandler(async (req, res, next) => {
   const user = req.body.user;
   const mentor = req.body.mentor;
   const price = req.body.price;
@@ -148,14 +126,10 @@ exports.postPayment = (req, res, next) => {
     total: total,
     duration: duration,
   });
-  return payment
-    .save()
-    .then((result) => {
-      console.log(chalk.yellow.inverse(result));
-      res.redirect("/stripe/" + payment._id);
-    })
-    .catch((err) => console.log(err));
-};
+  const result = await payment.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/stripe/" + payment._id);
+});
 
 exports.getStripe = (req, res, next) => {
   const id = req.params.id;
@@ -198,51 +172,43 @@ exports.getStripe = (req, res, next) => {
 
 exports.postStripeSuccess = (req, res, next) => {
   const id = req.params.id;
-  let mentorId;
   console.log(chalk.red.inverse(`Payment ID : ${id}`));
   Payment.findById(id)
     .then((payment) => {
       payment.status = true;
-      let idMentor = payment.mentor;
       return payment
         .save()
         .then((result) => {
-          return longpoll
-            .publish("/pollmentorpayment", {
-              id: idMentor,
-              message: "New Payment Notification",
-              data: true,
-            })
-            .then(() => {
-              Payment.findOne()
+          console.log(chalk.red(result));
+          Payment.findOne()
+            .sort({ _id: -1 })
+            .then((payment) => {
+              const mentorId = payment.mentor;
+              console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
+              // ** get the last payment
+              Payment.findOne({ mentor: mentorId })
                 .sort({ _id: -1 })
+                .limit(1)
                 .then((payment) => {
-                  mentorId = payment.mentor;
-                  console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
-                  // ** get the last payment
-                  Payment.findOne({ mentor: mentorId })
-                    .sort({ _id: -1 })
-                    .limit(1)
-                    .then((payment) => {
-                      userId = payment.user;
-                      // console.log(chalk.yellowBright.inverse(payment));
-                      let total = payment.total;
-                      // console.log("-----------------");
-                      Mentor.findById(mentorId)
-                        .then((mentor) => {
-                          // ** sum the last payment with intial income from mentor collection
-                          let income = mentor.income + total;
-                          mentor.income = income;
-                          return mentor.save();
-                        })
-                        .then((result2) => {
-                          console.log(chalk.yellow.inverse(result2));
-                          res.redirect("/user/schedule");
-                        })
-                        .catch((err) => console.log(err));
+                  userId = payment.user;
+                  // console.log(chalk.yellowBright.inverse(payment));
+                  let total = payment.total;
+                  // console.log("-----------------");
+                  Mentor.findById(mentorId)
+                    .then((mentor) => {
+                      // ** sum the last payment with intial income from mentor collection
+                      console.log(chalk.red.inverse(mentor));
+                      let income = mentor.income + total;
+                      mentor.income = income;
+                      return mentor.save();
+                    })
+                    .then((mentorIncome) => {
+                      console.log(chalk.red.inverse(mentorIncome));
+                      res.redirect("/user/schedule");
                     })
                     .catch((err) => console.log(err));
-                });
+                })
+                .catch((err) => console.log(err));
             });
         })
         .catch((err) => console.log(err));
@@ -397,17 +363,15 @@ exports.postSchedule = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postEditSchedule = (req, res, next) => {
+exports.postEditSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const datetime = req.body.datetime;
-  Schedule.findByIdAndUpdate(id).then((schedule) => {
-    schedule.datetime = datetime;
-    return schedule.save().then((result) => {
-      console.log(chalk.green.inverse(result));
-      res.redirect("/user/schedule");
-    });
-  });
-};
+  const schedule = await Schedule.findByIdAndUpdate(id);
+  schedule.datetime = datetime;
+  const result = await schedule.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/user/schedule");
+});
 
 exports.getMentoring = (req, res, next) => {
   const session = req.session.user;
@@ -658,3 +622,32 @@ exports.getPaymentJson = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+// ** Refactor
+// exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
+//   const id = req.params.id;
+//   const payment = await Payment.findById(id);
+//   payment.status = true;
+//   let idMentor = payment.mentor;
+//   await payment.save();
+//   await longpoll.publish("/pollmentorpayment", {
+//     id: idMentor,
+//     message: "New Payment Notification",
+//     data: true,
+//   });
+//   const payment2 = await Payment.findOne().sort({ _id: -1 });
+//   let mentorId = payment2.mentor;
+//   console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
+//   const payment3 = await Payment.findOne({ mentor: mentorId })
+//     .sort({ _id: -1 })
+//     .limit(1);
+//   userId = payment3.user;
+//   console.log(chalk.yellowBright.inverse(payment));
+//   let total = payment.total;
+//   const mentor = await Mentor.findById(mentorId);
+//   let income = mentor.income + total;
+//   mentor.income = income;
+//   const result = await mentor.save();
+//   console.log(chalk.yellow.inverse(result2));
+//   res.redirect("/user/schedule");
+// });
