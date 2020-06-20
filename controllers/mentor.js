@@ -16,6 +16,7 @@ const bcrypt = require("bcryptjs");
 const voca = require("voca");
 const { validationResult } = require("express-validator");
 const longpoll = require("express-longpoll")(app);
+const asyncHandler = require("express-async-handler");
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.mentor;
@@ -166,39 +167,32 @@ exports.postMentorStatus = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getProfile = (req, res, next) => {
+exports.getProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findById(session._id)
-    .then((mentor) => {
-      res.render("back/mentor/profile", {
-        mentor: mentor,
-        session: session,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profile", {
+    mentor: mentor,
+    session: session,
+  });
+});
 
-exports.getPayment = (req, res, next) => {
+exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
+  const payment = await Payment.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  })
     .populate("user", "username email")
-    .sort({ _id: -1 })
-    .then((payment) => {
-      Mentor.findById(session._id).then((mentor) => {
-        res.render("back/mentor/payment", {
-          mentor: mentor,
-          payment: payment,
-          voca: voca,
-          moment: moment,
-          currency: currency,
-          session: session,
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ _id: -1 });
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/payment", {
+    mentor: mentor,
+    payment: payment,
+    voca: voca,
+    moment: moment,
+    currency: currency,
+    session: session,
+  });
+});
 
 exports.getPaymentJson = (req, res, next) => {
   const session = req.session.mentor;
@@ -232,17 +226,14 @@ exports.getPaymentJson = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getUpdateProfile = (req, res, next) => {
+exports.getUpdateProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findById(session._id)
-    .then((mentor) => {
-      res.render("back/mentor/profileUpdate", {
-        mentor: mentor,
-        session: session,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profileUpdate", {
+    mentor: mentor,
+    session: session,
+  });
+});
 
 exports.updateProfile = (req, res, next) => {
   const id = req.body.id;
@@ -356,35 +347,26 @@ exports.getExam = (req, res, next) => {
     });
 };
 
-exports.postExam = (req, res, next) => {
+exports.postExam = asyncHandler(async (req, res, next) => {
   const expertise = req.body.expertise;
   const id = req.session.mentor._id;
-  Mentor.findById(id)
-    .then((mentor) => {
-      mentor.expertise = expertise;
-      return mentor.save();
-    })
-    .then((result) => {
-      res.redirect("/mentor/exam/begin");
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(id);
+  mentor.expertise = expertise;
+  const result = await mentor.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/exam/begin");
+});
 
-exports.postBeginExam = (req, res, next) => {
+exports.postBeginExam = asyncHandler(async (req, res, next) => {
   const examstatus = req.body.examstatus;
-  Mentor.findById(req.session.mentor._id)
-    .then((mentor) => {
-      mentor.examstatus = examstatus;
-      return mentor.save();
-    })
-    .then((result) => {
-      return longpoll.publish("/pollexam", {
-        message: "Incoming New Mentor Exam",
-        data: true,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = Mentor.findById(req.session.mentor._id);
+  mentor.examstatus = examstatus;
+  await mentor.save();
+  longpoll.publish("/pollexam", {
+    message: "Incoming New Mentor Exam",
+    data: true,
+  });
+});
 
 exports.getBeginExam = (req, res, next) => {
   const session = req.session.mentor;
@@ -424,24 +406,20 @@ exports.getBeginExam = (req, res, next) => {
   });
 };
 
-exports.getSchedule = (req, res, next) => {
+exports.getSchedule = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Schedule.find({ mentor: session._id })
+  const schedule = await Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
-    .sort({ _id: -1 })
-    .then((schedule) => {
-      Mentor.findById(session._id).then((mentor) => {
-        res.render("back/mentor/schedule", {
-          mentor: mentor,
-          schedule: schedule,
-          moment: moment,
-          session: session,
-          voca: voca,
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ _id: -1 });
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/schedule", {
+    mentor: mentor,
+    schedule: schedule,
+    moment: moment,
+    session: session,
+    voca: voca,
+  });
+});
 
 exports.getScheduleJson = (req, res, next) => {
   const session = req.session.mentor;
@@ -561,20 +539,15 @@ exports.getLive = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postFinishMentoring = (req, res, next) => {
+exports.postFinishMentoring = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const status = req.body.status;
-  Schedule.findById(id)
-    .then((schedule) => {
-      schedule.status = status;
-      return schedule.save();
-    })
-    .then((result) => {
-      console.log(chalk.bgBlue(result));
-      res.redirect("/mentor/schedule");
-    })
-    .catch((err) => console.log(err));
-};
+  const schedule = await Schedule.findById(id);
+  schedule.status = status;
+  const result = await schedule.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/schedule");
+});
 
 exports.getReview = (req, res, next) => {
   const session = req.session.mentor;
@@ -682,7 +655,7 @@ exports.getWithdrawJson = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postWithdraw = (req, res, next) => {
+exports.postWithdraw = asyncHandler(async (req, res, next) => {
   const mentor = req.body.mentor;
   const total = req.body.total;
   const note = req.body.note;
@@ -700,20 +673,17 @@ exports.postWithdraw = (req, res, next) => {
     note: note,
     adminincome: adminIncome,
   });
-  withdraw
-    .save()
-    .then((result) => {
-      console.log(chalk.yellow.inverse(result));
-      return longpoll.publish("/polladminwithdraw", {
-        message: "New Withdraw Request Notification",
-        data: true,
-      });
-    })
-    .then(() => {
-      res.redirect("/mentor/withdraw");
-    })
-    .catch((err) => console.log(err));
-};
+
+  const result = await withdraw.save();
+  console.log(chalk.yellow.inverse(result));
+
+  longpoll.publish("/polladminwithdraw", {
+    message: "New Withdraw Request Notification",
+    data: true,
+  });
+
+  res.redirect("/mentor/withdraw");
+});
 
 exports.deleteWithdraw = (req, res, next) => {
   const id = req.body.id;
