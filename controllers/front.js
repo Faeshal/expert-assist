@@ -11,16 +11,16 @@ const voca = require("voca");
 const moment = require("moment");
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
-  let session = req.session;
-  let newMentor = await Mentor.find({
+  const session = req.session;
+  const newMentor = await Mentor.find({
     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
   })
     .limit(7)
     .sort({ _id: -1 });
-  let bestMentor = await Mentor.find({ mentorstatus: "true" })
+  const bestMentor = await Mentor.find({ mentorstatus: "true" })
     .limit(7)
     .sort({ rating: -1 });
-  let cheapestMentor = await Mentor.find({
+  const cheapestMentor = await Mentor.find({
     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
   })
     .limit(7)
@@ -83,16 +83,13 @@ exports.getAllBlog = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getFaq = (req, res, next) => {
-  Admin.find()
-    .then((admin) => {
-      res.render("front/faq", {
-        admin: admin,
-        voca: voca,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+exports.getFaq = asyncHandler(async (req, res, next) => {
+  const admin = await Admin.find();
+  res.render("front/faq", {
+    admin: admin,
+    voca: voca,
+  });
+});
 
 exports.getDetailBlog = (req, res, next) => {
   id = req.params.id;
@@ -194,9 +191,10 @@ exports.getMentorList = (req, res, next) => {
   let totalMentors;
   Mentor.countDocuments()
     .then((numMentors) => {
-      // ! Bug Disini , mentor yang belum kompeten muncul di list
       totalMentors = numMentors;
-      return Mentor.find()
+      return Mentor.find({
+        $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+      })
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })

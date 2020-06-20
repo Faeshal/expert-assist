@@ -1,6 +1,7 @@
 require("pretty-error").start();
 const express = require("express");
 const app = express();
+const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
@@ -15,6 +16,7 @@ const currency = require("currency.js");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { findById } = require("../models/User");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 
 exports.getDashboard = (req, res, next) => {
@@ -86,17 +88,14 @@ exports.getDashboard = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getProfile = (req, res, next) => {
+exports.getProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  User.findById(session._id)
-    .then((user) => {
-      res.render("back/user/profile", {
-        user: user,
-        session: session,
-      });
-    })
-    .catch();
-};
+  const user = await findById(session._id);
+  res.render("back/user/profile", {
+    user: user,
+    session: session,
+  });
+});
 
 exports.updateProfile = (req, res, next) => {
   const id = req.body.id;
@@ -251,15 +250,12 @@ exports.postStripeSuccess = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postStripeCancel = (req, res, next) => {
+exports.postStripeCancel = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  Payment.findByIdAndDelete(id)
-    .then((result) => {
-      console.log(chalk.red.inverse(`Deleted : ${result}`));
-      res.redirect("/");
-    })
-    .catch((err) => console.log(err));
-};
+  const result = await Payment.findByIdAndDelete(id);
+  console.log(chalk.red.inverse(`Deleted : ${result}`));
+  res.redirect("/");
+});
 
 exports.getSchedule = (req, res, next) => {
   const session = req.session.user;
@@ -401,7 +397,7 @@ exports.postSchedule = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.psotEditSchedule = (req, res, next) => {
+exports.postEditSchedule = (req, res, next) => {
   const id = req.body.id;
   const datetime = req.body.datetime;
   Schedule.findByIdAndUpdate(id).then((schedule) => {
