@@ -1,4 +1,6 @@
 require("pretty-error").start();
+const express = require("express");
+const app = express();
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const Payment = require("../models/Payment");
@@ -13,6 +15,7 @@ const currency = require("currency.js");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const longpoll = require("express-longpoll")(app, { DEBUG: true });
 
 exports.getDashboard = (req, res, next) => {
   const session = req.session.user;
@@ -196,41 +199,51 @@ exports.getStripe = (req, res, next) => {
 
 exports.postStripeSuccess = (req, res, next) => {
   const id = req.params.id;
+  let mentorId;
   console.log(chalk.red.inverse(`Payment ID : ${id}`));
   Payment.findById(id)
     .then((payment) => {
       payment.status = true;
+      let idMentor = payment.mentor;
       return payment
         .save()
         .then((result) => {
-          Payment.findOne()
-            .sort({ _id: -1 })
-            .then((payment) => {
-              const mentorId = payment.mentor;
-              console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
-              // ** get the last payment
-              Payment.findOne({ mentor: mentorId })
+          return longpoll
+            .publish("/pollmentorpayment", {
+              id: idMentor,
+              message: "New Payment Notification",
+              data: result,
+            })
+            .then(() => {
+              Payment.findOne()
                 .sort({ _id: -1 })
-                .limit(1)
                 .then((payment) => {
-                  userId = payment.user;
-                  // console.log(chalk.yellowBright.inverse(payment));
-                  let total = payment.total;
-                  // console.log("-----------------");
-                  Mentor.findById(mentorId)
-                    .then((mentor) => {
-                      // ** sum the last payment with intial income from mentor collection
-                      let income = mentor.income + total;
-                      mentor.income = income;
-                      return mentor.save();
-                    })
-                    .then((mentorIncome) => {
-                      console.log(chalk.red.inverse(mentorIncome));
-                      res.redirect("/user/schedule");
+                  mentorId = payment.mentor;
+                  console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
+                  // ** get the last payment
+                  Payment.findOne({ mentor: mentorId })
+                    .sort({ _id: -1 })
+                    .limit(1)
+                    .then((payment) => {
+                      userId = payment.user;
+                      // console.log(chalk.yellowBright.inverse(payment));
+                      let total = payment.total;
+                      // console.log("-----------------");
+                      Mentor.findById(mentorId)
+                        .then((mentor) => {
+                          // ** sum the last payment with intial income from mentor collection
+                          let income = mentor.income + total;
+                          mentor.income = income;
+                          return mentor.save();
+                        })
+                        .then((result2) => {
+                          console.log(chalk.yellow.inverse(result2));
+                          res.redirect("/user/schedule");
+                        })
+                        .catch((err) => console.log(err));
                     })
                     .catch((err) => console.log(err));
-                })
-                .catch((err) => console.log(err));
+                });
             });
         })
         .catch((err) => console.log(err));
@@ -377,6 +390,11 @@ exports.postSchedule = (req, res, next) => {
         return schedule.save().then((result) => {
           console.log(chalk.yellow.inverse(result));
           res.json({ message: true });
+          return longpoll.publish("/pollmentorschedule", {
+            id: mentor,
+            message: "New Schedule Notification",
+            data: result,
+          });
         });
       });
     })
@@ -520,28 +538,37 @@ exports.postReview = (req, res, next) => {
           .save()
           .then((review) => {
             console.log(chalk.yellow.inverse(review));
-            const convertMentorId = mongoose.Types.ObjectId(mentor);
-            Review.aggregate([
-              {
-                $match: { mentor: convertMentorId },
-              },
-              {
-                $group: { _id: null, avgRating: { $avg: "$rating" } },
-              },
-            ]).then((resultReview) => {
-              console.log(chalk.bgYellow(JSON.stringify(resultReview)));
-              let avgRating = resultReview[0].avgRating;
-              Mentor.findById(mentor)
-                .then((mentors) => {
-                  mentors.rating = avgRating;
-                  return mentors.save();
-                })
-                .then((result) => {
-                  console.log(chalk.magenta.inverse(result));
-                  res.redirect("/user/review");
-                })
-                .catch((err) => console.log(err));
-            });
+            let mentorId = review.mentor;
+            return longpoll
+              .publish("/pollmentorreview", {
+                id: mentorId,
+                message: "New Review Notification",
+                data: review,
+              })
+              .then(() => {
+                const convertMentorId = mongoose.Types.ObjectId(mentor);
+                Review.aggregate([
+                  {
+                    $match: { mentor: convertMentorId },
+                  },
+                  {
+                    $group: { _id: null, avgRating: { $avg: "$rating" } },
+                  },
+                ]).then((resultReview) => {
+                  console.log(chalk.bgYellow(JSON.stringify(resultReview)));
+                  let avgRating = resultReview[0].avgRating;
+                  Mentor.findById(mentor)
+                    .then((mentors) => {
+                      mentors.rating = avgRating;
+                      return mentors.save();
+                    })
+                    .then((result) => {
+                      console.log(chalk.magenta.inverse(result));
+                      res.redirect("/user/review");
+                    })
+                    .catch((err) => console.log(err));
+                });
+              });
           })
           .catch((err) => console.log(err));
       });

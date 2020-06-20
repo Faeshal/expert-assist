@@ -85,7 +85,7 @@
 <!-- Trigerred Modals -->
 <script>
   $(document).ready(function () {
-    let url = "/pollwithdraw";
+    let mentorId = "<%-session._id%>";
     $("#modal-notification").modal("show");
     $("#mytable").DataTable({
       ordering: false,
@@ -102,21 +102,19 @@
       responsive: true,
     });
 
-    let subscribe = function () {
-      $.ajax({
-        method: "GET",
-        url: url,
-        timeout: 30000,
-      })
+    let subscribe = function (url, cb) {
+      $.ajax({ method: "GET", url: url, timeout: 30000 })
         .done((data) => {
+          cb(data);
           console.log(data);
           let id = data.id;
+          let message = data.message;
           let messageId = id.toString();
-          if (messageId == userId) {
+          if (messageId == mentorId) {
             setTimeout(function () {
-              subscribe(url);
+              subscribe(url, cb);
               Swal.fire({
-                title: "Schedule Approve Notification",
+                title: message,
                 width: 400,
                 icon: "success",
                 padding: "3em",
@@ -127,12 +125,26 @@
             }, 1000);
           }
         })
-        .fail((error) => {
-          console.log(error);
+        .fail((err) => {
+          console.log(err);
         });
     };
 
-    subscribe(url);
+    subscribe("/pollmentorpayment", function (data) {
+      console.log("payment Data:", data);
+    });
+
+    subscribe("/pollmentorschedule", function (data) {
+      console.log("schedule Data:", data);
+    });
+
+    subscribe("/pollmentorreview", function (data) {
+      console.log("review Data:", data);
+    });
+
+    subscribe("/pollmentorwithdraw", function (data) {
+      console.log("Withdraw Data:", data);
+    });
 
     // function getRequest() {
     //   $.when(

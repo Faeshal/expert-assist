@@ -769,7 +769,11 @@ exports.postUpdateWithdraw = (req, res, next) => {
             })
             .then((result2) => {
               console.log(result2);
-              return longpoll.publish("/pollwithdraw", result2);
+              return longpoll.publish("/pollmentorwithdraw", {
+                id: mentorId,
+                message: "Withdraw Approve Notification",
+                data: result2,
+              });
             })
             .then(() => {
               res.redirect("/admin/withdraw");
