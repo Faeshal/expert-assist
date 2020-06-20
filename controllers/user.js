@@ -212,7 +212,7 @@ exports.postStripeSuccess = (req, res, next) => {
             .publish("/pollmentorpayment", {
               id: idMentor,
               message: "New Payment Notification",
-              data: result,
+              data: true,
             })
             .then(() => {
               Payment.findOne()
@@ -393,7 +393,7 @@ exports.postSchedule = (req, res, next) => {
           return longpoll.publish("/pollmentorschedule", {
             id: mentor,
             message: "New Schedule Notification",
-            data: result,
+            data: true,
           });
         });
       });
@@ -543,7 +543,7 @@ exports.postReview = (req, res, next) => {
               .publish("/pollmentorreview", {
                 id: mentorId,
                 message: "New Review Notification",
-                data: review,
+                data: true,
               })
               .then(() => {
                 const convertMentorId = mongoose.Types.ObjectId(mentor);

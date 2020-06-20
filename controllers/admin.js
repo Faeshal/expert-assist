@@ -705,7 +705,6 @@ exports.getwithdraw = (req, res, next) => {
     .sort({ _id: -1 })
     .exec()
     .then((withdraw) => {
-      console.log(chalk.yellow(withdraw));
       res.render("back/admin/withdraw", {
         moment: moment,
         pageTitle: "Money Withdraw",
@@ -772,7 +771,7 @@ exports.postUpdateWithdraw = (req, res, next) => {
               return longpoll.publish("/pollmentorwithdraw", {
                 id: mentorId,
                 message: "Withdraw Approve Notification",
-                data: result2,
+                data: true,
               });
             })
             .then(() => {

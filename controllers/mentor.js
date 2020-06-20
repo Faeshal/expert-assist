@@ -377,6 +377,12 @@ exports.postBeginExam = (req, res, next) => {
       mentor.examstatus = examstatus;
       return mentor.save();
     })
+    .then((result) => {
+      return longpoll.publish("/pollexam", {
+        message: "Incoming New Mentor Exam",
+        data: true,
+      });
+    })
     .catch((err) => console.log(err));
 };
 
@@ -478,10 +484,10 @@ exports.postUpdateSchedule = (req, res, next) => {
     .then((result) => {
       console.log(chalk.yellow(result));
       let userId = result.user;
-      return longpoll.publish("/pollschedule", {
+      return longpoll.publish("/polluserschedule", {
         id: userId,
         message: "Schedule Approve Notification",
-        data: result,
+        data: true,
       });
     })
     .then(() => {
@@ -698,6 +704,12 @@ exports.postWithdraw = (req, res, next) => {
     .save()
     .then((result) => {
       console.log(chalk.yellow.inverse(result));
+      return longpoll.publish("/polladminwithdraw", {
+        message: "New Withdraw Request Notification",
+        data: true,
+      });
+    })
+    .then(() => {
       res.redirect("/mentor/withdraw");
     })
     .catch((err) => console.log(err));

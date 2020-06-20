@@ -38,7 +38,11 @@ const upload = multer({
 });
 
 // * Polling For User
-longpoll.create("/pollschedule");
+longpoll.create("/polluserschedule");
+
+// * Polling for Admin
+longpoll.create("/pollexam");
+longpoll.create("/polladminwithdraw");
 
 // * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);
