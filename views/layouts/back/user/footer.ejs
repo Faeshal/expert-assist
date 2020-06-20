@@ -115,48 +115,5 @@
     };
 
     subscribe(url);
-
-    // $.get("/api/user/schedules")
-    //   .done((data) => {
-    //     console.log(data);
-    //   })
-    //   .fail();
-    // function getRequest() {
-    //   $.when(
-    //     $.get({
-    //       url: "/api/user/schedules",
-    //     })
-    //   )
-    //     .then((data1) => {
-    //       let scheduleKey =
-    //         "schedule_" + "pake ejs disini simbol strip 1..session.username";
-    //       let newData1 = JSON.stringify(data1.schedule);
-    //       let oldData1 = localStorage.getItem(scheduleKey);
-    //       console.log(`schedule : ${oldData1} = ${newData1} `);
-    //       if (!oldData1) {
-    //         localStorage.setItem(scheduleKey, newData1);
-    //       } else {
-    //         if (newData1 > oldData1) {
-    //           Swal.fire({
-    //             title: "Schedule Approve Notification",
-    //             width: 400,
-    //             icon: "success",
-    //             padding: "3em",
-    //             backdrop: "rgba(0,0,123,0.4)",
-    //             showConfirmButton: false,
-    //             timer: 10000,
-    //           });
-    //           localStorage.removeItem(scheduleKey);
-    //         }
-    //       }
-    //     })
-    //     .fail((err) => {
-    //       console.log(err);
-    //     })
-    //     .always(function () {
-    //       setTimeout(getRequest, interval);
-    //     });
-    // }
-    // setTimeout(getRequest, interval);
   });
 </script>
