@@ -7,7 +7,6 @@ const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const bcrypt = require("bcryptjs");
-const chalk = require("chalk");
 const voca = require("voca");
 const sgMail = require("@sendgrid/mail");
 // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
