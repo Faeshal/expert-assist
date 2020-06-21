@@ -9,8 +9,6 @@ const currency = require("currency.js");
 const ITEMS_PER_PAGE = 9;
 const voca = require("voca");
 const moment = require("moment");
-const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 900, checkperiod: 900 });
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
   const session = req.session;

@@ -14,14 +14,15 @@ router.get(
   frontController.getDetailBlog
 );
 
-// ! THIS IS THE BUG
-// router.get("/mentor/:id", frontController.getDetailMentor);
-
-router.get("/mdetail/:id", frontController.getDetailMentor);
+router.get(
+  "/mdetail/:id",
+  routeCache.cacheSeconds(600),
+  frontController.getDetailMentor
+);
 
 router.get(
   "/mlist",
-  routeCache.cacheSeconds(300),
+  routeCache.cacheSeconds(600),
   frontController.getMentorList
 );
 router.get("/api/mlists", frontController.getMentorListJson);
