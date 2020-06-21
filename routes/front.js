@@ -4,6 +4,7 @@ const router = express.Router();
 const frontController = require("../controllers/front");
 
 router.get("/", frontController.getIndex);
+// router.get("/mentors", frontController.getIndexJson);
 router.get("/search", frontController.getSearch);
 
 router.get("/blog", frontController.getAllBlog);
