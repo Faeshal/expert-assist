@@ -286,7 +286,7 @@ exports.getScheduleJson = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postSchedule = (req, res, next) => {
+exports.postSchedule = asyncHandler(async (req, res, next) => {
   const user = req.body.user;
   const mentor = req.body.mentor;
   const duration = req.body.duration;
@@ -295,7 +295,7 @@ exports.postSchedule = (req, res, next) => {
   const finishTime = moment(datetime).add(duration, "hours").toISOString();
 
   // ** Check Jadwal Sudah ada yang booking belum
-  Schedule.findOne({
+  const isEqual = await Schedule.findOne({
     $and: [
       { mentor: mentor },
       { approve: "true" },
@@ -321,47 +321,44 @@ exports.postSchedule = (req, res, next) => {
         ],
       },
     ],
-  })
-    .then((isEqual) => {
-      console.log(chalk.whiteBright("isEqual: " + isEqual));
-      if (isEqual) {
-        console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
-        return res.json({ message: false });
-      }
-      // ** Check ada ga jadwal yang di reject sebelumnya , kalau ada delete data itu
-      Schedule.findOne({
-        $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
-      }).then((lastReject) => {
-        if (lastReject) {
-          Schedule.findByIdAndDelete(lastReject._id).then(() => {
-            console.log(
-              chalk.red.inverse("Last Rejected Data Succesfully Deleted")
-            );
-          });
-        }
-        // ** Kalau udah lolos semua , baru proses save
+  });
 
-        const schedule = new Schedule({
-          user: user,
-          mentor: mentor,
-          duration: duration,
-          datetime: datetime,
-          endtime: finishTime,
-          note: note,
-        });
-        return schedule.save().then((result) => {
-          console.log(chalk.yellow.inverse(result));
-          res.json({ message: true });
-          return longpoll.publish("/pollmentorschedule", {
-            id: mentor,
-            message: "New Schedule Notification",
-            data: true,
-          });
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  console.log(chalk.whiteBright("isEqual: " + isEqual));
+
+  if (isEqual) {
+    console.log(chalk.red.inverse("JADWAL SUDAH DI PESAN"));
+    return res.json({ message: false });
+  }
+
+  // ** Check ada ga jadwal yang di reject sebelumnya , kalau ada delete data itu
+  const lastReject = await Schedule.findOne({
+    $and: [{ user: user }, { mentor: mentor }, { approve: "reject" }],
+  });
+
+  if (lastReject) {
+    await Schedule.findByIdAndDelete(lastReject._id);
+    console.log(chalk.red.inverse("Last Rejected Data Succesfully Deleted"));
+  }
+
+  // ** Kalau udah lolos semua , baru proses save
+  const schedule = new Schedule({
+    user: user,
+    mentor: mentor,
+    duration: duration,
+    datetime: datetime,
+    endtime: finishTime,
+    note: note,
+  });
+
+  const result = await schedule.save();
+  console.log(chalk.yellow.inverse(result));
+  longpoll.publish("/pollmentorschedule", {
+    id: mentor,
+    message: "New Schedule Notification",
+    data: true,
+  });
+  return res.json({ message: true });
+});
 
 exports.postEditSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
@@ -424,59 +421,49 @@ exports.getMentoring = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getLive = (req, res, next) => {
+exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.user._id;
-  Schedule.findOne({ user: id })
-    .sort({ datetime: -1 })
-    .then((schedule) => {
-      const dateTimeSchedule = schedule.datetime;
-      console.log("MASUK");
-      if (schedule.approve == "false" || schedule.approve == "reject") {
-        res.render("layouts/404");
-        console.log("Not Auhtorize");
-      } else if (schedule.approve == "true") {
-        res.render("back/user/live", {
-          schedule: schedule,
-          user: req.session.user._id,
-          dateTimeSchedule: dateTimeSchedule,
-          moment: moment,
-        });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  const schedule = await Schedule.findOne({ user: id }).sort({ datetime: -1 });
+  const dateTimeSchedule = schedule.datetime;
+  if (schedule.approve == "false" || schedule.approve == "reject") {
+    console.log(chalk.red.inverse("Not Auhtorize"));
+    return res.render("layouts/404");
+  } else if (schedule.approve == "true") {
+    res.render("back/user/live", {
+      schedule: schedule,
+      user: req.session.user._id,
+      dateTimeSchedule: dateTimeSchedule,
+      moment: moment,
+    });
+  }
+});
 
-exports.getReview = (req, res, next) => {
+exports.getReview = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-
-  Review.find({ user: session._id })
+  const review = await Review.find({ user: session._id })
     .populate("mentor", "username")
     .sort({ _id: -1 })
-    .exec()
-    .then((review) => {
-      Schedule.findOne({ $and: [{ user: session._id }, { status: true }] })
-        .sort({ _id: -1 })
-        .then((schedule) => {
-          if (!schedule) {
-            schedule = 0;
-            console.log(chalk.redBright.inverse("Ga punya jadwal"));
-          } else {
-            console.log("punya jadwal");
-          }
-          res.render("back/user/review", {
-            session: session,
-            review: review,
-            moment: moment,
-            voca: voca,
-            schedule: schedule,
-          });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+    .exec();
+  let schedule = await Schedule.findOne({
+    $and: [{ user: session._id }, { status: true }],
+  }).sort({ _id: -1 });
 
-exports.postReview = (req, res, next) => {
+  if (!schedule) {
+    schedule = 0;
+    console.log(chalk.redBright.inverse("Ga punya jadwal"));
+  } else {
+    console.log("punya jadwal");
+  }
+  res.render("back/user/review", {
+    session: session,
+    review: review,
+    moment: moment,
+    voca: voca,
+    schedule: schedule,
+  });
+});
+
+exports.postReview = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const content = req.body.content;
   const rating = req.body.rating;
@@ -490,51 +477,38 @@ exports.postReview = (req, res, next) => {
     mentor: mentor,
   });
 
-  Schedule.findById(id)
-    .then((schedule) => {
-      schedule.rating = true;
-      return schedule.save().then(() => {
-        review
-          .save()
-          .then((review) => {
-            console.log(chalk.yellow.inverse(review));
-            let mentorId = review.mentor;
-            return longpoll
-              .publish("/pollmentorreview", {
-                id: mentorId,
-                message: "New Review Notification",
-                data: true,
-              })
-              .then(() => {
-                const convertMentorId = mongoose.Types.ObjectId(mentor);
-                Review.aggregate([
-                  {
-                    $match: { mentor: convertMentorId },
-                  },
-                  {
-                    $group: { _id: null, avgRating: { $avg: "$rating" } },
-                  },
-                ]).then((resultReview) => {
-                  console.log(chalk.bgYellow(JSON.stringify(resultReview)));
-                  let avgRating = resultReview[0].avgRating;
-                  Mentor.findById(mentor)
-                    .then((mentors) => {
-                      mentors.rating = avgRating;
-                      return mentors.save();
-                    })
-                    .then((result) => {
-                      console.log(chalk.magenta.inverse(result));
-                      res.redirect("/user/review");
-                    })
-                    .catch((err) => console.log(err));
-                });
-              });
-          })
-          .catch((err) => console.log(err));
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const schedule = await Schedule.findById(id);
+  schedule.rating = true;
+  await schedule.save();
+
+  const result = await review.save();
+  console.log(chalk.yellow.inverse(result));
+
+  longpoll.publish("/pollmentorreview", {
+    id: mentor,
+    message: "New Review Notification",
+    data: true,
+  });
+
+  const convertMentorId = mongoose.Types.ObjectId(mentor);
+  const resultReview = await Review.aggregate([
+    {
+      $match: { mentor: convertMentorId },
+    },
+    {
+      $group: { _id: null, avgRating: { $avg: "$rating" } },
+    },
+  ]);
+
+  console.log(chalk.bgYellow(JSON.stringify(resultReview)));
+  let avgRating = resultReview[0].avgRating;
+  const mentors = await Mentor.findById(mentor);
+
+  mentors.rating = avgRating;
+  const result2 = await mentors.save();
+  console.log(chalk.magenta.inverse(result2));
+  res.redirect("/user/review");
+});
 
 exports.postChangePassword = (req, res, next) => {
   const id = req.body.id;
@@ -578,36 +552,34 @@ exports.postChangePassword = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getPayment = (req, res, next) => {
+exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  Payment.find({ user: session._id })
+  const payment = await Payment.find({ user: session._id })
     .sort({ _id: -1 })
     .populate("mentor", "username email")
-    .exec()
-    .then((payment) => {
-      let lastPaymentId = "";
-      let lastDatetime = "";
+    .exec();
 
-      if (payment.length > 0) {
-        console.log(chalk.redBright.inverse("Ada isinya"));
-        lastPaymentId = payment[0]._id;
-        lastDatetime = payment[0].datetime;
-      } else {
-        console.log(chalk.red.inverse("Payment Array Kosong"));
-      }
+  let lastPaymentId = "";
+  let lastDatetime = "";
 
-      res.render("back/user/payment", {
-        moment: moment,
-        voca: voca,
-        payment: payment,
-        session: session,
-        currency: currency,
-        lastPaymentId: lastPaymentId,
-        lastDatetime: lastDatetime,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  if (payment.length > 0) {
+    console.log(chalk.redBright.inverse("Ada isinya"));
+    lastPaymentId = payment[0]._id;
+    lastDatetime = payment[0].datetime;
+  } else {
+    console.log(chalk.red.inverse("Payment Array Kosong"));
+  }
+
+  res.render("back/user/payment", {
+    moment: moment,
+    voca: voca,
+    payment: payment,
+    session: session,
+    currency: currency,
+    lastPaymentId: lastPaymentId,
+    lastDatetime: lastDatetime,
+  });
+});
 
 exports.getPaymentJson = (req, res, next) => {
   const session = req.session.user;
