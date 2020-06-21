@@ -9,6 +9,8 @@ const currency = require("currency.js");
 const ITEMS_PER_PAGE = 9;
 const voca = require("voca");
 const moment = require("moment");
+const NodeCache = require("node-cache");
+const cache = new NodeCache({ stdTTL: 900, checkperiod: 900 });
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
   const session = req.session;
@@ -33,31 +35,6 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
     currency: currency,
   });
 });
-
-// exports.getIndexJson = asyncHandler(async (req, res, next) => {
-//   const newMentor = await Mentor.find({
-//     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-//   })
-//     .limit(7)
-//     .sort({ _id: -1 });
-//   const bestMentor = await Mentor.find({ mentorstatus: "true" })
-//     .limit(7)
-//     .sort({ rating: -1 });
-//   const cheapestMentor = await Mentor.find({
-//     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-//   })
-//     .limit(7)
-//     .sort({ price: 1 });
-//   if (!newMentor || !bestMentor || !cheapestMentor) {
-//     return res.json({ message: "no data" });
-//   }
-//   res.status(200).json({
-//     success: true,
-//     newMentor: newMentor,
-//     bestMentor: bestMentor,
-//     cheapestMentor: cheapestMentor,
-//   });
-// });
 
 exports.getAllBlog = (req, res, next) => {
   // *FindOne mengembalikan object
