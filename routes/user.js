@@ -40,9 +40,9 @@ const upload = multer({
 });
 
 // * Longpoll for mentor
-longpoll.create("/pollmentorpayment");
-longpoll.create("/pollmentorschedule");
-longpoll.create("/pollmentorreview");
+longpoll.create("/pollmentorpayment", { maxListeners: 100 });
+longpoll.create("/pollmentorschedule", { maxListeners: 100 });
+longpoll.create("/pollmentorreview", { maxListeners: 100 });
 
 // * Dashboard
 router.get(
@@ -53,7 +53,12 @@ router.get(
 );
 
 // * Profile
-router.get("/user/profile", isAuth, userController.getProfile);
+router.get(
+  "/user/profile",
+  routeCache.cacheSeconds(600),
+  isAuth,
+  userController.getProfile
+);
 router.post(
   "/user/profile/update",
   isAuth,
@@ -77,8 +82,6 @@ router.get("/stripe/:id", userController.getStripe);
 router.get("/payment/success/:id", userController.postStripeSuccess);
 router.get("/payment/cancel/:id", userController.postStripeCancel);
 router.get("/api/user/payments", isAuth, userController.getPaymentJson);
-
-// User Dashboard
 router.get(
   "/user/payment",
   routeCache.cacheSeconds(600),
@@ -87,7 +90,12 @@ router.get(
 );
 
 // * Scheduling
-router.get("/user/schedule", isAuth, userController.getSchedule);
+router.get(
+  "/user/schedule",
+  routeCache.cacheSeconds(600),
+  isAuth,
+  userController.getSchedule
+);
 router.get("/api/user/schedules", isAuth, userController.getScheduleJson);
 router.post("/user/schedule", isAuth, userController.postSchedule);
 router.post("/user/schedule/edit", userController.postEditSchedule);

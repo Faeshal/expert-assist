@@ -97,7 +97,8 @@
           if (messageId == userId) {
             setTimeout(function () {
               subscribe(url);
-              Swal.fire({
+              console.log("TRIGERED ALLERT");
+              return Swal.fire({
                 title: message,
                 width: 400,
                 icon: "success",

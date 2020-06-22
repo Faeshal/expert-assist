@@ -3,14 +3,9 @@ const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 const authController = require("../controllers/auth");
-const routeCache = require("route-cache");
 
 // * Auth User & Mentor
-router.get(
-  "/register",
-  routeCache.cacheSeconds(900),
-  authController.getRegister
-);
+router.get("/register", authController.getRegister);
 router.post(
   "/register",
   [
@@ -34,7 +29,7 @@ router.post(
   authController.postRegister
 );
 
-router.get("/login", routeCache.cacheSeconds(900), authController.getLogin);
+router.get("/login", authController.getLogin);
 
 router.post(
   "/login",
@@ -53,17 +48,9 @@ router.post(
 );
 
 // * Auth Admin
-router.get(
-  "/registerAdmin",
-  routeCache.cacheSeconds(900),
-  authController.getRegisterAdmin
-);
+router.get("/registerAdmin", authController.getRegisterAdmin);
 router.post("/registerAdmin", authController.postRegisterAdmin);
-router.get(
-  "/loginAdmin",
-  routeCache.cacheSeconds(900),
-  authController.getLoginAdmin
-);
+router.get("/loginAdmin", authController.getLoginAdmin);
 router.post("/loginAdmin", authController.postLoginAdmin);
 
 router.post("/logout", authController.postLogout);

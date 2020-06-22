@@ -18,6 +18,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
+const routeCache = require("route-cache");
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
@@ -102,11 +103,11 @@ exports.updateProfile = (req, res, next) => {
         fileHelper.deleteFile(user.profilepicture);
         user.profilepicture = profilepicture.path.replace("\\", "/");
       }
-
       return user.save();
     })
     .then((result) => {
       console.log("Profile Updated");
+      routeCache.removeCache("/user/profile");
       res.redirect("/user/profile");
     })
     .catch((err) => console.log(err));
@@ -128,6 +129,9 @@ exports.postPayment = asyncHandler(async (req, res, next) => {
   });
   const result = await payment.save();
   console.log(chalk.yellow.inverse(result));
+  routeCache.removeCache("/user/dashboard");
+  routeCache.removeCache("/user/payment");
+  routeCache.removeCache("/user/schedule");
   res.redirect("/stripe/" + payment._id);
 });
 
@@ -204,6 +208,9 @@ exports.postStripeSuccess = (req, res, next) => {
                     })
                     .then((mentorIncome) => {
                       console.log(chalk.red.inverse(mentorIncome));
+                      routeCache.removeCache("/user/dashboard");
+                      routeCache.removeCache("/user/payment");
+                      routeCache.removeCache("/user/schedule");
                       res.redirect("/user/schedule");
                     })
                     .catch((err) => console.log(err));
@@ -220,6 +227,9 @@ exports.postStripeCancel = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const result = await Payment.findByIdAndDelete(id);
   console.log(chalk.red.inverse(`Deleted : ${result}`));
+  routeCache.removeCache("/user/dashboard");
+  routeCache.removeCache("/user/payment");
+  routeCache.removeCache("/user/schedule");
   res.redirect("/");
 });
 
@@ -352,6 +362,9 @@ exports.postSchedule = asyncHandler(async (req, res, next) => {
 
   const result = await schedule.save();
   console.log(chalk.yellow.inverse(result));
+  routeCache.removeCache("/user/dashboard");
+  routeCache.removeCache("/user/payment");
+  routeCache.removeCache("/user/schedule");
   longpoll.publish("/pollmentorschedule", {
     id: mentor,
     message: "New Schedule Notification",
@@ -404,6 +417,10 @@ exports.getMentoring = (req, res, next) => {
           console.log(incoming);
           console.log(chalk.magenta.inverse(newdate));
           console.log(chalk.magenta.inverse(dateTimeSchedule));
+
+          routeCache.removeCache("/user/dashboard");
+          routeCache.removeCache("/user/payment");
+          routeCache.removeCache("/user/schedule");
 
           res.render("back/user/mentoring", {
             payment: payment,
@@ -483,6 +500,10 @@ exports.postReview = asyncHandler(async (req, res, next) => {
 
   const result = await review.save();
   console.log(chalk.yellow.inverse(result));
+
+  routeCache.removeCache("/user/dashboard");
+  routeCache.removeCache("/user/schedule");
+  routeCache.removeCache("/user/review");
 
   longpoll.publish("/pollmentorreview", {
     id: mentor,
