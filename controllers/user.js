@@ -75,7 +75,7 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.updateProfile = (req, res, next) => {
+exports.updateProfile = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
   const job = req.body.job;
@@ -87,29 +87,27 @@ exports.updateProfile = (req, res, next) => {
   const linkedin = req.body.linkedin;
   const profilepicture = req.file;
 
-  User.findOne({ _id: id })
-    .then((user) => {
-      user.username = username;
-      user.job = job;
-      user.bio = bio;
-      user.city = city;
-      user.phone = phone;
-      user.twitter = twitter;
-      user.github = github;
-      user.linkedin = linkedin;
+  const user = await User.findOne({ _id: id });
 
-      if (profilepicture) {
-        fileHelper.deleteFile(user.profilepicture);
-        user.profilepicture = profilepicture.path.replace("\\", "/");
-      }
-      return user.save();
-    })
-    .then((result) => {
-      console.log("Profile Updated");
-      res.redirect("/user/profile");
-    })
-    .catch((err) => console.log(err));
-};
+  user.username = username;
+  user.job = job;
+  user.bio = bio;
+  user.city = city;
+  user.phone = phone;
+  user.twitter = twitter;
+  user.github = github;
+  user.linkedin = linkedin;
+
+  if (profilepicture) {
+    fileHelper.deleteFile(user.profilepicture);
+    user.profilepicture = profilepicture.path.replace("\\", "/");
+  }
+
+  const result = await user.save();
+
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/user/profile");
+});
 
 exports.postPayment = asyncHandler(async (req, res, next) => {
   const user = req.body.user;
@@ -222,68 +220,47 @@ exports.postStripeCancel = asyncHandler(async (req, res, next) => {
   res.redirect("/");
 });
 
-exports.getSchedule = (req, res, next) => {
+exports.getSchedule = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  Payment.findOne({ user: session._id })
+  const payment = await Payment.findOne({ user: session._id })
     .sort({ _id: -1 })
     .populate("user", "username")
-    .populate("mentor", "username")
-    .exec()
-    .then((payment) => {
-      Schedule.find({ user: session._id })
-        .sort({ _id: -1 })
-        .populate("mentor", "username")
-        .exec()
-        .then((schedule) => {
-          // ** Check , Ada ga jadwal yang di reject sebelumnya.
-          Schedule.findOne({
-            $and: [{ user: session._id }, { approve: "reject" }],
-          })
-            .sort({ _id: -1 })
-            .populate("mentor", "username")
-            .then((rejectSchedule) => {
-              let userId;
-              let mentorId;
-              let duration;
-              let mentorUsername;
-              if (rejectSchedule !== null) {
-                userId = rejectSchedule.user;
-                mentorId = rejectSchedule.mentor._id;
-                duration = rejectSchedule.duration;
-                mentorUsername = rejectSchedule.mentor.username;
-              }
-              console.log(chalk.yellow.inverse(rejectSchedule));
-              res.render("back/user/schedule", {
-                payment: payment,
-                schedule: schedule,
-                moment: moment,
-                session: session,
-                rejectSchedule: rejectSchedule,
-                userId: userId,
-                mentorId: mentorId,
-                duration: duration,
-                mentorUsername: mentorUsername,
-              });
-            });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+    .populate("mentor", "username");
 
-exports.getScheduleJson = (req, res, next) => {
-  const session = req.session.user;
-  Schedule.find({ $and: [{ user: session._id }, { approve: true }] })
-    .countDocuments()
-    .then((schedule) => {
-      if (schedule) {
-        res.status(200).json({ message: "Success", schedule: schedule });
-      } else {
-        res.json({ message: "Data Not Found", schedule: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  const schedule = await Schedule.find({ user: session._id })
+    .sort({ _id: -1 })
+    .populate("mentor", "username");
+
+  // ** Check , Ada ga jadwal yang di reject sebelumnya.
+  const rejectSchedule = await Schedule.findOne({
+    $and: [{ user: session._id }, { approve: "reject" }],
+  })
+    .sort({ _id: -1 })
+    .populate("mentor", "username");
+
+  let userId;
+  let mentorId;
+  let duration;
+  let mentorUsername;
+  if (rejectSchedule !== null) {
+    userId = rejectSchedule.user;
+    mentorId = rejectSchedule.mentor._id;
+    duration = rejectSchedule.duration;
+    mentorUsername = rejectSchedule.mentor.username;
+  }
+  console.log(chalk.yellow.inverse(rejectSchedule));
+  res.render("back/user/schedule", {
+    payment: payment,
+    schedule: schedule,
+    moment: moment,
+    session: session,
+    rejectSchedule: rejectSchedule,
+    userId: userId,
+    mentorId: mentorId,
+    duration: duration,
+    mentorUsername: mentorUsername,
+  });
+});
 
 exports.postSchedule = asyncHandler(async (req, res, next) => {
   const user = req.body.user;
@@ -369,56 +346,49 @@ exports.postEditSchedule = asyncHandler(async (req, res, next) => {
   res.redirect("/user/schedule");
 });
 
-exports.getMentoring = (req, res, next) => {
+exports.getMentoring = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
   const dateTimeNow = new Date();
+  const payment = await Payment.findOne({ user: session._id });
+  if (!payment) {
+    console.log("User Not Yet Pay");
+  }
+  const schedule = await Schedule.findOne({
+    $and: [{ user: session._id }, { approve: "true" }, { status: false }],
+  })
+    .sort({ datetime: 1 })
+    .populate("mentor", "username");
 
-  Payment.findOne({ user: session._id })
-    .then((payment) => {
-      if (!payment) {
-        console.log("User Not Yet Pay");
-      }
-      Schedule.findOne({
-        $and: [{ user: session._id }, { approve: "true" }, { status: false }],
-      })
-        .sort({ datetime: 1 })
-        .populate("mentor", "username")
-        .then((schedule) => {
-          console.log(chalk.green.inverse(schedule));
-          let dateTimeSchedule = "";
-          if (schedule) {
-            dateTimeSchedule = schedule.datetime;
-          } else {
-            schedule = 0;
-          }
+  console.log(chalk.green.inverse(schedule));
 
-          var now = moment().format();
-          var finish = moment(dateTimeSchedule).format();
+  let dateTimeSchedule = "";
+  if (schedule) {
+    dateTimeSchedule = schedule.datetime;
+  } else {
+    schedule = 0;
+  }
 
-          let newdate = new Date();
-          let hasil = Math.abs(dateTimeSchedule - newdate);
-          let incoming = moment.utc(hasil).format("LTS");
+  let now = moment().format();
+  let newdate = new Date();
+  let hasil = Math.abs(dateTimeSchedule - newdate);
+  let incoming = moment.utc(hasil).format("LTS");
 
-          console.log(toString);
-          console.log(incoming);
-          console.log(chalk.magenta.inverse(newdate));
-          console.log(chalk.magenta.inverse(dateTimeSchedule));
+  console.log(toString);
+  console.log(incoming);
+  console.log(chalk.magenta.inverse(newdate));
+  console.log(chalk.magenta.inverse(dateTimeSchedule));
 
-          res.render("back/user/mentoring", {
-            payment: payment,
-            schedule: schedule,
-            session: session,
-            dateTimeNow: dateTimeNow,
-            dateTimeSchedule: dateTimeSchedule,
-            moment: moment,
-            now: now,
-            incoming: incoming,
-          });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+  res.render("back/user/mentoring", {
+    payment: payment,
+    schedule: schedule,
+    session: session,
+    dateTimeNow: dateTimeNow,
+    dateTimeSchedule: dateTimeSchedule,
+    moment: moment,
+    now: now,
+    incoming: incoming,
+  });
+});
 
 exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.user._id;
@@ -504,12 +474,12 @@ exports.postReview = asyncHandler(async (req, res, next) => {
   const mentors = await Mentor.findById(mentor);
 
   mentors.rating = avgRating;
-  const result2 = await mentors.save();
-  console.log(chalk.magenta.inverse(result2));
+  await mentors.save();
+
   res.redirect("/user/review");
 });
 
-exports.postChangePassword = (req, res, next) => {
+exports.postChangePassword = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const password = req.body.password;
   const newPassword = req.body.newPassword;
@@ -522,34 +492,23 @@ exports.postChangePassword = (req, res, next) => {
     console.log(chalk.green.inverse("lulus uji express-validator"));
   }
 
-  User.findById(id)
-    .then((user) => {
-      const oldPassword = user.password;
-      bcrypt.compare(password, oldPassword).then((doMatch) => {
-        if (doMatch) {
-          return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
-            User.findById(id)
-              .then((users) => {
-                users.password = hashedPassword;
-                return users.save().then((result, err) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    res.json(result);
-                    console.log(chalk.yellowBright(result));
-                  }
-                });
-              })
-              .catch((err) => console.log(err));
-          });
-        } else {
-          console.log(chalk.redBright("password not match"));
-          res.status(422).json({ error: "password not match" });
-        }
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const user = await User.findById(id);
+  const oldPassword = user.password;
+
+  const doMatch = await bcrypt.compare(password, oldPassword);
+  if (doMatch) {
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    const users = await User.findById(id);
+    users.password = hashedPassword;
+    const result = await users.save();
+    console.log(chalk.yellowBright(result));
+    res.json(result);
+  } else {
+    console.log(chalk.redBright("password not match"));
+    res.status(422).json({ error: "password not match" });
+  }
+});
 
 exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
@@ -580,19 +539,16 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getPaymentJson = (req, res, next) => {
+exports.getPaymentJson = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
-  Payment.find({ $and: [{ user: session._id }, { status: true }] })
-    .countDocuments()
-    .then((payment) => {
-      if (payment) {
-        res.status(200).json({ message: "Success", total: payment });
-      } else {
-        res.json({ message: "Data Not Found", total: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  const payment = await Payment.find({
+    $and: [{ user: session._id }, { status: true }],
+  }).countDocuments();
+  if (!payment) {
+    res.json({ message: "Data Not Found", total: 0 });
+  }
+  res.status(200).json({ message: "Success", total: payment });
+});
 
 // ** Refactor
 // exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
