@@ -373,6 +373,22 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
     .populate({ path: "user", select: ["username", "email"] })
     .sort({ _id: -1 });
   const mentor = await Mentor.findById(session._id);
+
+  // ?? Hanya untuk testing , hapus setelahnya
+  const scheudleOne = await Schedule.findOne({ mentor: session._id })
+    .populate("user", "email")
+    .populate("mentor", "email");
+
+  const time = scheudleOne.datetime;
+
+  const unixTime = moment(time).unix();
+  const substactTime = moment(time).subtract(1, "hour").unix();
+
+  console.log(chalk.greenBright.inverse("Unix Time: " + unixTime));
+  console.log(chalk.greenBright.inverse("Sudah Dikurangi : " + substactTime));
+
+  // ?? Akhir
+
   res.render("back/mentor/schedule", {
     mentor: mentor,
     schedule: schedule,
@@ -413,12 +429,25 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const approve = req.body.approve;
   const link = req.body.link;
-  const schedule = await Schedule.findById(id);
-
+  const schedule = await Schedule.findById(id)
+    .populate("user", "email")
+    .populate("mentor", "email");
   schedule.approve = approve;
   schedule.link = link;
+
+  const status = schedule.approve;
+  const datetime = schedule.datetime;
+
+  // ** Waktu di jadwal , Dengan format normal (ISO time)
+  const calendarTime = moment(datetime).format("LLLL");
+  // ** Waktu di jadwal , dikurangi 1 Jam dan dirubah ke format UNIX time
+  const unixTime = moment(datetime).subtract(2, "minutes").unix();
+  console.log(chalk.green.inverse(unixTime));
+
+  const userEmail = schedule.user.email;
+  const mentorEmail = schedule.mentor.email;
+
   const result = await schedule.save();
-  // const status = result.approve;
   console.log(chalk.yellow.inverse(result));
 
   // ** Polling
@@ -432,21 +461,18 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   res.redirect("/mentor/schedule");
 
   // ** Send Email Before Mentoring Come
-  // if (status == "true") {
-  //   const unixTime = moment(result.datetime, "X");
-  //   const calendarTime = moment(result.datetime).format("LT");
-  //   const mentorEmail = result.rmentor.email;
-  //   const userEmail = result.user.email;
-  //   const msg = {
-  //     to: [mentorEmail, userEmail],
-  //     send_each_at: [unixTime],
-  //     from: "expertassist@example.com",
-  //     subject: "Incoming Mentoring Notification",
-  //     text: "Dont Forget to attend to your mentoring session",
-  //     html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
-  //   };
-  //   return sgMail.send(msg);
-  // }
+  if (status == "true") {
+    const msg = {
+      to: [userEmail, mentorEmail],
+      send_each_at: [unixTime, unixTime],
+      from: "expertassist@example.com",
+      subject: "Incoming Mentoring Notification",
+      text: "Dont Forget to attend to your mentoring session",
+      html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
+    };
+    console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
+    return sgMail.send(msg);
+  }
 });
 
 exports.getMentoring = asyncHandler(async (req, res, next) => {
