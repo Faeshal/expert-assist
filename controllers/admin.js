@@ -15,6 +15,7 @@ const mongoose = require("mongoose");
 const currency = require("currency.js");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 const asyncHandler = require("express-async-handler");
+const routeCache = require("route-cache");
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -203,6 +204,8 @@ exports.createBlog = (req, res, nexta) => {
     })
     .then((result) => {
       console.log(result);
+      routeCache.removeCache("/blog");
+      routeCache.removeCache("/blog/:id");
       res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
@@ -244,6 +247,8 @@ exports.updateBlog = (req, res, next) => {
   )
     .then((result) => {
       console.log(result);
+      routeCache.removeCache("/blog");
+      routeCache.removeCache("/blog/:id");
       res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
@@ -257,6 +262,8 @@ exports.deleteBlog = (req, res, next) => {
     .then((admins) => {
       console.log(admins);
       console.log("Blog Deleted");
+      routeCache.removeCache("/blog");
+      routeCache.removeCache("/blog/:id");
       res.redirect("/admin/blog");
     })
     .catch((err) => console.log(err));
@@ -355,6 +362,7 @@ exports.postFaq = (req, res, next) => {
     })
     .then((result) => {
       console.log(result);
+      routeCache.removeCache("/faq");
       res.redirect("/admin/faq");
     })
     .catch((err) => console.log(err));
@@ -376,6 +384,7 @@ exports.updateFaq = (req, res, next) => {
   )
     .then((result) => {
       console.log(result);
+      routeCache.removeCache("/faq");
       res.redirect("/admin/faq");
     })
     .catch((err) => console.log(err));
@@ -387,6 +396,7 @@ exports.deleteFaq = (req, res, next) => {
     .then((admins) => {
       console.log(admins);
       console.log("Faq Deleted");
+      routeCache.removeCache("/faq");
       res.redirect("/admin/faq");
     })
     .catch((err) => console.log(err));
@@ -515,6 +525,9 @@ exports.postScore = (req, res, next) => {
       return mentor.save();
     })
     .then((result) => {
+      routeCache.removeCache("/");
+      routeCache.removeCache("/mlist");
+      routeCache.removeCache("/mdetail/:id");
       res.redirect("/admin/mentor/exam");
     })
     .catch((err) => console.log(err));

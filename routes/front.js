@@ -29,7 +29,6 @@ router.get("/api/mlists", frontController.getMentorListJson);
 router.get("/filter", frontController.getFilter);
 router.get("/sort", frontController.getSort);
 
-// FAQ
 router.get("/faq", routeCache.cacheSeconds(600), frontController.getFaq);
 
 module.exports = router;
