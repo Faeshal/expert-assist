@@ -17,6 +17,10 @@ const voca = require("voca");
 const { validationResult } = require("express-validator");
 const longpoll = require("express-longpoll")(app);
 const asyncHandler = require("express-async-handler");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
@@ -414,9 +418,11 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   schedule.approve = approve;
   schedule.link = link;
   const result = await schedule.save();
+  // const status = result.approve;
   console.log(chalk.yellow.inverse(result));
 
-  let userId = result.user;
+  // ** Polling
+  const userId = result.user;
   longpoll.publish("/polluserschedule", {
     id: userId,
     message: "Schedule Approve Notification",
@@ -424,6 +430,23 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   });
 
   res.redirect("/mentor/schedule");
+
+  // ** Send Email Before Mentoring Come
+  // if (status == "true") {
+  //   const unixTime = moment(result.datetime, "X");
+  //   const calendarTime = moment(result.datetime).format("LT");
+  //   const mentorEmail = result.rmentor.email;
+  //   const userEmail = result.user.email;
+  //   const msg = {
+  //     to: [mentorEmail, userEmail],
+  //     send_each_at: [unixTime],
+  //     from: "expertassist@example.com",
+  //     subject: "Incoming Mentoring Notification",
+  //     text: "Dont Forget to attend to your mentoring session",
+  //     html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
+  //   };
+  //   return sgMail.send(msg);
+  // }
 });
 
 exports.getMentoring = asyncHandler(async (req, res, next) => {

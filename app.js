@@ -26,13 +26,6 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors());
 
-app.use(
-  errorHandler({
-    debug: true,
-    log: true,
-  })
-);
-
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
@@ -92,20 +85,25 @@ mongoose.connect("mongodb://localhost:27017/exas", {
   useUnifiedTopology: true,
   useCreateIndex: true,
 });
-
 mongoose.connection.on("connected", function () {
   console.log(chalk.blueBright("MongoDB connected"));
 });
-
 mongoose.connection.on("error", function (err) {
   console.log(chalk.redBright("MongoDB connection error: " + err));
 });
 
+// ** Error Handler
+app.use(
+  errorHandler({
+    debug: true,
+    log: true,
+  })
+);
+
 // * Server Listen
 app.listen(PORT, (err) => {
   if (err) {
-    console.log(chalk.red.inverse(`Error occured : ${err}`));
-  } else {
-    console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
+    console.log(chalk.red.inverse(`Error : ${err}`));
   }
+  console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
 });
