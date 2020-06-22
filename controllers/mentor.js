@@ -108,7 +108,7 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.postMentorStatus = (req, res, next) => {
+exports.postMentorStatus = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
   const mentorstatus = req.body.mentorstatus;
   const mentorusername = voca.slugify(req.body.mentorusername);
@@ -135,16 +135,12 @@ exports.postMentorStatus = (req, res, next) => {
       console.log(error);
     });
 
-  Mentor.findById(req.session.mentor._id)
-    .then((mentor) => {
-      mentor.mentorstatus = mentorstatus;
-      mentor.videocallroom = roomName;
-      return mentor.save().then(() => {
-        res.redirect("/mentor/profile");
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(req.session.mentor._id);
+  mentor.mentorstatus = mentorstatus;
+  mentor.videocallroom = roomName;
+  await mentor.save();
+  res.redirect("/mentor/profile");
+});
 
 exports.getProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
@@ -173,9 +169,9 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getPaymentJson = (req, res, next) => {
+exports.getPaymentJson = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Payment.aggregate([
+  const paymentData = await Payment.aggregate([
     {
       $match: { mentor: session._id },
     },
@@ -187,23 +183,17 @@ exports.getPaymentJson = (req, res, next) => {
     },
     { $sort: { _id: -1 } },
     { $limit: 6 },
-  ])
-    .then((paymentData) => {
-      Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
-        .countDocuments()
-        .then((total) => {
-          if (total) {
-            res
-              .status(200)
-              .json({ message: "true", data: paymentData, total: total });
-          } else {
-            res.json({ message: "No Mentor Data", data: 0 });
-          }
-        });
-    })
+  ]);
 
-    .catch((err) => console.log(err));
-};
+  const total = await Payment.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
+
+  if (!total) {
+    res.json({ message: "No Mentor Data", data: 0 });
+  }
+  res.status(200).json({ message: true, data: paymentData, total: total });
+});
 
 exports.getUpdateProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
@@ -214,7 +204,7 @@ exports.getUpdateProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.updateProfile = (req, res, next) => {
+exports.updateProfile = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
   const price = req.body.price;
@@ -241,61 +231,52 @@ exports.updateProfile = (req, res, next) => {
   console.log(req.files["coverpicture"]);
   console.log("================");
   console.log(req.files);
-  Mentor.findOne({ _id: id })
-    .then((mentor) => {
-      mentor.username = username;
-      mentor.price = price;
-      mentor.city = city;
-      mentor.job = job;
 
-      if (profilepicture) {
-        fileHelper.deleteFile(mentor.profilepicture);
-        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      } else {
-        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      }
+  const mentor = await Mentor.findOne({ _id: id });
 
-      if (coverpicture) {
-        // fileHelper.deleteFile(mentor.coverpicture);
-        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      } else {
-        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      }
+  mentor.username = username;
+  mentor.price = price;
+  mentor.city = city;
+  mentor.job = job;
 
-      mentor.phone = phone;
-      mentor.twitter = twitter;
-      mentor.github = github;
-      mentor.linkedin = linkedin;
-      mentor.experience = experience;
-      mentor.portofolio = portofolio;
-      mentor.cv = cv;
-      mentor.bio = bio;
-      mentor.desc = desc;
-      mentor.skill = skill;
-      mentor.bankname = bankname;
-      mentor.bankaccount = bankaccount;
+  if (profilepicture) {
+    fileHelper.deleteFile(mentor.profilepicture);
+    mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+      "\\",
+      "/"
+    );
+  } else {
+    mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+      "\\",
+      "/"
+    );
+  }
 
-      return mentor.save();
-    })
-    .then((result) => {
-      console.log(result);
-      console.log("Profile Updated");
-      res.redirect("/mentor/profile");
-    })
-    .catch((err) => console.log(err));
-};
+  if (coverpicture) {
+    // fileHelper.deleteFile(mentor.coverpicture);
+    mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
+  } else {
+    mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
+  }
+
+  mentor.phone = phone;
+  mentor.twitter = twitter;
+  mentor.github = github;
+  mentor.linkedin = linkedin;
+  mentor.experience = experience;
+  mentor.portofolio = portofolio;
+  mentor.cv = cv;
+  mentor.bio = bio;
+  mentor.desc = desc;
+  mentor.skill = skill;
+  mentor.bankname = bankname;
+  mentor.bankaccount = bankaccount;
+
+  const result = await mentor.save();
+
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/profile");
+});
 
 exports.getExam = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
@@ -374,21 +355,6 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
     .sort({ _id: -1 });
   const mentor = await Mentor.findById(session._id);
 
-  // ?? Hanya untuk testing , hapus setelahnya
-  const scheudleOne = await Schedule.findOne({ mentor: session._id })
-    .populate("user", "email")
-    .populate("mentor", "email");
-
-  const time = scheudleOne.datetime;
-
-  const unixTime = moment(time).unix();
-  const substactTime = moment(time).subtract(1, "hour").unix();
-
-  console.log(chalk.greenBright.inverse("Unix Time: " + unixTime));
-  console.log(chalk.greenBright.inverse("Sudah Dikurangi : " + substactTime));
-
-  // ?? Akhir
-
   res.render("back/mentor/schedule", {
     mentor: mentor,
     schedule: schedule,
@@ -397,33 +363,6 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
     voca: voca,
   });
 });
-
-exports.getScheduleJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Schedule.find({
-    $and: [{ mentor: session._id }, { status: false }],
-  })
-    .limit(6)
-    .sort({ datetime: 1 })
-    .populate("user", "username phone")
-    .then((userData) => {
-      Schedule.find({ mentor: session._id })
-        .countDocuments()
-        .then((schedule) => {
-          if (schedule) {
-            res.status(200).json({
-              status: "schedule Fetched",
-              data: userData,
-              schedule: schedule,
-            });
-          } else {
-            res.json({ status: "No Schedule Found" });
-          }
-        });
-    })
-
-    .catch((err) => console.log(err));
-};
 
 exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
@@ -441,7 +380,7 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   // ** Waktu di jadwal , Dengan format normal (ISO time)
   const calendarTime = moment(datetime).format("LLLL");
   // ** Waktu di jadwal , dikurangi 1 Jam dan dirubah ke format UNIX time
-  const unixTime = moment(datetime).subtract(2, "minutes").unix();
+  const unixTime = moment(datetime).subtract(15, "minutes").unix();
   console.log(chalk.green.inverse(unixTime));
 
   const userEmail = schedule.user.email;
@@ -502,21 +441,6 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getMentoringJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Schedule.findOne({ mentor: session._id })
-    .then((schedule) => {
-      if (schedule) {
-        res
-          .status(200)
-          .json({ message: "Fetched Mentoring", mentoring: schedule });
-      } else {
-        res.json({ message: "Mentoring Data is Empty" });
-      }
-    })
-    .catch((err) => console.log(err));
-};
-
 exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.mentor._id;
   const schedule = await Schedule.findOne({ mentor: id }).sort({ _id: -1 });
@@ -564,20 +488,6 @@ exports.getReview = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getReviewJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Review.find({ mentor: session._id })
-    .countDocuments()
-    .then((review) => {
-      if (review) {
-        res.status(200).json({ message: "Successfully Fetch", review: review });
-      } else {
-        res.json({ message: "No Review Data", review: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
-
 exports.getWithdraw = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
   const mentor = await Mentor.findById(session._id);
@@ -615,22 +525,6 @@ exports.getWithdraw = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getWithdrawJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Withdraw.find({ $and: [{ mentor: session._id }, { status: true }] })
-    .countDocuments()
-    .then((withdraw) => {
-      if (withdraw) {
-        res
-          .status(200)
-          .json({ message: "Withdraw Fetched", withdraw: withdraw });
-      } else {
-        res.json({ message: "Withdraw data is empty", withdraw: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
-
 exports.postWithdraw = asyncHandler(async (req, res, next) => {
   const mentor = req.body.mentor;
   const total = req.body.total;
@@ -661,17 +555,14 @@ exports.postWithdraw = asyncHandler(async (req, res, next) => {
   res.redirect("/mentor/withdraw");
 });
 
-exports.deleteWithdraw = (req, res, next) => {
+exports.deleteWithdraw = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
-  Withdraw.findByIdAndDelete(id)
-    .then((withdraw) => {
-      console.log(chalk.yellow.inverse(withdraw));
-      res.redirect("/mentor/withdraw");
-    })
-    .catch((err) => console.log(err));
-};
+  const withdraw = await Withdraw.findByIdAndDelete(id);
+  console.log(chalk.yellow.inverse(withdraw));
+  res.redirect("/mentor/withdraw");
+});
 
-exports.postChangePassword = (req, res, next) => {
+exports.postChangePassword = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const password = req.body.password;
   const newPassword = req.body.newPassword;
@@ -684,31 +575,21 @@ exports.postChangePassword = (req, res, next) => {
     console.log(chalk.green.inverse("lulus uji express-validator"));
   }
 
-  Mentor.findById(id)
-    .then((mentor) => {
-      const oldPassword = mentor.password;
-      bcrypt.compare(password, oldPassword).then((doMatch) => {
-        if (doMatch) {
-          return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
-            Mentor.findById(id)
-              .then((mentors) => {
-                mentors.password = hashedPassword;
-                return mentors.save().then((result, err) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    res.statsu(201).json(result);
-                    console.log(chalk.yellowBright(result));
-                  }
-                });
-              })
-              .catch((err) => console.log(err));
-          });
-        } else {
-          console.log(chalk.redBright("password not match"));
-          res.status(422).json({ error: "password not match" });
-        }
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(id);
+
+  const oldPassword = mentor.password;
+  const doMatch = await bcrypt.compare(password, oldPassword);
+
+  if (doMatch) {
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const mentors = await Mentor.findById(id);
+    mentors.password = hashedPassword;
+
+    const result = await mentors.save();
+    console.log(chalk.yellowBright(result));
+    res.status(201).json(result);
+  } else {
+    console.log(chalk.redBright("password not match"));
+    res.status(422).json({ error: "password not match" });
+  }
+});
