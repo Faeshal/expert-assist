@@ -58,6 +58,8 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
     $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
   }).sort({ datetime: 1 });
 
+  console.log(chalk.white.inverse(nextMentoring));
+
   const totalWithdrawData = await Withdraw.aggregate([
     {
       $match: {
