@@ -38,7 +38,7 @@ const upload = multer({
 });
 
 // * Polling For User
-longpoll.create("/polluserschedule");
+longpoll.create("/polluser");
 
 // * Polling for Admin
 longpoll.create("/pollexam");

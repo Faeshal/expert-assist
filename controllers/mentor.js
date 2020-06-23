@@ -394,12 +394,6 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
 
   res.redirect("/mentor/schedule");
 
-  return longpoll.publish("/polluserschedule", {
-    id: userId,
-    message: "Schedule Approve Notification",
-    data: true,
-  });
-
   // ** Send Email Before Mentoring Come
   // if (status == "true") {
   //   const msg = {
@@ -413,6 +407,12 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   //   console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
   //   return sgMail.send(msg);
   // }
+
+  return longpoll.publish("/polluser", {
+    id: userId,
+    message: "Schedule Approve Notification",
+    data: true,
+  });
 });
 
 exports.getMentoring = asyncHandler(async (req, res, next) => {
