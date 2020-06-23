@@ -6,7 +6,7 @@ const isAuth = require("../middleware/is-auth");
 const longpoll = require("express-longpoll")(router, { DEBUG: true });
 
 // * Polling for Mentor
-longpoll.create("/pollmentorwithdraw");
+longpoll.create("/pollwithdraw");
 
 // * Welcome Dashboard
 router.get("/admin/dashboard", isAuth, adminContoller.getDashboard);

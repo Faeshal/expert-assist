@@ -730,11 +730,11 @@ exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
   mentor.income = income;
   await mentor.save();
 
-  longpoll.publish("/pollmentorwithdraw", {
+  res.redirect("/admin/withdraw");
+
+  return longpoll.publish("/pollwithdraw", {
     id: mentorId,
     message: "Withdraw Approve Notification",
     data: true,
   });
-
-  res.redirect("/admin/withdraw");
 });

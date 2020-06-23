@@ -82,14 +82,18 @@
     });
 
     let subscribe = function () {
-      $.ajax({ method: "GET", url: url, timeout: 30000 })
+      $.ajax({
+        method: "GET",
+        url: url,
+        timeout: 30000,
+      })
         .done((data) => {
-          cb(data);
           console.log(data);
           let message = data.message;
           setTimeout(function () {
             subscribe(url);
-            Swal.fire({
+            console.log("TRIGERED ALLERT");
+            return Swal.fire({
               title: message,
               width: 400,
               icon: "success",
@@ -100,8 +104,8 @@
             });
           }, 1000);
         })
-        .fail((err) => {
-          console.log(err);
+        .fail((error) => {
+          console.log(error);
         });
     };
 
