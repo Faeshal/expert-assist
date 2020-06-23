@@ -41,8 +41,7 @@ const upload = multer({
 longpoll.create("/polluser");
 
 // * Polling for Admin
-longpoll.create("/pollexam");
-longpoll.create("/polladminwithdraw");
+longpoll.create("/polladmin");
 
 // * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);

@@ -310,7 +310,7 @@ exports.postBeginExam = asyncHandler(async (req, res, next) => {
   const mentor = Mentor.findById(req.session.mentor._id);
   mentor.examstatus = examstatus;
   await mentor.save();
-  longpoll.publish("/pollexam", {
+  return longpoll.publish("/polladmin", {
     message: "Incoming New Mentor Exam",
     data: true,
   });
@@ -548,12 +548,11 @@ exports.postWithdraw = asyncHandler(async (req, res, next) => {
   const result = await withdraw.save();
   console.log(chalk.yellow.inverse(result));
 
-  longpoll.publish("/polladminwithdraw", {
+  res.redirect("/mentor/withdraw");
+  return longpoll.publish("/polladmin", {
     message: "New Withdraw Request Notification",
     data: true,
   });
-
-  res.redirect("/mentor/withdraw");
 });
 
 exports.deleteWithdraw = asyncHandler(async (req, res, next) => {

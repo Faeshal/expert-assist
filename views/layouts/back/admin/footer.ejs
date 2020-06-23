@@ -64,7 +64,7 @@
 
 <script>
   $(document).ready(function () {
-    let interval = 1000;
+    let url = "/polladmin";
     $("#mytable").DataTable({
       ordering: false,
 
@@ -81,14 +81,14 @@
       responsive: true,
     });
 
-    let subscribe = function (url, cb) {
+    let subscribe = function () {
       $.ajax({ method: "GET", url: url, timeout: 30000 })
         .done((data) => {
           cb(data);
           console.log(data);
           let message = data.message;
           setTimeout(function () {
-            subscribe(url, cb);
+            subscribe(url);
             Swal.fire({
               title: message,
               width: 400,
@@ -105,12 +105,6 @@
         });
     };
 
-    subscribe("/pollexam", function (data) {
-      console.log("exam Data:", data);
-    });
-
-    subscribe("/polladminwithdraw", function (data) {
-      console.log("withdraw Data:", data);
-    });
+    subscribe(url);
   });
 </script>
