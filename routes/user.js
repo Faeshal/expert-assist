@@ -39,9 +39,7 @@ const upload = multer({
 });
 
 // * Longpoll for mentor
-longpoll.create("/pollmentorpayment", { maxListeners: 100 });
-longpoll.create("/pollmentorschedule", { maxListeners: 100 });
-longpoll.create("/pollmentorreview", { maxListeners: 100 });
+longpoll.create("/poolmentor");
 
 // * Dashboard
 router.get("/user/dashboard", isAuth, userController.getDashboard);
@@ -54,7 +52,6 @@ router.post(
   upload.single("profilepicture"),
   userController.updateProfile
 );
-
 router.post(
   "/user/profile/changepassword",
   [

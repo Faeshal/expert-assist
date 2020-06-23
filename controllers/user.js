@@ -167,51 +167,42 @@ exports.getStripe = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postStripeSuccess = (req, res, next) => {
+exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  console.log(chalk.red.inverse(`Payment ID : ${id}`));
-  Payment.findById(id)
-    .then((payment) => {
-      payment.status = true;
-      return payment
-        .save()
-        .then((result) => {
-          console.log(chalk.red(result));
-          Payment.findOne()
-            .sort({ _id: -1 })
-            .then((payment) => {
-              const mentorId = payment.mentor;
-              console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
-              // ** get the last payment
-              Payment.findOne({ mentor: mentorId })
-                .sort({ _id: -1 })
-                .limit(1)
-                .then((payment) => {
-                  userId = payment.user;
-                  // console.log(chalk.yellowBright.inverse(payment));
-                  let total = payment.total;
-                  // console.log("-----------------");
-                  Mentor.findById(mentorId)
-                    .then((mentor) => {
-                      // ** sum the last payment with intial income from mentor collection
-                      console.log(chalk.red.inverse(mentor));
-                      let income = mentor.income + total;
-                      mentor.income = income;
-                      return mentor.save();
-                    })
-                    .then((mentorIncome) => {
-                      console.log(chalk.red.inverse(mentorIncome));
-                      res.redirect("/user/schedule");
-                    })
-                    .catch((err) => console.log(err));
-                })
-                .catch((err) => console.log(err));
-            });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+  const payment = await Payment.findById(id);
+  payment.status = true;
+  const result = await payment.save();
+  console.log(chalk.red(result));
+
+  const payment2 = await Payment.findOne().sort({ _id: -1 });
+  const mentorId = payment2.mentor;
+
+  // ** get the last payment
+  const lastPayment = await Payment.findOne({ mentor: mentorId })
+    .sort({ _id: -1 })
+    .limit(1);
+
+  userId = lastPayment.user;
+  z;
+  let total = lastPayment.total;
+
+  const mentor = await Mentor.findById(mentorId);
+
+  // ** sum the last payment with intial income from mentor collection
+  let income = mentor.income + total;
+  mentor.income = income;
+
+  const mentorIncome = await mentor.save();
+
+  console.log(chalk.red.inverse(mentorIncome));
+  res.redirect("/user/schedule");
+
+  return longpoll.publish("/poolmentor", {
+    id: mentorId,
+    message: "New Payment Notification",
+    data: true,
+  });
+});
 
 exports.postStripeCancel = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
@@ -328,12 +319,12 @@ exports.postSchedule = asyncHandler(async (req, res, next) => {
 
   const result = await schedule.save();
   console.log(chalk.yellow.inverse(result));
-  longpoll.publish("/pollmentorschedule", {
+  res.json({ message: true });
+  return longpoll.publish("/poolmentor", {
     id: mentor,
     message: "New Schedule Notification",
     data: true,
   });
-  return res.json({ message: true });
 });
 
 exports.postEditSchedule = asyncHandler(async (req, res, next) => {
@@ -453,12 +444,6 @@ exports.postReview = asyncHandler(async (req, res, next) => {
   const result = await review.save();
   console.log(chalk.yellow.inverse(result));
 
-  longpoll.publish("/pollmentorreview", {
-    id: mentor,
-    message: "New Review Notification",
-    data: true,
-  });
-
   const convertMentorId = mongoose.Types.ObjectId(mentor);
   const resultReview = await Review.aggregate([
     {
@@ -477,6 +462,12 @@ exports.postReview = asyncHandler(async (req, res, next) => {
   await mentors.save();
 
   res.redirect("/user/review");
+
+  return longpoll.publish("/poolmentor", {
+    id: mentor,
+    message: "New Review Notification",
+    data: true,
+  });
 });
 
 exports.postChangePassword = asyncHandler(async (req, res, next) => {
@@ -549,32 +540,3 @@ exports.getPaymentJson = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ message: "Success", total: payment });
 });
-
-// ** Refactor
-// exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
-//   const id = req.params.id;
-//   const payment = await Payment.findById(id);
-//   payment.status = true;
-//   let idMentor = payment.mentor;
-//   await payment.save();
-//   await longpoll.publish("/pollmentorpayment", {
-//     id: idMentor,
-//     message: "New Payment Notification",
-//     data: true,
-//   });
-//   const payment2 = await Payment.findOne().sort({ _id: -1 });
-//   let mentorId = payment2.mentor;
-//   console.log(chalk.red.inverse(`Mentor ID : ${mentorId}`));
-//   const payment3 = await Payment.findOne({ mentor: mentorId })
-//     .sort({ _id: -1 })
-//     .limit(1);
-//   userId = payment3.user;
-//   console.log(chalk.yellowBright.inverse(payment));
-//   let total = payment.total;
-//   const mentor = await Mentor.findById(mentorId);
-//   let income = mentor.income + total;
-//   mentor.income = income;
-//   const result = await mentor.save();
-//   console.log(chalk.yellow.inverse(result2));
-//   res.redirect("/user/schedule");
-// });

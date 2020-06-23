@@ -390,28 +390,29 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   console.log(chalk.yellow.inverse(result));
 
   // ** Polling
-  const userId = result.user;
-  longpoll.publish("/polluserschedule", {
+  const userId = result.user._id;
+
+  res.redirect("/mentor/schedule");
+
+  return longpoll.publish("/polluserschedule", {
     id: userId,
     message: "Schedule Approve Notification",
     data: true,
   });
 
-  res.redirect("/mentor/schedule");
-
   // ** Send Email Before Mentoring Come
-  if (status == "true") {
-    const msg = {
-      to: [userEmail, mentorEmail],
-      send_each_at: [unixTime, unixTime],
-      from: "expertassist@example.com",
-      subject: "Incoming Mentoring Notification",
-      text: "Dont Forget to attend to your mentoring session",
-      html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
-    };
-    console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
-    return sgMail.send(msg);
-  }
+  // if (status == "true") {
+  //   const msg = {
+  //     to: [userEmail, mentorEmail],
+  //     send_each_at: [unixTime, unixTime],
+  //     from: "expertassist@example.com",
+  //     subject: "Incoming Mentoring Notification",
+  //     text: "Dont Forget to attend to your mentoring session",
+  //     html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
+  //   };
+  //   console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
+  //   return sgMail.send(msg);
+  // }
 });
 
 exports.getMentoring = asyncHandler(async (req, res, next) => {

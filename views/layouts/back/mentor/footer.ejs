@@ -123,6 +123,8 @@
                 timer: 10000,
               });
             }, 1000);
+          }else{
+            console.log("Data is not for you")
           }
         })
         .fail((err) => {
@@ -130,16 +132,8 @@
         });
     };
 
-    subscribe("/pollmentorpayment", function (data) {
-      console.log("payment Data:", data);
-    });
-
-    subscribe("/pollmentorschedule", function (data) {
-      console.log("schedule Data:", data);
-    });
-
-    subscribe("/pollmentorreview", function (data) {
-      console.log("review Data:", data);
+    subscribe("/poolmentor", function (data) {
+      console.log("Data:", data);
     });
 
     subscribe("/pollmentorwithdraw", function (data) {
