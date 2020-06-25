@@ -189,8 +189,8 @@ exports.getPaymentJson = asyncHandler(async (req, res, next) => {
     $and: [{ mentor: session._id }, { status: true }],
   }).countDocuments();
 
-  if (!total) {
-    res.json({ message: "No Mentor Data", data: 0 });
+  if (!total || total.length == 0) {
+    return res.json({ message: "No Mentor Data", data: 0 });
   }
   res.status(200).json({ message: true, data: paymentData, total: total });
 });
@@ -322,6 +322,7 @@ exports.getBeginExam = asyncHandler(async (req, res, next) => {
 
   if (!admin) {
     console.log("Admin not found");
+    return res.render("layouts/500");
   }
   const mentor = await Mentor.findById(session._id);
   if (!mentor.expertise) {
@@ -494,6 +495,7 @@ exports.getWithdraw = asyncHandler(async (req, res, next) => {
   const mentor = await Mentor.findById(session._id);
   if (!mentor) {
     console.log("No Mentor");
+    return res.render("layouts/500");
   }
   const payment = await Payment.findOne({ mentor: session._id });
   console.log(chalk.blue(payment));
