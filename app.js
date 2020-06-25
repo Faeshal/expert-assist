@@ -44,7 +44,9 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
 const store = new MongoDBStore({
-  uri: "mongodb://localhost:27017/exas",
+  // uri: "mongodb://localhost:27017/exas",
+  uri:
+    "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
 });
 
 const csrfProtection = csrf();
@@ -80,11 +82,14 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect("mongodb://localhost:27017/exas", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 mongoose.connection.on("connected", function () {
   console.log(chalk.blueBright("MongoDB connected"));
 });
@@ -101,9 +106,39 @@ app.use(
 );
 
 // * Server Listen
-app.listen(PORT, (err) => {
+const server = app.listen(PORT, (err) => {
   if (err) {
     console.log(chalk.red.inverse(`Error : ${err}`));
   }
   console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
 });
+
+// * Graceful Shutdown
+// quit on ctrl-c when running docker in terminal
+process.on("SIGINT", function onSigint() {
+  console.info(
+    "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// quit properly on docker stop
+process.on("SIGTERM", function onSigterm() {
+  console.info(
+    "Got SIGTERM (docker container stop). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// shut down server
+function shutdown() {
+  server.close(function onServerClosed(err) {
+    if (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+    process.exit();
+  });
+}
