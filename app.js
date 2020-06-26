@@ -43,10 +43,9 @@ app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
+const MONGO_URI = "mongodb://localhost:27017/exas";
 const store = new MongoDBStore({
-  // uri: "mongodb://localhost:27017/exas",
-  uri:
-    "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
+  uri: MONGO_URI,
 });
 
 const csrfProtection = csrf();
@@ -82,14 +81,11 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect(
-  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  }
-);
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 mongoose.connection.on("connected", function () {
   console.log(chalk.blueBright("MongoDB connected"));
 });

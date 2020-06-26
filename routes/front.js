@@ -14,11 +14,7 @@ router.get(
   frontController.getDetailBlog
 );
 
-router.get(
-  "/mdetail/:id",
-  routeCache.cacheSeconds(600),
-  frontController.getDetailMentor
-);
+router.get("/mdetail/:id", frontController.getDetailMentor);
 
 router.get(
   "/mlist",

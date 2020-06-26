@@ -9,6 +9,7 @@ const currency = require("currency.js");
 const ITEMS_PER_PAGE = 9;
 const voca = require("voca");
 const moment = require("moment");
+const routeCache = require("route-cache");
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
   const session = req.session;
@@ -112,10 +113,11 @@ exports.getDetailBlog = (req, res, next) => {
 
 exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
-  let userId = req.session;
-  console.log(userId);
+  let userId = req.session.user;
+  console.log(chalk.white.inverse(userId));
+  routeCache.removeCache("/mdetail/:id");
 
-  if (!userId.user) {
+  if (!userId) {
     console.log(chalk.blue.inverse("No User Session"));
     console.log(chalk.redBright.inverse(userId));
     userId = "xxx";

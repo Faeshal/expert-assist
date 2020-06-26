@@ -344,7 +344,7 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
   if (!payment) {
     console.log("User Not Yet Pay");
   }
-  const schedule = await Schedule.findOne({
+  let schedule = await Schedule.findOne({
     $and: [{ user: session._id }, { approve: "true" }, { status: false }],
   })
     .sort({ datetime: 1 })

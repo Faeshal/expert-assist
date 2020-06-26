@@ -205,7 +205,7 @@
             </div>
             <% } else { %>
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="mytable">
+              <table class="table align-items-center table-flush" id="withdraw_table">
                 <thead class="thead-light">
                   <tr>
                     <th id="total">Total</th>
@@ -296,6 +296,23 @@
 
     <script>
       $(document).ready(function () {
+        $("#withdraw_table").DataTable({
+        pageLength: 4,
+        lengthMenu: [4 , 10, 20],
+        ordering: false,
+        stateSave: true,
+        pagingType: "simple_numbers",
+        language: {
+          paginate: {
+            first: "«",
+            previous: "‹",
+            next: "›",
+            last: "»",
+          },
+        },
+        responsive: true,
+        });
+
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
           let total = $("#total").val();

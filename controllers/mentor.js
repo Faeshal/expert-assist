@@ -121,6 +121,7 @@ exports.postMentorStatus = asyncHandler(async (req, res, next) => {
     name: roomName,
     privacy: "public",
   };
+
   axios
     .post("https://api.daily.co/v1/rooms", data, {
       headers: {
