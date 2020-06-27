@@ -366,7 +366,7 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
   console.log(toString);
   console.log(incoming);
   console.log(chalk.magenta.inverse(newdate));
-  console.log(chalk.magenta.inverse(dateTimeSchedule));
+  console.log(chalk.green.inverse(dateTimeSchedule));
 
   res.render("back/user/mentoring", {
     payment: payment,
@@ -383,7 +383,7 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
 exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.user._id;
   const schedule = await Schedule.findOne({ user: id }).sort({ datetime: -1 });
-  const dateTimeSchedule = schedule.datetime;
+  const endTime = schedule.endtime;
   if (schedule.approve == "false" || schedule.approve == "reject") {
     console.log(chalk.red.inverse("Not Auhtorize"));
     return res.render("layouts/404");
@@ -391,7 +391,7 @@ exports.getLive = asyncHandler(async (req, res, next) => {
     res.render("back/user/live", {
       schedule: schedule,
       user: req.session.user._id,
-      dateTimeSchedule: dateTimeSchedule,
+      endTime: endTime,
       moment: moment,
     });
   }

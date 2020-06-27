@@ -446,17 +446,24 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
 
 exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.mentor._id;
-  const schedule = await Schedule.findOne({ mentor: id }).sort({ _id: -1 });
+  const schedule = await Schedule.findOne({ mentor: id })
+    .sort({ _id: -1 })
+    .populate("user", "username");
   console.log(chalk.blue.inverse(schedule));
-  const dateTimeSchedule = schedule.datetime;
+  const endTime = schedule.endtime;
   if (schedule.approve == "false" || schedule.approve == "reject") {
     console.log("Not Auhtorize");
     return res.render("layouts/404");
   }
+  let momentStartTime = moment(schedule.datetime).format("LTS");
+  let momentEndTime = moment(schedule.endtime).format("LTS");
   res.render("back/mentor/live", {
     schedule: schedule,
     mentor: req.session.mentor._id,
-    dateTimeSchedule: dateTimeSchedule,
+    endTime: endTime,
+    momentStartTime: momentStartTime,
+    momentEndTime: momentEndTime,
+    voca: voca,
   });
 });
 
