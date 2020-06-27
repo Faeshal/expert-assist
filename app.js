@@ -1,3 +1,4 @@
+const compression = require("compression");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,10 +22,11 @@ const morgan = require("morgan");
 const errorHandler = require("strong-error-handler");
 require("pretty-error").start();
 
-// * Security
+// * Security & Compression
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors());
+app.use(compression());
 
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));

@@ -167,7 +167,9 @@ exports.getSearch = (req, res, next) => {
     console.log("Redirect harusnya");
     res.redirect("/mlist");
   } else {
-    Mentor.find({ $text: { $search: trim } })
+    Mentor.find({
+      $text: { $search: trim },
+    })
       .sort({ _id: -1 })
       .then((mentor) => {
         Mentor.countDocuments().then(() => {
