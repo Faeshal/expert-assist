@@ -183,7 +183,6 @@ exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
     .limit(1);
 
   userId = lastPayment.user;
-  z;
   let total = lastPayment.total;
 
   const mentor = await Mentor.findById(mentorId);

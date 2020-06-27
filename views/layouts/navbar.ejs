@@ -13,22 +13,11 @@
       </div>
       <div class="float-right">
         <ul class="topbar-list list-unstyled d-flex" style="margin: 11px 0px;">
-          <%if (isAuthenticated) { %>
-          <form id="form1" action="/logout" method="POST">
-            <li class="list-inline-item">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <a
-                href="javascript:;"
-                onclick="document.getElementById('form1').submit();"
-                ><i class="mdi mdi-login mr-2"></i>Logout</a
-              >
-            </li>
-          </form>
-          <% } else { %>
           <li class="list-inline-item">
-            <a href="/login"><i class="mdi mdi-login mr-2"></i>Login</a>
+            <a href="/register"
+              ><i class="mdi mdi-account-plus mr-1"></i>Register</a
+            >
           </li>
-          <% } %>
         </ul>
       </div>
       <div class="clearfix"></div>
@@ -56,9 +45,21 @@
       </a>
     </div>
     <div class="buy-button">
-      <a href="/register" class="btn btn-primary"
-        ><i class="mdi mdi-cloud-upload"></i> Register</a
+      <%if (isAuthenticated) { %>
+      <form id="form1" action="/logout" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <a
+          href="javascript:;"
+          onclick="document.getElementById('form1').submit();"
+          class="btn btn-primary"
+          ><i class="mdi mdi-login mr-2"></i>Logout</a
+        >
+      </form>
+      <% } else { %>
+      <a href="/login" class="btn btn-primary"
+        ><i class="mdi mdi-login mr-2"></i>Login</a
       >
+      <% } %>
     </div>
     <!--end login button-->
     <!-- End Logo container-->
