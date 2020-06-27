@@ -21,17 +21,18 @@
           <div class="text-center mt-3">
             <% if (userId=="xxx") { %>
             <button class="btn btn-sm btn-primary" onclick="sweet()">
-              Hire Mentor
+              <i class="fas fa-address-card fa-lg mr-2"></i>Hire Mentor
             </button>
-            <% } else { %>
+            <% } else { %> < class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
+            data-toggle="modal" data-target="#paymentModal" >
+            <i class="fas fa-address-card fa-lg ml-2"></i>Hire Mentor <% } %>
             <a
-              class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
-              data-toggle="modal"
-              data-target="#paymentModal"
+              href="https://api.whatsapp.com/send?phone=<%-mentor.phone%>&text=Hello%20i%20find%20you%20from%20Expert-Assist.%20Can%20i%20ask%20a%20couple%20of%20question%20?"
+              target="_blank"
+              class="ml-3 btn btn-sm btn-dark text-dark"
             >
-              Hire Mentor
+              <i class="fab fa-whatsapp fa-lg mr-2 text-success"></i>Chat Mentor
             </a>
-            <% } %>
           </div>
         </div>
       </div>
@@ -279,9 +280,9 @@
         </div>
 
         <div class="job-detail border rounded mt-4">
-          <% if (!userId) { %>
-          <a href="/login" class="btn btn-primary btn-block" onclick="sweet()"
-            >Hire Mentor</a
+          <% if (userId=="xxx") { %>
+          <a class="btn btn-primary btn-block" onclick="sweet()"
+            ><i class="fas fa-address-card fa-lg mr-3"></i>Hire Mentor</a
           >
           <% } else{ %>
           <a
@@ -289,7 +290,7 @@
             class="btn btn-primary btn-block"
             data-toggle="modal"
             data-target="#paymentModal"
-            >Hire Mentor</a
+            ><i class="fas fa-address-card fa-lg mr-3"></i>Hire Mentor</a
           >
           <% } %>
         </div>
