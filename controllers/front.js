@@ -16,16 +16,44 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
   const newMentor = await Mentor.find({
     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
   })
+    .select({
+      username: 1,
+      city: 1,
+      price: 1,
+      expertise: 1,
+      experience: 1,
+      profilepicture: 1,
+      job: 1,
+    })
     .limit(7)
     .sort({ _id: -1 });
   const bestMentor = await Mentor.find({ mentorstatus: "true" })
+    .select({
+      username: 1,
+      city: 1,
+      price: 1,
+      expertise: 1,
+      experience: 1,
+      profilepicture: 1,
+      job: 1,
+    })
     .limit(7)
     .sort({ rating: -1 });
   const cheapestMentor = await Mentor.find({
     $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
   })
+    .select({
+      username: 1,
+      city: 1,
+      price: 1,
+      expertise: 1,
+      experience: 1,
+      profilepicture: 1,
+      job: 1,
+    })
     .limit(7)
     .sort({ price: 1 });
+
   res.render("front/index", {
     session: session,
     newMentor: newMentor,
@@ -85,7 +113,7 @@ exports.getAllBlog = (req, res, next) => {
 };
 
 exports.getFaq = asyncHandler(async (req, res, next) => {
-  const admin = await Admin.find();
+  const admin = await Admin.find().select({ faq: 1 });
   res.render("front/faq", {
     admin: admin,
     voca: voca,
@@ -190,32 +218,37 @@ exports.getSearch = (req, res, next) => {
   }
 };
 
-exports.getMentorList = (req, res, next) => {
+exports.getMentorList = asyncHandler(async (req, res, next) => {
   const page = +req.query.page || 1;
   let totalMentors;
-  Mentor.countDocuments()
-    .then((numMentors) => {
-      totalMentors = numMentors;
-      return Mentor.find({
-        $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-      })
-        .skip((page - 1) * ITEMS_PER_PAGE)
-        .limit(ITEMS_PER_PAGE);
+  const numMentors = await Mentor.countDocuments();
+  totalMentors = numMentors;
+
+  const mentor = await Mentor.find({
+    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+  })
+    .select({
+      username: 1,
+      profilepicture: 1,
+      rating: 1,
+      job: 1,
+      city: 1,
+      price: 1,
     })
-    .then((mentor) => {
-      res.render("front/mentorList", {
-        mentor: mentor,
-        currency: currency,
-        currentPage: page,
-        hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
-        hasPreviousPage: page > 1,
-        nextPage: page + 1,
-        previousPage: page - 1,
-        lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .skip((page - 1) * ITEMS_PER_PAGE)
+    .limit(ITEMS_PER_PAGE);
+
+  res.render("front/mentorList", {
+    mentor: mentor,
+    currency: currency,
+    currentPage: page,
+    hasNextPage: ITEMS_PER_PAGE * page < totalMentors,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
+  });
+});
 
 exports.getMentorListJson = (req, res, next) => {
   Mentor.find()

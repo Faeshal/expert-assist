@@ -24,8 +24,11 @@ sgMail.setApiKey(
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  const mentor = await Mentor.findOne({ _id: session._id });
-
+  const mentor = await Mentor.findOne({ _id: session._id }).select({
+    desc: 0,
+    password: 0,
+  });
+  
   const totalClient = await Payment.countDocuments({
     $and: [{ mentor: session._id }, { status: true }],
   });
