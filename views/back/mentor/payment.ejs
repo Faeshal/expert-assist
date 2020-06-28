@@ -161,6 +161,7 @@
           doc.text("Username : <%=mentor.username%> ", 15, 50);
 
           doc.text("Last Payment ID : <%=lastPaymentId%>", 15, 55);
+          doc.text("Last Payment Date : <%=lastPaymentDate%>", 15, 60);
 
           var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
           var columns = [

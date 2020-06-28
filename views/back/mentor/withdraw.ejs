@@ -355,7 +355,7 @@
           doc.text("Last Withdraw ID : <%-lastWithdrawId%>", 15, 55);
           doc.text("Last Witdraw Date : <%-lastDatetime%>", 15, 60);
 
-          var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
+          var res = doc.autoTableHtmlToJson(document.getElementById("withdraw_table"));
           var columns = [
             res.columns[0],
             res.columns[1],

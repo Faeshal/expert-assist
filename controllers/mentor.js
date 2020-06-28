@@ -157,7 +157,8 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 
 exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  let lastPaymentId = "xxx";
+  let lastPaymentId;
+  let lastPaymentDate;
   const payment = await Payment.find({
     $and: [{ mentor: session._id }, { status: true }],
   })
@@ -166,6 +167,7 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
 
   if (payment.length > 0) {
     lastPaymentId = payment[0]._id;
+    lastPaymentDate = payment[0].datetime;
   }
 
   const mentor = await Mentor.findById(session._id);
@@ -177,6 +179,7 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
     currency: currency,
     session: session,
     lastPaymentId: lastPaymentId,
+    lastPaymentDate: lastPaymentDate,
   });
 });
 
