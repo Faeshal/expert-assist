@@ -35,12 +35,6 @@ router.post("/admin/faq", isAuth, adminContoller.postFaq);
 router.post("/admin/faq/update", isAuth, adminContoller.updateFaq);
 router.post("/admin/faq/delete", isAuth, adminContoller.deleteFaq);
 
-// * News
-router.get("/admin/news", isAuth, adminContoller.getNews);
-router.post("/admin/news", isAuth, adminContoller.postNews);
-router.post("/admin/news/update", isAuth, adminContoller.updateNews);
-router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
-
 // * Mentor
 router.get("/admin/mentor/all", adminContoller.getMentorAll);
 router.post("/admin/mentor/all", adminContoller.postMentorBlock);

@@ -33,17 +33,6 @@ const FaqSchema = new mongoose.Schema({
   },
 });
 
-const NewsSchema = new mongoose.Schema({
-  title: String,
-  desc: String,
-  target: String,
-  content: String,
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 const AdminSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -70,7 +59,6 @@ const AdminSchema = new mongoose.Schema({
   blog: [BlogSchema],
   category: [CategorySchema],
   faq: [FaqSchema],
-  news: [NewsSchema],
 });
 
 module.exports = mongoose.model("Admin", AdminSchema);

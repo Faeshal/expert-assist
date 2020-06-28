@@ -23,9 +23,15 @@
             <button class="btn btn-sm btn-primary" onclick="sweet()">
               <i class="fas fa-address-card fa-lg mr-2"></i>Hire Mentor
             </button>
-            <% } else { %> < class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
-            data-toggle="modal" data-target="#paymentModal" >
-            <i class="fas fa-address-card fa-lg ml-2"></i>Hire Mentor <% } %>
+            <% } else { %>
+            <a
+              class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
+              data-toggle="modal"
+              data-target="#paymentModal"
+            >
+              <i class="fas fa-address-card fa-lg mr-2"></i>Hire Mentor</a
+            >
+            <% } %>
             <a
               href="https://api.whatsapp.com/send?phone=<%-mentor.phone%>&text=Hello%20i%20find%20you%20from%20Expert-Assist.%20Can%20i%20ask%20a%20couple%20of%20question%20?"
               target="_blank"

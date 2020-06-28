@@ -18,6 +18,10 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.user;
@@ -169,7 +173,9 @@ exports.getStripe = (req, res, next) => {
 
 exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  const payment = await Payment.findById(id);
+  const payment = await Payment.findById(id)
+    .populate("mentor", "username email")
+    .populate("user", "username email");
   payment.status = true;
   const result = await payment.save();
   console.log(chalk.red(result));
@@ -192,15 +198,31 @@ exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   mentor.income = income;
 
   const mentorIncome = await mentor.save();
-
   console.log(chalk.red.inverse(mentorIncome));
-  res.redirect("/user/schedule");
 
-  return longpoll.publish("/poolmentor", {
+  longpoll.publish("/poolmentor", {
     id: mentorId,
     message: "New Payment Notification",
     data: true,
   });
+
+  res.redirect("/user/schedule");
+
+  const msg = {
+    to: payment.user.email,
+    from: "expertassist@example.com",
+    subject: "Payment Success Report",
+    text: `Thank You ${payment.user.username}, For Your Purchase.`,
+    html: `<strong><u>💰Payment Detail</u> <br> 
+    ◾Mentor Name: ${payment.mentor.username}<br>  
+    ◾Mentor Email: ${payment.mentor.email}<br>
+    ◾Mentor Price: ${payment.price}<br>
+    ◾Duration: ${payment.duration}<br>
+    ◾Datetime: ${payment.datetime}<br>
+    🚩Payment Total: ${payment.total}<br>
+    </strong>`,
+  };
+  return sgMail.send(msg);
 });
 
 exports.postStripeCancel = asyncHandler(async (req, res, next) => {
