@@ -28,7 +28,7 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
     desc: 0,
     password: 0,
   });
-  
+
   const totalClient = await Payment.countDocuments({
     $and: [{ mentor: session._id }, { status: true }],
   });
@@ -157,11 +157,17 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 
 exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
+  let lastPaymentId = "xxx";
   const payment = await Payment.find({
     $and: [{ mentor: session._id }, { status: true }],
   })
     .populate("user", "username email")
     .sort({ _id: -1 });
+
+  if (payment.length > 0) {
+    lastPaymentId = payment[0]._id;
+  }
+
   const mentor = await Mentor.findById(session._id);
   res.render("back/mentor/payment", {
     mentor: mentor,
@@ -170,6 +176,7 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
     moment: moment,
     currency: currency,
     session: session,
+    lastPaymentId: lastPaymentId,
   });
 });
 
