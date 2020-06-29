@@ -208,21 +208,24 @@ exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
 
   res.redirect("/user/schedule");
 
-  const msg = {
-    to: payment.user.email,
-    from: "expertassist@example.com",
-    subject: "Payment Success Report",
-    text: `Thank You ${payment.user.username}, For Your Purchase.`,
-    html: `<strong><u>💰Payment Detail</u> <br> 
-    ◾Mentor Name: ${payment.mentor.username}<br>  
-    ◾Mentor Email: ${payment.mentor.email}<br>
-    ◾Mentor Price: ${payment.price}<br>
-    ◾Duration: ${payment.duration}<br>
-    ◾Datetime: ${payment.datetime}<br>
-    🚩Payment Total: ${payment.total}<br>
-    </strong>`,
-  };
-  return sgMail.send(msg);
+  const formatPrice = currency(payment.price, { precision: 0 }).format();
+  const formatTotal = currency(payment.total, { precision: 0 }).format();
+
+  // const msg = {
+  //   to: payment.user.email,
+  //   from: "expertassist@example.com",
+  //   subject: "Payment Success Report",
+  //   text: `Thank You ${payment.user.username}, For Your Purchase.`,
+  //   html: `<strong><u>💰Payment Detail</u> <br>
+  //   ◾Mentor Name: ${payment.mentor.username}<br>
+  //   ◾Mentor Email: ${payment.mentor.email}<br>
+  //   ◾Mentor Price: Rp.${formatPrice}<br>
+  //   ◾Duration: ${payment.duration}<br>
+  //   ◾Datetime: ${payment.datetime}<br>
+  //   🔹 Payment Total: Rp.${formatTotal}<br>
+  //   </strong>`,
+  // };
+  // return sgMail.send(msg);
 });
 
 exports.postStripeCancel = asyncHandler(async (req, res, next) => {

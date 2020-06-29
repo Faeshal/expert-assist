@@ -4,7 +4,7 @@ const router = express.Router();
 const frontController = require("../controllers/front");
 const routeCache = require("route-cache");
 
-router.get("/", routeCache.cacheSeconds(900), frontController.getIndex);
+router.get("/", frontController.getIndex);
 router.get("/search", frontController.getSearch);
 
 router.get("/blog", routeCache.cacheSeconds(600), frontController.getAllBlog);

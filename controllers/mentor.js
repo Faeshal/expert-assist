@@ -415,7 +415,7 @@ exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   //     to: [userEmail, mentorEmail],
   //     send_each_at: [unixTime, unixTime],
   //     from: "expertassist@example.com",
-  //     subject: "Incoming Mentoring Notification",
+  //     subject: "⏲ Incoming Mentoring Notification",
   //     text: "Dont Forget to attend to your mentoring session",
   //     html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
   //   };

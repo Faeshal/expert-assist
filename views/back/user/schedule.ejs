@@ -391,7 +391,8 @@
           let rejectSchedule = <%-JSON.stringify(rejectSchedule)%>;
 
           if (!oldPayment) {
-            localStorage.setItem(paymentChecker, newPayment);
+            let subtractPayment= newPayment - 1;
+            localStorage.setItem(paymentChecker, subtractPayment);
           } else {
             if (oldPayment && rejectSchedule) {
               $("#mentorName").val(mentorUsername);
@@ -435,6 +436,8 @@
                 }).then(()=>{
                   // !! Bug : bagian ini harus direload 2 kali baru nutup request boxnya
                   localStorage.removeItem(paymentChecker);
+                }).then(()=>{
+                  localStorage.setItem(paymentChecker, newPayment);
                   location.reload(true);
                 })
               }else{

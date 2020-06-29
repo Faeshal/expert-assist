@@ -29,15 +29,7 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <form action="/logout" method="POST">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <button type="submit" class="btn btn-sm btn-danger">
-                <i class="ni ni-user-run"></i>
-                <span>Logout</span>
-              </button>
-            </form>
-          </div>
+        
         </div>
       </div>
     </div>
@@ -403,9 +395,12 @@
 
     <!-- Footer -->
     <%-include('../../layouts/back/mentor/footer.ejs')%>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="https://unpkg.com/currency.js@1.2.2/dist/currency.min.js"></script>
+
     <script>
       $(document).ready(() => {
         $.get("/api/mentor/payments")
