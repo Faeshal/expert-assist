@@ -10,7 +10,6 @@ const Review = require("../models/Review");
 const fileHelper = require("../util/file");
 const { validationResult } = require("express-validator");
 const moment = require("moment");
-const stripe = require("stripe")("sk_test_Tnz59oHlP8YD4orawQO6eUXU00FhO9PLbb");
 const voca = require("voca");
 const currency = require("currency.js");
 const chalk = require("chalk");
@@ -149,6 +148,7 @@ exports.postPayment = asyncHandler(async (req, res, next) => {
     payerEmail: userEmail,
     description: "Expert Assist-Payment Mentor",
     amount: total,
+    shouldSendEmail: true,
     successRedirectURL:
       req.protocol + "://" + req.get("host") + "/payment/success/" + paymentId,
     failureRedirectURL:
@@ -160,7 +160,7 @@ exports.postPayment = asyncHandler(async (req, res, next) => {
   res.redirect(url);
 });
 
-exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
+exports.postXenditSuccess = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const payment = await Payment.findById(id)
     .populate("mentor", "username email")
@@ -198,7 +198,7 @@ exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   res.redirect("/user/schedule");
 });
 
-exports.postStripeCancel = asyncHandler(async (req, res, next) => {
+exports.postXenditCancel = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const result = await Payment.findByIdAndDelete(id);
   console.log(chalk.red.inverse(`Deleted : ${result}`));
