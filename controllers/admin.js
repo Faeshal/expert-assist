@@ -598,7 +598,10 @@ exports.getMentoring = (req, res, next) => {
 
 exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
-    .populate({ path: "mentor", select: ["username", "email", "bankaccount"] })
+    .populate({
+      path: "mentor",
+      select: ["username", "email", "bankaccountnumber"],
+    })
     .sort({ _id: -1 })
     .exec()
     .then((withdraw) => {

@@ -234,8 +234,9 @@ exports.updateProfile = asyncHandler(async (req, res, next) => {
   const github = req.body.github;
   const linkedin = req.body.linkedin;
   const skill = req.body.skill;
-  const bankname = req.body.bankname;
-  const bankaccount = req.body.bankaccount;
+  const bankcode = req.body.bankcode;
+  const bankaccountnumber = req.body.bankaccountnumber;
+  const bankaccountusername = req.body.bankaccountusername;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
@@ -259,17 +260,10 @@ exports.updateProfile = asyncHandler(async (req, res, next) => {
       "\\",
       "/"
     );
-  } else {
-    mentor.profilepicture = req.files["profilepicture"][0].path.replace(
-      "\\",
-      "/"
-    );
   }
 
   if (coverpicture) {
     // fileHelper.deleteFile(mentor.coverpicture);
-    mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
-  } else {
     mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
   }
 
@@ -283,8 +277,9 @@ exports.updateProfile = asyncHandler(async (req, res, next) => {
   mentor.bio = bio;
   mentor.desc = desc;
   mentor.skill = skill;
-  mentor.bankname = bankname;
-  mentor.bankaccount = bankaccount;
+  mentor.bankcode = bankcode;
+  mentor.bankaccountnumber = bankaccountnumber;
+  mentor.bankaccountusername = bankaccountusername;
 
   const result = await mentor.save();
 
