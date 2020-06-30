@@ -546,19 +546,20 @@ exports.getWithdraw = asyncHandler(async (req, res, next) => {
 
 exports.postWithdraw = asyncHandler(async (req, res, next) => {
   const mentor = req.body.mentor;
-  const total = req.body.total;
+  const amount = req.body.amount;
   const note = req.body.note;
   const initialincome = req.body.initialincome;
 
   const tax = 0.05;
 
-  const adminIncome = total * tax;
-  const finalTotal = total - adminIncome;
+  const adminIncome = amount * tax;
+  const total = amount - adminIncome;
 
   const withdraw = new Withdraw({
     initialincome: initialincome,
     mentor: mentor,
-    total: finalTotal,
+    amount: amount,
+    total: total,
     note: note,
     adminincome: adminIncome,
   });

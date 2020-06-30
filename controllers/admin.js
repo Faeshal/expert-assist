@@ -660,7 +660,7 @@ exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
     .limit(1);
 
   console.log(chalk.red.inverse(newWithdraw));
-  let total = newWithdraw.total;
+  let amount = newWithdraw.amount;
   const mentor = await Mentor.findById(newMentorId).select({
     username: 1,
     income: 1,
@@ -670,7 +670,7 @@ exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
   });
   console.log(chalk.greenBright.italic(mentor));
   // * Save New Mentor Income
-  let income = mentor.income - total;
+  let income = mentor.income - amount;
   mentor.income = income;
   await mentor.save();
 
