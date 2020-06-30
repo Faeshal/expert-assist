@@ -48,8 +48,9 @@ const MentorSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  bankname: String,
-  bankaccount: String,
+  bankcode: String,
+  bankaccountnumber: Number,
+  bankaccountusername: String,
   videocallroom: String,
 });
 

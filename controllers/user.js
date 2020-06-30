@@ -152,56 +152,13 @@ exports.postPayment = asyncHandler(async (req, res, next) => {
     successRedirectURL:
       req.protocol + "://" + req.get("host") + "/payment/success/" + paymentId,
     failureRedirectURL:
-      req.protocol + "://" + req.get("host") + "/payment/cancel/" + id,
+      req.protocol + "://" + req.get("host") + "/payment/cancel/" + paymentId,
   });
-  console.log("created invoice", invoice);
 
-  const retrievedInvoice = await i.getInvoice({ invoiceID: invoice.id });
-  console.log("retrieved invoice", retrievedInvoice);
-  let url = retrievedInvoice.invoice_url;
+  let url = invoice.invoice_url;
 
   res.redirect(url);
-  // res.redirect("/stripe/" + payment._id);
 });
-
-// exports.getStripe = (req, res, next) => {
-//   const id = req.params.id;
-//   Payment.findById(id)
-//     .then((payment) => {
-//       console.log(chalk.blueBright.inverse(payment));
-//       const price = payment.price;
-//       const priceConvert = price * 100;
-//       const duration = payment.duration;
-
-//       // *Stripe
-//       return stripe.checkout.sessions.create({
-//         payment_method_types: ["card"],
-//         line_items: [
-//           {
-//             name: "Mentor Payment",
-//             description: "Expert-Assist Payment System",
-//             images: [
-//               "https://cdn2.iconfinder.com/data/icons/money-related/128/MONEY_2-02-512.png",
-//             ],
-//             amount: priceConvert,
-//             currency: "idr",
-//             quantity: duration,
-//           },
-//         ],
-//         success_url:
-//           req.protocol + "://" + req.get("host") + "/payment/success/" + id,
-//         cancel_url:
-//           req.protocol + "://" + req.get("host") + "/payment/cancel/" + id,
-//       });
-//     })
-//     .then((session) => {
-//       console.log(session.id);
-//       res.render("front/stripe", {
-//         sessionId: session.id,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
 
 exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
@@ -239,25 +196,6 @@ exports.postStripeSuccess = asyncHandler(async (req, res, next) => {
   });
 
   res.redirect("/user/schedule");
-
-  // const formatPrice = currency(payment.price, { precision: 0 }).format();
-  // const formatTotal = currency(payment.total, { precision: 0 }).format();
-
-  // const msg = {
-  //   to: payment.user.email,
-  //   from: "expertassist@example.com",
-  //   subject: "Payment Success Report",
-  //   text: `Thank You ${payment.user.username}, For Your Purchase.`,
-  //   html: `<strong><u>💰Payment Detail</u> <br>
-  //   ◾Mentor Name: ${payment.mentor.username}<br>
-  //   ◾Mentor Email: ${payment.mentor.email}<br>
-  //   ◾Mentor Price: Rp.${formatPrice}<br>
-  //   ◾Duration: ${payment.duration}<br>
-  //   ◾Datetime: ${payment.datetime}<br>
-  //   🔹 Payment Total: Rp.${formatTotal}<br>
-  //   </strong>`,
-  // };
-  // return sgMail.send(msg);
 });
 
 exports.postStripeCancel = asyncHandler(async (req, res, next) => {

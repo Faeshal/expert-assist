@@ -16,6 +16,10 @@ const currency = require("currency.js");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 const asyncHandler = require("express-async-handler");
 const routeCache = require("route-cache");
+// * Xendit Withdraw Transfer
+const x = require("../middleware/xendit");
+const { Disbursement } = x;
+const d = new Disbursement({});
 
 // * Get Request video Call API
 const base_url = "https://api.daily.co/v1/";
@@ -635,6 +639,19 @@ exports.getwithdrawJson = (req, res, next) => {
 };
 
 exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
+  // * Send Transfer Request to Xendit
+  let disb = await d.create({
+    externalID: `${banks[0].name} - ${banks[0].code} single disbursement`,
+    bankCode: banks[0].code,
+    accountHolderName: "Stan",
+    accountNumber: "1234567890",
+    description: `purchase paid from ${banks[0].name}`,
+    amount: 10000,
+  });
+
+  console.log(chalk.white.inverse("disbursement created: ", disb));
+
+  // * Update Withdraw Status To Mongodb
   const id = req.body.id;
   const status = req.body.status;
   const mentorId = req.body.mentor;
