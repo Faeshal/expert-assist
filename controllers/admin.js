@@ -600,7 +600,7 @@ exports.getwithdraw = (req, res, next) => {
   Withdraw.find()
     .populate({
       path: "mentor",
-      select: ["username", "email", "bankaccountnumber"],
+      select: ["username", "email", "bankcode", "bankaccountnumber"],
     })
     .sort({ _id: -1 })
     .exec()
@@ -642,29 +642,18 @@ exports.getwithdrawJson = (req, res, next) => {
 };
 
 exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
-  // * Send Transfer Request to Xendit
-  let disb = await d.create({
-    externalID: `${banks[0].name} - ${banks[0].code} single disbursement`,
-    bankCode: banks[0].code,
-    accountHolderName: "Stan",
-    accountNumber: "1234567890",
-    description: `purchase paid from ${banks[0].name}`,
-    amount: 10000,
-  });
-
-  console.log(chalk.white.inverse("disbursement created: ", disb));
+  const id = req.body.id;
+  const mentorId = req.body.mentor;
+  const status = req.body.status;
 
   // * Update Withdraw Status To Mongodb
-  const id = req.body.id;
-  const status = req.body.status;
-  const mentorId = req.body.mentor;
-
   const withdraw = await Withdraw.findById(id);
   withdraw.status = status;
 
   const result = await withdraw.save();
   console.log(chalk.yellow.inverse(result));
 
+  // * Calculate Mentor Income
   const newMentorId = mongoose.Types.ObjectId(mentorId);
   const newWithdraw = await Withdraw.findOne({ mentor: newMentorId })
     .sort({ _id: -1 })
@@ -672,12 +661,37 @@ exports.postUpdateWithdraw = asyncHandler(async (req, res, next) => {
 
   console.log(chalk.red.inverse(newWithdraw));
   let total = newWithdraw.total;
-  const mentor = await Mentor.findById(newMentorId);
-
+  const mentor = await Mentor.findById(newMentorId).select({
+    username: 1,
+    income: 1,
+    bankcode: 1,
+    bankaccountnumber: 1,
+    bankaccountusername: 1,
+  });
   console.log(chalk.greenBright.italic(mentor));
+  // * Save New Mentor Income
   let income = mentor.income - total;
   mentor.income = income;
   await mentor.save();
+
+  // * Send Transfer Request to Xendit
+  let stringId = id.toString();
+  let bankAccountNumber = mentor.bankaccountnumber;
+  let accountNumber = bankAccountNumber.toString();
+
+  let disb = await d.create({
+    externalID: stringId,
+    bankCode: mentor.bankcode,
+    accountHolderName: mentor.bankaccountusername,
+    accountNumber: accountNumber,
+    description: `Payment Withdraw - ${mentor.username} `,
+    amount: withdraw.total,
+    xIdempotencyKey: stringId,
+  });
+
+  console.log(
+    chalk.white.inverse("Disbursement created: ", JSON.stringify(disb))
+  );
 
   res.redirect("/admin/withdraw");
 
