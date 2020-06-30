@@ -64,7 +64,7 @@ router.post(
 
 // * Payment
 router.post("/pay", userController.postPayment);
-router.get("/stripe/:id", userController.getStripe);
+// router.get("/stripe/:id", userController.getStripe);
 router.get("/payment/success/:id", userController.postStripeSuccess);
 router.get("/payment/cancel/:id", userController.postStripeCancel);
 router.get("/api/user/payments", isAuth, userController.getPaymentJson);

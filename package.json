@@ -45,7 +45,8 @@
     "route-cache": "^0.4.5",
     "stripe": "^8.33.0",
     "strong-error-handler": "^3.4.0",
-    "voca": "^1.4.0"
+    "voca": "^1.4.0",
+    "xendit-node": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
