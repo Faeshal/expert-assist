@@ -377,8 +377,11 @@ exports.getMentoring = asyncHandler(async (req, res, next) => {
 
 exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.user._id;
-  const schedule = await Schedule.findOne({ user: id }).sort({ datetime: -1 });
+  const schedule = await Schedule.findOne({ user: id })
+    .sort({ _id: -1 })
+    .populate("mentor", "videocallroom");
   const endTime = schedule.endtime;
+  console.log(chalk.white.inverse("live- user:" + schedule));
   if (schedule.approve == "false" || schedule.approve == "reject") {
     console.log(chalk.red.inverse("Not Auhtorize"));
     return res.render("layouts/404");

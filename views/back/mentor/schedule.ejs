@@ -209,11 +209,6 @@
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="id" class="id" />
                 <input
-                  type="hidden"
-                  name="link"
-                  value="<%=mentor.videocallroom%>"
-                />
-                <input
                   type="text"
                   class="form-control username"
                   id="exampleInputPassword1"
@@ -250,14 +245,12 @@
     <script>
       $(document).ready(function () {
         $(".myTd").on("click", ".edit", function () {
-          var id = $(this).data("id");
+          let id = $(this).data("id");
           console.log(id);
-          var approve = $(this).data("approve");
-          var username = $(this).data("username");
-          var link = $(this).data("link");
+          let approve = $(this).data("approve");
+          let username = $(this).data("username");
           $(".approve").val(approve);
           $(".username").val(username);
-          $(".link").val(link);
           $(".id").val(id);
         });
       });

@@ -377,13 +377,13 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
 exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const approve = req.body.approve;
-  const link = req.body.link;
+
   const schedule = await Schedule.findById(id)
     .populate("user", "email")
     .populate("mentor", "email");
   schedule.approve = approve;
-  schedule.link = link;
 
+  // ? buat apa const status dibawah ?
   const status = schedule.approve;
   const datetime = schedule.datetime;
 
@@ -456,8 +456,9 @@ exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.mentor._id;
   const schedule = await Schedule.findOne({ mentor: id })
     .sort({ _id: -1 })
-    .populate("user", "username");
-  console.log(chalk.blue.inverse(schedule));
+    .populate("user", "username")
+    .populate("mentor", "videocallroom");
+  console.log(chalk.blue.inverse("live mentor:" + schedule));
   const endTime = schedule.endtime;
   if (schedule.approve == "false" || schedule.approve == "reject") {
     console.log("Not Auhtorize");
@@ -480,8 +481,7 @@ exports.postFinishMentoring = asyncHandler(async (req, res, next) => {
   const status = req.body.status;
   const schedule = await Schedule.findById(id);
   schedule.status = status;
-  const result = await schedule.save();
-  console.log(chalk.yellow.inverse(result));
+  await schedule.save();
   res.redirect("/mentor/schedule");
 });
 
