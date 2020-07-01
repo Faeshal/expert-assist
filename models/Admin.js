@@ -50,10 +50,6 @@ const AdminSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  status: {
-    type: Boolean,
-    default: true,
-  },
   phone: String,
   publicemail: String,
   blog: [BlogSchema],
