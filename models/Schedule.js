@@ -22,10 +22,6 @@ const ScheduleSchema = new mongoose.Schema({
     type: String,
     default: "false",
   },
-  link: {
-    type: String,
-    default: "not set",
-  },
   status: {
     type: Boolean,
     default: false,
