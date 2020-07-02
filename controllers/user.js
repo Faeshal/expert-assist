@@ -149,6 +149,7 @@ exports.postPayment = asyncHandler(async (req, res, next) => {
     description: "Expert Assist-Payment Mentor",
     amount: total,
     shouldSendEmail: true,
+    xIdempotencyKey: paymentId,
     successRedirectURL:
       req.protocol + "://" + req.get("host") + "/payment/success/" + paymentId,
     failureRedirectURL:
