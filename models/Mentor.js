@@ -7,7 +7,6 @@ const MentorSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  title: String,
   username: String,
   level: String,
   profilepicture: String,
