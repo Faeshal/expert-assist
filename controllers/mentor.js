@@ -316,7 +316,7 @@ exports.postExam = asyncHandler(async (req, res, next) => {
 
 exports.postBeginExam = asyncHandler(async (req, res, next) => {
   const examstatus = req.body.examstatus;
-  const mentor = Mentor.findById(req.session.mentor._id);
+  const mentor = await Mentor.findById(req.session.mentor._id);
   mentor.examstatus = examstatus;
   await mentor.save();
   return longpoll.publish("/polladmin", {
