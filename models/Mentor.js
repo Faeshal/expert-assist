@@ -36,8 +36,8 @@ const MentorSchema = new mongoose.Schema({
     default: 0,
   },
   examstatus: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "false",
   },
   mentorstatus: {
     type: String,

@@ -116,7 +116,7 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
   }
 
   const waitingExam = await Mentor.find({
-    examstatus: true,
+    examstatus: "true",
     mentorstatus: "false",
   }).countDocuments();
 
@@ -449,18 +449,20 @@ exports.getMentorExamJson = (req, res, next) => {
 
 exports.postScore = (req, res, next) => {
   const username = req.body.username;
-  const mentorstatus = req.body.mentorstatus;
+  const examstatus = req.body.examstatus;
   const id = req.body.id;
   Mentor.findById(id)
     .then((mentor) => {
       mentor.username = username;
-      mentor.mentorstatus = mentorstatus;
+      mentor.examstatus = examstatus;
+      if (examstatus == "true") {
+        mentor.mentorstatus = "new";
+      } else {
+        mentor.mentorstatus = "false";
+      }
       return mentor.save();
     })
     .then((result) => {
-      routeCache.removeCache("/");
-      routeCache.removeCache("/mlist");
-      routeCache.removeCache("/mdetail/:id");
       res.redirect("/admin/mentor/exam");
     })
     .catch((err) => console.log(err));

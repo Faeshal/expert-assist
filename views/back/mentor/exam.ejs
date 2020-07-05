@@ -19,15 +19,15 @@
     </div>
   </div>
   <!-- Page content -->
-  <div class="container-fluid mt--7  justify-content-center mx-auto">
+  <div class="container-fluid mt--7 justify-content-center mx-auto">
     <div class="row justify-content-center mx-auto mb-6">
       <div class="col-lg-9">
         <!-- Pricing card -->
-        <% if (mentor.examstatus == false){ %>
+        <% if (mentor.examstatus == "false"){ %>
         <div class="card card-pricing border-0 text-center mb-2 mt-3">
-          <div class="card-header bg-transparent ">
+          <div class="card-header bg-transparent">
             <img
-              class="img-fluid "
+              class="img-fluid"
               width="35%"
               alt="Responsive image"
               src="../../back/assets/img/custom/exambegin.png"
@@ -61,12 +61,30 @@
                     >
                   </select>
                 </div>
-              </div>  
+              </div>
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button type="submit" class="btn btn-primary mb-3">
                 Mulai Tes
               </button>
             </form>
+          </div>
+        </div>
+        <% } else if(mentor.examstatus == "reject") { %>
+        <div class="card card-pricing border-0 text-center mb-2">
+          <div class="card-body px-lg-7">
+            <img
+              class="img-fluid"
+              alt="Responsive image"
+              src="../../back/assets/img/custom/exam_reject.svg"
+              alt=""
+              style="width: 55%;"
+            />
+            <h3 class="text-center mb-4 text-primary">
+              Maaf anda belum lulus , Ujian akan dibuka di awal bulan depan.
+            </h3>
+            <h4 class="text-center mb-4 text-muted">
+              Tetap semangat & silahkan persiapkan diri 🔥
+            </h4>
           </div>
         </div>
         <% } else { %>

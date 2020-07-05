@@ -337,7 +337,7 @@ exports.getBeginExam = asyncHandler(async (req, res, next) => {
   if (!mentor.expertise) {
     console.log("Not Auhtorize");
     return res.render("layouts/404");
-  } else if (mentor.examstatus == true) {
+  } else if (mentor.examstatus == "true") {
     console.log("Exam Finished");
     res.redirect("/mentor/dashboard");
   } else {

@@ -101,10 +101,12 @@
                 >
               </td>
               <td class="text-center">
-                <%if (mentorData.examstatus === true) {%>
-                <b class="font-weight-bold text-blue">Finished</b>
-                <% } else { %>
-                <b class="font-weight-bold text-danger">Not Yet</b>
+                <%if (mentorData.examstatus === "true") {%>
+                <b class="font-weight-bold text-dark badge badge-primary">Finished</b>
+                <% }else if(mentorData.examstatus === "reject"){%>
+                <b class="font-weight-bold text-white badge badge-dark">reject</b>
+                <% }else { %>
+                <b class="font-weight-bold text-dark badge badge-danger">Not Yet</b>
                 <% } %>
               </td>
               <td class="table-actions text-center tdedit">
@@ -162,12 +164,12 @@
                 <label for="username">Result</label>
                 <select
                   class="form-control target text-dark font-weight-bold "
-                  name="mentorstatus"
+                  name="examstatus"
                   required
                 >
                   <option value="" selected>Exam result is...</option>
-                  <option value="new">Qualified</option>
-                  <option value="false">UnQualified</option>
+                  <option value="true">Qualified</option>
+                  <option value="reject">UnQualified</option>
                 </select>
               </div>
             </div>
