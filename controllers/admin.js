@@ -16,6 +16,10 @@ const currency = require("currency.js");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 const asyncHandler = require("express-async-handler");
 const routeCache = require("route-cache");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
 // * Xendit Withdraw Transfer
 const x = require("../middleware/xendit");
 const { Disbursement } = x;
@@ -418,21 +422,18 @@ exports.getMentorAll = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getMentorExam = (req, res, next) => {
-  Mentor.find({ mentorstatus: "false" })
-    .sort({ _id: 1 })
-    .then((mentor) => {
-      if (!mentor) {
-        console.log("No Mentor Unqualified");
-      }
-      res.render("back/admin/mentorExam", {
-        mentor: mentor,
-        pageTitle: "Admin - Mentor Exam",
-        moment: moment,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+exports.getMentorExam = asyncHandler(async (req, res, next) => {
+  const mentor = await Mentor.find({ mentorstatus: "false" }).sort({ _id: 1 });
+
+  if (!mentor) {
+    console.log("No Mentor Unqualified");
+  }
+  res.render("back/admin/mentorExam", {
+    mentor: mentor,
+    pageTitle: "Admin - Mentor Exam",
+    moment: moment,
+  });
+});
 
 exports.getMentorExamJson = (req, res, next) => {
   Mentor.find({ mentorstatus: "false" })
@@ -467,6 +468,33 @@ exports.postScore = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.resetExam = asyncHandler(async (req, res, next) => {
+  const mentor = await Mentor.find({ examstatus: "reject" });
+  await Mentor.updateMany(
+    { examstatus: "reject" },
+    { $set: { examstatus: "false" } }
+  );
+
+  // * Make a single array from multiple object
+  let email = [];
+  mentor.forEach((mentorData) => {
+    let emailData = mentorData.email;
+    email.push(emailData);
+  });
+
+  // * Send Notification New Exam season has open
+  const msg = {
+    to: email,
+    from: "expertassist@example.com",
+    subject: "✌ New Exam Season Has Open",
+    text: "If you wanna take an exam again, this is your chance",
+    html: `<strong>The opportunity has come, if you wanna try to become an expert again, go ahead. Just login in expertassist.com and take the exam. Good Luck</strong>`,
+  };
+  console.log(chalk.greenBright.inverse("Email Notification was sent"));
+  res.redirect("/admin/mentor/exam");
+  return sgMail.sendMultiple(msg);
+});
 
 exports.getUserAll = (req, res, next) => {
   User.find({ status: "true" })

@@ -41,6 +41,7 @@ router.post("/admin/mentor/all", adminContoller.postMentorBlock);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
 router.get("/api/admin/mentorexams", adminContoller.getMentorExamJson);
 router.post("/admin/mentor/exam/update", adminContoller.postScore);
+router.post("/admin/mentor/exam/reset", adminContoller.resetExam);
 router.get("/admin/mentor/block", adminContoller.getBlockMentor);
 
 // ** User
