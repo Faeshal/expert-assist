@@ -2,7 +2,7 @@ version: '2.4'
 services:
   app:
     container_name: exas_app
-    image: expert-assist:1.0
+    image: faeshal/expert-assist:1.0
     restart: on-failure
   boatswain:
     container_name: exas_boatswain
@@ -19,7 +19,7 @@ services:
       BOATSWAIN_TOKEN: eATB9sIvllUn2sMvPYvxV1QjEFK1ZbYws4PhkxZKWxWd6iMIKX7bOgRw9vDUOqfu
   portainer:
     container_name:  exas_portainer
-    image: portainer/portainer:1.23.2
+    image: portainer/portainer:1.24.0
     restart: on-failure
     ports:
       - '9005:9000'
