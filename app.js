@@ -45,7 +45,10 @@ app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
-const MONGO_URI = "mongodb://localhost:27017/exas";
+// Cloud : "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority"
+// Local : "mongodb://localhost:27017/exas";
+const MONGO_URI =
+  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority";
 const store = new MongoDBStore({
   uri: MONGO_URI,
 });

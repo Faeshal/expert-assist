@@ -1,11 +1,9 @@
 version: '2.4'
 services:
   app:
-    container_name: exas_app
     image: faeshal/expert-assist:1.0
     restart: on-failure
   boatswain:
-    container_name: exas_boatswain
     image: boatswainio/boatswain:0.2.11
     command: boatswain
     volumes:
@@ -18,17 +16,14 @@ services:
     environment:
       BOATSWAIN_TOKEN: eATB9sIvllUn2sMvPYvxV1QjEFK1ZbYws4PhkxZKWxWd6iMIKX7bOgRw9vDUOqfu
   portainer:
-    container_name:  exas_portainer
     image: portainer/portainer:1.24.0
-    restart: on-failure
     ports:
       - '9005:9000'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data 
-  haproxy:
-    container_name: exas_haproxy
-    image: dockercloud/haproxy
+  balancer:
+    image: dockercloud/haproxy:1.6.7
     links:
      - app
     ports:
