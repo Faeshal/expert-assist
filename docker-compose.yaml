@@ -1,0 +1,35 @@
+version: '2.4'
+services:
+  app:
+    image: faeshal/expert-assist:1.0
+    restart: on-failure
+  boatswain:
+    image: boatswainio/boatswain:0.2.11
+    command: boatswain
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    pid: "host"
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+    restart: on-failure
+    environment:
+      BOATSWAIN_TOKEN: eATB9sIvllUn2sMvPYvxV1QjEFK1ZbYws4PhkxZKWxWd6iMIKX7bOgRw9vDUOqfu
+  portainer:
+    image: portainer/portainer:1.24.0
+    ports:
+      - '9005:9000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data 
+  balancer:
+    image: dockercloud/haproxy:1.6.7
+    links:
+     - app
+    ports:
+     - '80:80'
+    restart: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  portainer_data:

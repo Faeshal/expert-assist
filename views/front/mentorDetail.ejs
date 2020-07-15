@@ -1,5 +1,4 @@
 <%-include('../layouts/home/header.ejs')%> <%-include('../layouts/navbar.ejs')%>
-
 <!-- Start home -->
 <section class="bg-half page-next-level">
   <div class="bg-overlay"></div>
@@ -21,18 +20,25 @@
           <p class="lead text-center"><%=mentor.bio %></p>
           <div class="text-center mt-3">
             <% if (userId=="xxx") { %>
-            <a href="/login" class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
-              >Hire</a
-            >
+            <button class="btn btn-sm btn-primary" onclick="sweet()">
+              <i class="fas fa-address-card fa-lg mr-2"></i>Hire Mentor
+            </button>
             <% } else { %>
             <a
               class="badge badge-primary pl-4 pr-4 pt-2 pb-2"
               data-toggle="modal"
               data-target="#paymentModal"
             >
-              Hire Mentor
-            </a>
+              <i class="fas fa-address-card fa-lg mr-2"></i>Hire Mentor</a
+            >
             <% } %>
+            <a
+              href="https://api.whatsapp.com/send?phone=<%-mentor.phone%>&text=Hello%20i%20find%20you%20from%20Expert-Assist.%20Can%20i%20ask%20a%20couple%20of%20question%20?"
+              target="_blank"
+              class="ml-3 btn btn-sm btn-dark text-dark"
+            >
+              <i class="fab fa-whatsapp fa-lg mr-2 text-success"></i>Chat Mentor
+            </a>
           </div>
         </div>
       </div>
@@ -281,14 +287,16 @@
 
         <div class="job-detail border rounded mt-4">
           <% if (userId=="xxx") { %>
-          <a href="/login" class="btn btn-primary btn-block">Hire Mentor</a>
-          <% }else{ %>
+          <a class="btn btn-primary btn-block" onclick="sweet()"
+            ><i class="fas fa-address-card fa-lg mr-3"></i>Hire Mentor</a
+          >
+          <% } else{ %>
           <a
             href="#"
             class="btn btn-primary btn-block"
             data-toggle="modal"
             data-target="#paymentModal"
-            >Hire Mentor</a
+            ><i class="fas fa-address-card fa-lg mr-3"></i>Hire Mentor</a
           >
           <% } %>
         </div>
@@ -388,37 +396,21 @@
 
 <!-- footer start -->
 <%-include('../layouts/home/footer.ejs')%>
+
 <script src="/back/assets/js/rater.js"></script>
-<!-- Button -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-  let option = {
-    max_value: 10,
-    readonly: true,
-  };
-  $(".rate").rate(option);
-  $(".review").rate(option);
+  function sweet() {
+    Swal.fire("Alert!", "You Must Login as User", "info");
+  }
 </script>
 <script>
-  // (function () {
-  //   var options = {
-  //     whatsapp: "xxxx", // WhatsApp number
-  //     call: "xxx", // Call phone number
-  //     call_to_action: "Chat Mentor", // Call to action
-  //     button_color: "#666666", // Color of button
-  //     position: "right", // Position may be 'right' or 'left'
-  //     order: "whatsapp,call", // Order of buttons
-  //   };
-  //   var proto = document.location.protocol,
-  //     host = "getbutton.io",
-  //     url = proto + "//static." + host;
-  //   var s = document.createElement("script");
-  //   s.type = "text/javascript";
-  //   s.async = true;
-  //   s.src = url + "/widget-send-button/js/init.js";
-  //   s.onload = function () {
-  //     WhWidgetSendButton.init(host, proto, options);
-  //   };
-  //   var x = document.getElementsByTagName("script")[0];
-  //   x.parentNode.insertBefore(s, x);
-  // })();
+  $(document).ready(() => {
+    let option = {
+      max_value: 10,
+      readonly: true,
+    };
+    $(".rate").rate(option);
+    $(".review").rate(option);
+  });
 </script>

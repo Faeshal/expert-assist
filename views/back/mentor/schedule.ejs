@@ -25,16 +25,7 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <a
-              href="javascript:void(0);"
-              class="btn btn-sm btn-neutral tombolTambahData"
-              data-toggle="modal"
-              data-target="#modal-form"
-              >New</a
-            >
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -52,19 +43,7 @@
                 <div class="col-6">
                   <h3 class="mb-0">Approval Booking</h3>
                 </div>
-                <div class="col-6 text-right">
-                  <a
-                    href="#"
-                    class="btn btn-sm btn-neutral btn-round btn-icon"
-                    data-toggle="tooltip"
-                    data-original-title="Edit product"
-                  >
-                    <span class="btn-inner--icon"
-                      ><i class="fas fa-user-edit"></i
-                    ></span>
-                    <span class="btn-inner--text">Export</span>
-                  </a>
-                </div>
+               
               </div>
             </div>
             <% if(schedule == "") { %>
@@ -230,11 +209,6 @@
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="id" class="id" />
                 <input
-                  type="hidden"
-                  name="link"
-                  value="<%=mentor.videocallroom%>"
-                />
-                <input
                   type="text"
                   class="form-control username"
                   id="exampleInputPassword1"
@@ -271,14 +245,12 @@
     <script>
       $(document).ready(function () {
         $(".myTd").on("click", ".edit", function () {
-          var id = $(this).data("id");
+          let id = $(this).data("id");
           console.log(id);
-          var approve = $(this).data("approve");
-          var username = $(this).data("username");
-          var link = $(this).data("link");
+          let approve = $(this).data("approve");
+          let username = $(this).data("username");
           $(".approve").val(approve);
           $(".username").val(username);
-          $(".link").val(link);
           $(".id").val(id);
         });
       });

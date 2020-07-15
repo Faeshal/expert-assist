@@ -1,19 +1,14 @@
 require("pretty-error").start();
-const dotenv = require("dotenv");
-dotenv.config({ path: "../config.env" });
+require("dotenv").config();
 const crypto = require("crypto");
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const bcrypt = require("bcryptjs");
-const chalk = require("chalk");
 const voca = require("voca");
 const sgMail = require("@sendgrid/mail");
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-sgMail.setApiKey(
-  "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"
-);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getRegister = (req, res, next) => {
   let message = req.flash("error");

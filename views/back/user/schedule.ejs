@@ -71,7 +71,7 @@
                 </div>
               </div>
               <% } else if(payment){ %>
-              <form id="scheduleForm" action="/user/schedule" method="POST">
+              <form id="scheduleForm" method="POST">
                 <!-- Input groups with icon -->
                 <div class="row">
                   <div class="col-md-12">
@@ -86,16 +86,19 @@
                         <input
                           type="hidden"
                           name="user"
+                          id="userId"
                           value="<%=payment.user._id%>"
                         />
                         <input
                           type="hidden"
                           name="mentor"
+                          id="mentorId"
                           value="<%=payment.mentor._id%>"
                         />
                         <input
                           type="hidden"
                           name="duration"
+                          id="duration"
                           value="<%= payment.duration %>"
                         />
                         <input
@@ -203,7 +206,10 @@
             </div>
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="table_id">
+              <table
+                class="table align-items-center table-flush"
+                id="schedule_table"
+              >
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
@@ -251,27 +257,28 @@
                       <% } %>
                     </td>
                     <td class="table-actions text-center">
-                     <% if (scheduleData.approve == "true"  && scheduleData.status==false ) { %>
-                      <span class="badge  badge-primary text-dark"
+                      <% if (scheduleData.approve == "true" &&
+                      scheduleData.status==false ) { %>
+                      <span class="badge badge-primary text-dark"
                         >Incoming</span
                       >
-                      <% } else if(scheduleData.approve == "reject"  && scheduleData.status==false) { %>
-                      <span class="badge  badge-dark text-white"
-                        >Cancel</span
-                      >
-                      <% }else if(scheduleData.approve=="false"  && scheduleData.status==false){ %>
-                      <span class="badge  badge-danger text-dark"
-                        >Pending</span>
-                      <%}else if(scheduleData.approve=="true" && scheduleData.status==true) {%> 
-                        <span class="badge  badge-success text-dark"
-                        >Finish</span>
-                      <% } %> 
+                      <% } else if(scheduleData.approve == "reject" &&
+                      scheduleData.status==false) { %>
+                      <span class="badge badge-dark text-white">Cancel</span>
+                      <% }else if(scheduleData.approve=="false" &&
+                      scheduleData.status==false){ %>
+                      <span class="badge badge-danger text-dark">Pending</span>
+                      <%}else if(scheduleData.approve=="true" &&
+                      scheduleData.status==true) {%>
+                      <span class="badge badge-success text-dark">Finish</span>
+                      <% } %>
                     </td>
                     <td class="text-center">
-                      <% if (scheduleData.approve=="true"
-                      ||scheduleData.approve=="reject"){ %>
+                      <% if (scheduleData.approve=="true"){ %>
                       <i class="fas fa-check-circle text-success"></i>
-                      <% }else{ %>
+                      <% }else if (scheduleData.approve=="reject"){%>
+                      <i class="fas fa-check-circle text-dark"></i>
+                      <%} else{ %>
                       <button
                         type="button"
                         onclick=""
@@ -350,40 +357,51 @@
 
     <!-- Footer -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
-    <script>
-      $(document).ready(function () {
-        if ("<%=approveStatus%>" == "false") {
-          $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
-          $("#buttonAlert").prop("disabled", true).text("Approve Waiting");
-          $("#note").prop("disabled", true);
-          $("#datetime").prop("disabled", true);
-        }
-        $("#buttonAlert").click(function (e) {
-          e.preventDefault();
-          Swal.fire({
-            icon: "success",
-            title: "Request Berhasil!",
-            text: "Mohon menunggu sampai jadwal diApprove oleh Mentor",
-          }).then(function () {
-            $("#scheduleForm").submit();
-          });
-        });
-      });
-    </script>
     <%-include('../../layouts/back/user/footer.ejs')%>
     <script>
       $(document).ready(() => {
-        $.get("/api/user/payments", (data) => {
-          let paymentChecker = "pay_" + "<%-session.username%>";
+        let paymentChecker
+        let oldPayment;
+        let newPayment;
+        let alreadyBook=false;
 
-          let oldPayment = localStorage.getItem(paymentChecker);
-          let newPayment = JSON.stringify(data.total);
+        $("#schedule_table").DataTable({
+        pageLength: 4,
+        lengthMenu: [4 , 10, 20],
+        ordering: false,
+        stateSave: true,
+        pagingType: "simple_numbers",
+        language: {
+          paginate: {
+            first: "«",
+            previous: "‹",
+            next: "›",
+            last: "»",
+          },
+        },
+        responsive: true,
+        });
+
+        $.get("/api/user/payments", (data) => {
+         paymentChecker = "pay_" + "<%-session.username%>";
+         oldPayment = localStorage.getItem(paymentChecker);
+         newPayment = JSON.stringify(data.total);
+         console.log(oldPayment+"="+newPayment);
+
+          let rejectSchedule = <%-JSON.stringify(rejectSchedule)%>;
 
           if (!oldPayment) {
-            localStorage.setItem(paymentChecker, newPayment);
+            let subtractPayment= newPayment - 1;
+            localStorage.setItem(paymentChecker, subtractPayment);
           } else {
-            if (oldPayment == newPayment) {
+            if (oldPayment && rejectSchedule) {
+              $("#mentorName").val(mentorUsername);
+              $("#userId").val(<%-userId%>);
+              $("#mentorId").val(<%-mentorId%>);
+              $("#duration").val(<%-duration%>);
+              $("#note").prop("disabled", false);
+              $("#datetime").prop("disabled", false);
+            } else if (oldPayment == newPayment) {
               $("#buttonAlert").removeClass("btn-primary").addClass("btn-dark");
               $("#buttonAlert").prop("disabled", true).text("Need Payment");
               $("#mentorName").val("No New Payment Found..");
@@ -391,16 +409,48 @@
               $("#datetime").prop("disabled", true);
             }
           }
-          $("#scheduleForm").submit(() => {
-            localStorage.removeItem(paymentChecker);
-          });
         })
           .done((res) => {
             console.log(res);
           })
-          .fail(() => {
-            alert("error:");
+          .fail((err) => {
+            console.log(err);
           });
+
+          $("#buttonAlert").click(function (e) {
+          e.preventDefault();
+          let mentorId = $("input[name=mentor]").val();
+          let userId = $("input[name=user]").val();
+          let duration = $("input[name=duration]").val();
+          let datetime = $("input[name=datetime]").val();
+          let note = $("input[name=note]").val();
+          $.post("/user/schedule?_csrf=<%=csrfToken%>", { user: userId, mentor: mentorId,duration:duration,datetime:datetime,note:note })
+            .done((data) => {
+
+              let status=data.message;
+              if(status == true){
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Request Schedule Succesfully Sent',
+                  text: 'Please wait until schedule approve by mentor',
+                }).then(()=>{
+                  // !! Bug : bagian ini harus direload 2 kali baru nutup request boxnya
+                  localStorage.removeItem(paymentChecker);
+                }).then(()=>{
+                  localStorage.setItem(paymentChecker, newPayment);
+                  location.reload(true);
+                })
+              }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Schdule already booked',
+                  text: 'Please request schedule again with different time.',
+                })
+              }
+            })
+            .fail((err) => console.log(err));
+        });
+
       });
     </script>
   </div>

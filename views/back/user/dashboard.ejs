@@ -28,15 +28,7 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <form action="/logout" method="POST">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <button type="submit" class="btn btn-sm btn-danger">
-                <i class="ni ni-user-run"></i>
-                <span>Logout</span>
-              </button>
-            </form>
-          </div>
+        
         </div>
       </div>
     </div>
@@ -166,13 +158,8 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col-8">
-              <!-- Surtitle -->
-              <h6 class="surtitle">0/9 Mentor</h6>
               <!-- Title -->
               <h5 class="h3 mb-0">Mentor Track</h5>
-            </div>
-            <div class="col-4 text-right">
-              <a href="#!" class="btn btn-sm btn-neutral">Action</a>
             </div>
           </div>
         </div>
@@ -189,8 +176,8 @@
             />
           </div>
           <div class="mx-auto justify-content-center text-center mt-3">
-            <a href="/mlist" class="btn btn-sm btn-primary mt-2">
-              Explore Mentor
+            <a href="/mlist" class="btn btn-primary mt-4">
+              <i class="far fa-paper-plane fa-lg mr-3"></i>Explore Mentor
             </a>
           </div>
         </div>
@@ -246,24 +233,7 @@
         </div>
       </div>
     </div>
-
-    <!-- chat -->
-    <!-- <script type="text/javascript">
-      window.$crisp = [];
-      window.CRISP_WEBSITE_ID = "16552b1e-b93b-4e63-969b-b9363984f2a0";
-      (function() {
-        d = document;
-        s = d.createElement("script");
-        s.src = "https://client.crisp.chat/l.js";
-        s.async = 1;
-        d.getElementsByTagName("head")[0].appendChild(s);
-      })();
-    </script> -->
-
-    <!-- <script async type="text/javascript" src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/5a16afc55e544ccbe84d0baa383eb5bbbf18d4b8ca4a761d337c9b42bbabe095.js"></script>   -->
-
-    <!-- Footer -->
-
     <%-include('../../layouts/back/user/footer.ejs')%>
   </div>
 </div>
+

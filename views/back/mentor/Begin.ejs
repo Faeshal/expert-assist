@@ -4,25 +4,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $("#createbutton").click(function(e) {
-        e.preventDefault();
-        var data = $("input[name=examstatus]").val();
-        $.ajax({
-          type: "post",
-          url: "/mentor/exam/begin?_csrf=<%=csrfToken%>",
-          data: {
-            examstatus: data
-          },
-          success: function(data) {
-            //show content
-            console.log(data);
-          }
-        });
-      });
-    });
-  </script>
+
   <!-- Topnav -->
   <%-include('../../layouts/back/mentor/topNav.ejs')%>
   <!-- Header -->
@@ -51,16 +33,12 @@
           <div class="col-lg-6 col-7">
             <h6 class="h2 d-inline-block mb-0">Exam</h6>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral">New</a>
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-          </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Page content -->
-  <div class="container-fluid mt--6  justify-content-center mx-auto">
+  <div class="container-fluid mt--6 justify-content-center mx-auto">
     <div class="row justify-content-center mx-auto mb-6">
       <div class="col-lg-11 text-center">
         <!-- Pricing card -->
@@ -70,13 +48,14 @@
             class="card-img-top"
             src="https://images.pexels.com/photos/572487/pexels-photo-572487.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
             alt="Image placeholder"
-            style=" height: 200px"
+            style="height: 200px;"
           />
           <!-- List group -->
           <ul class="list-group list-group-flush">
             <li class="list-group-item h3">Selamat Mengerjakan</li>
             <li class="list-group-item">
-              <h2 class="text-danger font-weight-bold" >Timer: </h2><h2 class="text-danger font-weight-bold" id="time"></h2>
+              <h2 class="text-danger font-weight-bold">Timer:</h2>
+              <h2 class="text-danger font-weight-bold" id="time"></h2>
             </li>
           </ul>
           <!-- Card body -->
@@ -114,7 +93,8 @@
           </div>
           <form method="POST" id="eventForm">
             <div class="modal-body">
-              Selamat Mengerjakan, Jangan lupa perhatikan waktu. Tes yang sudah di submit tidak bisa diulang lagi.  
+              Selamat Mengerjakan, Jangan lupa perhatikan waktu. Tes yang sudah
+              di submit tidak bisa diulang lagi.
             </div>
             <div class="modal-footer mx-auto text-center">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
@@ -126,7 +106,7 @@
                 data-dismiss="modal"
                 onclick="timer()"
               >
-               Ok 
+                Ok
               </button>
             </div>
           </form>
@@ -134,16 +114,9 @@
       </div>
     </div>
 
-    <script>
-      $(document).ready(function() {
-        $("#exampleModal").modal("show");
-      });
-    </script>
-
     <script type="text/javascript">
       var load = 0;
-
-      document.getElementById("gform").onload = function() {
+      document.getElementById("gform").onload = function () {
         /*Execute on every reload on iFrame*/
         load++;
         if (load > 1) {
@@ -156,3 +129,24 @@
     <%-include('../../layouts/back/mentor/footer.ejs')%>
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#exampleModal").modal("show");
+    $("#createbutton").click(function (e) {
+      e.preventDefault();
+      var data = $("input[name=examstatus]").val();
+      $.ajax({
+        type: "post",
+        url: "/mentor/exam/begin?_csrf=<%=csrfToken%>",
+        data: {
+          examstatus: data,
+        },
+        success: function (data) {
+          //show content
+          console.log(data);
+        },
+      });
+    });
+  });
+</script>

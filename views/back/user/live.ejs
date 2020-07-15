@@ -31,31 +31,27 @@
           },
         });
         callFrame.join({
-          url: "https://expert-assist.daily.co/<%=schedule.link%>",
+          url: "https://expert-assist.daily.co/<%=schedule.mentor.videocallroom%>",
         });
       </script>
-           <div
+      <div
         class="fixed-top mb-2 text-center mx-auto justify-content-center"
         style="width: 100%;"
       >
         <nav
           class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center"
-          style="height: 35px; padding-top: 5px; padding-bottom: 5px;"
         >
-          <div class="container mx-auto text-center justify-content-center">
-            <div class="row mx-auto text-center justify-content-center">
-              <div class="col-sm-6">
-                <span class="badge badge-danger"><a class="text-white" href="/user/review">Finish</a></span>
-              </div>
-               <div class="col-sm-6">
-                <h5
-                  class="text-danger font-weight-bold mr-4 ml-4"
-                  id="time"
-                ></h5>
-              </div>
-              </div>
-            </div>
-          </div>
+          <span class="navbar-text">
+            <a class="h4 text-danger font-weight-bold" href="/user/review"
+              >Exit</a
+            >
+          </span>
+          <span class="navbar-text mr-3 ml-3">
+            <a class="h5">⌛</a>
+          </span>
+          <span class="navbar-text">
+            <a class="h4 text-danger font-weight-bold" id="time"></a>
+          </span>
         </nav>
       </div>
     </div>
@@ -78,61 +74,93 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
     <script>
-      window.onload = timer();
+      // Set the date we're counting down to
+      let countDownDate = new Date("<%-endTime%>").getTime();
 
-      function timer() {
-        let timeNow = moment().format("LT");
+      // Update the count down every 1 second
+      let x = setInterval(function () {
+        // Get today's date and time
+        let now = new Date().getTime();
 
-        let timeSchedule = "<%-moment(dateTimeSchedule).format('LT')%>";
+        // Find the distance between now and the count down date
+        let distance = countDownDate - now;
 
-        let timeDuration = "<%-schedule.duration%>" * 60;
+        // Time calculations for days, hours, minutes and seconds
+        let hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // * waktuSelesai = timeSchedule + durasiBooking
-        let endTime = moment(timeSchedule, "LT")
-          .add(timeDuration, "m")
-          .format("LT");
+        // Display the result in the element with id="time"
 
-        // * durasiAkhir = waktuSelesai - waktuMulai
-        let result = moment
-          .utc(moment(endTime, "LT").diff(moment(timeNow, "LT")))
-          .format("LT");
+        document.getElementById("time").innerHTML =
+          hours + ":" + minutes + ":" + seconds;
 
-        // * TERAKHIR : Convert Durasi (result) dari format jam ke menit saja
-        let duration = moment(result, "LT").diff(moment().startOf("day"), "m");
-
-        // console.log(result);
-        console.log(`Waktu diJadwal : ${timeSchedule}`);
-        console.log(`Waktu Sekarang : ${timeNow}`);
-        console.log("Waktu Selesai : " + endTime);
-        console.log("W.Selesai - W.Sekarang : " + result);
-        console.log("HASIL : " + duration);
-
-        let fiveMinutes = 60 * duration,
-          display = document.getElementById("time");
-        startTimer(fiveMinutes, display);
-      }
-
-      function startTimer(duration, display) {
-        let alert;
-        let timer = duration,
-          minutes,
-          seconds;
-        setInterval(function () {
-          minutes = parseInt(timer / 60, 10);
-          seconds = parseInt(timer % 60, 10);
-
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
-
-          display.textContent = minutes + ":" + seconds;
-
-          if (--timer < 0) {
-            // alert = true;
-            document.getElementById("time").innerHTML = "TIMES UP";
-            window.alert("Time is Up");
-          }
-        }, 1000);
-      }
+        // If the count down is finished, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("time").innerHTML = "Times Up !";
+        }
+      }, 1000);
     </script>
   </body>
 </html>
+
+<!-- Script Timer Lama-->
+<!-- <script>
+  window.onload = timer();
+
+  function timer() {
+    ? Cari Waktu Sekarang
+    let timeNow = moment().format("LT");
+
+    ? Cari Waktu Selesai (trus di convert ke menit)
+    let timeSchedule = "ejs moment(dateTimeSchedule).format('LT') ejs ";
+    let timeDuration = "ejs schedule.duration ejs" * 60;
+    * waktuSelesai = timeSchedule + durasiBooking (timeDuration)
+    let endTime = moment(timeSchedule, "LT")
+      .add(timeDuration, "m")
+      .format("LT");
+    * durasiAkhir = waktuSelesai - waktuMulai
+    let result = moment
+      .utc(moment(endTime, "LT").diff(moment(timeNow, "LT")))
+      .format("LT");
+    * TERAKHIR : Convert Durasi (result) dari format jam ke menit saja
+    let duration = moment(result, "LT").diff(moment().startOf("day"), "m");
+
+    // console.log(result);
+    console.log(`Waktu diJadwal : ${timeSchedule}`);
+    console.log(`Waktu Sekarang : ${timeNow}`);
+    console.log("Waktu Selesai : " + endTime);
+    console.log("W.Selesai - W.Sekarang : " + result);
+    console.log("HASIL : " + duration);
+
+    ? Waktu selesai (dalam menit) , lalu dikali 60 (detik) 
+    let fiveMinutes = 60 * duration,
+      display = document.getElementById("time");
+    startTimer(fiveMinutes, display);
+  }
+
+  function startTimer(duration, display) {
+    let alert;
+    let timer = duration,
+      minutes,
+      seconds;
+    setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+        // alert = true;
+        document.getElementById("time").innerHTML = "TIMES UP";
+        window.alert("Time is Up");
+      }
+    }, 1000);
+  }
+</script> -->

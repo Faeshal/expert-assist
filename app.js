@@ -1,3 +1,5 @@
+require("dotenv").config();
+const compression = require("compression");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,12 +20,14 @@ const mongoSanitize = require("express-mongo-sanitize");
 const flash = require("connect-flash");
 const chalk = require("chalk");
 const morgan = require("morgan");
+const errorHandler = require("strong-error-handler");
 require("pretty-error").start();
 
-// * Security
+// * Security & Compression
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors());
+app.use(compression());
 
 // * Static Files
 app.use(express.static(path.join(__dirname, "public")));
@@ -42,9 +46,14 @@ app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // * Session & Cookie
+const MONGO_URI = process.env.MONGO_URI;
 const store = new MongoDBStore({
+<<<<<<< HEAD
   uri:
     "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
+=======
+  uri: MONGO_URI,
+>>>>>>> dev
 });
 
 const csrfProtection = csrf();
@@ -80,28 +89,60 @@ app.get("*", (req, res, next) => {
 });
 
 // * Database Connection
-mongoose.connect(
-  "mongodb+srv://faeshal:toshibac855d@exas-8x4io.mongodb.net/exas?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  }
-);
-
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 mongoose.connection.on("connected", function () {
   console.log(chalk.blueBright("MongoDB connected"));
 });
-
 mongoose.connection.on("error", function (err) {
   console.log(chalk.redBright("MongoDB connection error: " + err));
 });
 
+// ** Error Handler
+app.use(
+  errorHandler({
+    debug: true,
+    log: true,
+  })
+);
+
 // * Server Listen
-app.listen(PORT, (err) => {
+const server = app.listen(PORT, (err) => {
   if (err) {
-    console.log(chalk.red.inverse(`Error occured : ${err}`));
-  } else {
-    console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
+    console.log(chalk.red.inverse(`Error : ${err}`));
   }
+  console.log(chalk.black.bgGreen(`Server is Running On Port : ${PORT}`));
 });
+
+// * Graceful Shutdown
+// quit on ctrl-c when running docker in terminal
+process.on("SIGINT", function onSigint() {
+  console.info(
+    "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// quit properly on docker stop
+process.on("SIGTERM", function onSigterm() {
+  console.info(
+    "Got SIGTERM (docker container stop). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
+});
+
+// shut down server
+function shutdown() {
+  server.close(function onServerClosed(err) {
+    if (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+    process.exit();
+  });
+}

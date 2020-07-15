@@ -32,7 +32,7 @@
         });
         callFrame
           .join({
-            url: "https://expert-assist.daily.co/<%=schedule.link%>",
+            url: "https://expert-assist.daily.co/<%=schedule.mentor.videocallroom%>",
           })
           .then((data) => {
             console.log(data);
@@ -46,39 +46,33 @@
       >
         <nav
           class="navbar navbar-expand-lg navbar-light bg-light mx-auto text-center justify-content-center"
-          style="height: 35px; padding-top: 5px; padding-bottom: 5px;"
         >
-          <div class="container mx-auto text-center justify-content-center">
-            <div class="row mx-auto text-center justify-content-center">
-              <div class="col-sm">
-                <span class="badge badge-primary">Summary</span>
-              </div>
-              <div class="col-sm">
-                <h5
-                  class="text-danger font-weight-bold mr-4 ml-4"
-                  id="time"
-                ></h5>
-              </div>
-              <div class="col-sm">
-                <form
-                  action="/mentor/mentoring/finish"
-                  method="POST"
-                  id="liveForm"
-                >
-                  <input type="hidden" name="id" value="<%=schedule._id%>" />
-                  <input type="hidden" name="status" value="true" />
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                  <button
-                    type="button"
-                    class="badge badge-success btn-outline-dark"
-                    id="btnFinish"
-                  >
-                    Finish
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
+          <span class="navbar-text">
+            <button
+              type="button"
+              class="badge badge-secondary btn-outline-dark"
+              id="btnSummary"
+            >
+              Summary
+            </button>
+          </span>
+          <span class="navbar-text mr-3 ml-3">
+            <a class="h4 text-danger font-weight-bold" id="time"></a>
+          </span>
+          <span class="navbar-text">
+            <form action="/mentor/mentoring/finish" method="POST" id="liveForm">
+              <input type="hidden" name="id" value="<%=schedule._id%>" />
+              <input type="hidden" name="status" value="true" />
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button
+                type="button"
+                class="badge badge-danger btn-outline-dark"
+                id="btnFinish"
+              >
+                Finish
+              </button>
+            </form>
+          </span>
         </nav>
       </div>
     </div>
@@ -102,62 +96,47 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
     <script>
-      window.onload = timer();
+      // Set the date we're counting down to
+      let countDownDate = new Date("<%-endTime%>").getTime();
 
-      function timer() {
-        let timeNow = moment().format("LT");
+      // Update the count down every 1 second
+      let x = setInterval(function () {
+        // Get today's date and time
+        let now = new Date().getTime();
 
-        let timeSchedule = moment("<%=dateTimeSchedule%>").format("LT");
+        // Find the distance between now and the count down date
+        let distance = countDownDate - now;
 
-        let timeDuration = "<%-schedule.duration%>" * 60;
+        // Time calculations for days, hours, minutes and seconds
+        let hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // * waktuSelesai = timeSchedule + durasiBooking
-        let endTime = moment(timeSchedule, "LT")
-          .add(timeDuration, "m")
-          .format("LT");
+        // Display the result in the element with id="time"
+        document.getElementById("time").innerHTML =
+          hours + ":" + minutes + ":" + seconds;
 
-        // * durasiAkhir = waktuSelesai - waktuMulai
-        let result = moment
-          .utc(moment(endTime, "LT").diff(moment(timeNow, "LT")))
-          .format("LT");
-
-        // * TERAKHIR : Convert Durasi (result) dari format jam ke menit saja
-        let duration = moment(result, "LT").diff(moment().startOf("day"), "m");
-
-        // console.log(result);
-        console.log(`Waktu diJadwal : ${timeSchedule}`);
-        console.log(`Waktu Sekarang : ${timeNow}`);
-        console.log("Waktu Selesai : " + endTime);
-        console.log("W.Selesai - W.Sekarang : " + result);
-        console.log("HASIL : " + duration);
-
-        let fiveMinutes = 60 * duration,
-          display = document.getElementById("time");
-        startTimer(fiveMinutes, display);
-      }
-
-      function startTimer(duration, display) {
-        let alert;
-        let timer = duration,
-          minutes,
-          seconds;
-        setInterval(function () {
-          minutes = parseInt(timer / 60, 10);
-          seconds = parseInt(timer % 60, 10);
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
-          display.textContent = minutes + ":" + seconds;
-
-          if (--timer < 0) {
-            document.getElementById("time").innerHTML = "EXPIRED";
-            window.location.href = "http://localhost:3000/mentor/dashboard";
-            window.alert("Time is Up");
-          }
-        }, 1000);
-      }
+        // If the count down is finished, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("time").innerHTML = "Times Up !";
+        }
+      }, 1000);
     </script>
     <script>
       $(document).ready(function () {
+        let momentStartTime = "<%-momentStartTime%>";
+        let momentEndTime = "<%-momentEndTime%>";
+        let user = "<%=voca.titleCase(schedule.user.username)%>";
+        $("#btnSummary").click(() => {
+          Swal.fire({
+            icon: "info",
+            title: `${user} Schedule Status`,
+            text: `Startime : ${momentStartTime} ◾ EndTime : ${momentEndTime}`,
+          });
+        });
         $("#btnFinish").click(function (e) {
           e.preventDefault();
           Swal.fire({
@@ -178,7 +157,7 @@
                 $("#liveForm").submit();
               });
             } else {
-              Swal.fire("Cancel!", "Ok, Always Be carefull", "info");
+              Swal.fire("Cancel!", "Ok, Always Be carefull", "warning");
             }
           });
         });

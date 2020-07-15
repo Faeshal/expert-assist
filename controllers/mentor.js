@@ -1,4 +1,7 @@
 require("pretty-error").start();
+require("dotenv").config();
+const express = require("express");
+const app = express();
 const Mentor = require("../models/Mentor");
 const Admin = require("../models/Admin");
 const Review = require("../models/Review");
@@ -13,118 +16,101 @@ const chalk = require("chalk");
 const bcrypt = require("bcryptjs");
 const voca = require("voca");
 const { validationResult } = require("express-validator");
+const longpoll = require("express-longpoll")(app);
+const asyncHandler = require("express-async-handler");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-exports.getDashboard = (req, res, next) => {
+exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findOne({ _id: session._id })
-    .then((mentor) => {
-      Payment.countDocuments({
-        $and: [{ mentor: session._id }, { status: true }],
-      }).then((totalClient) => {
-        Review.countDocuments({ mentor: session._id }).then((totalReview) => {
-          Schedule.find({ $and: [{ mentor: session._id }, { status: false }] })
-            .populate({
-              path: "user",
-              select: ["username", "email", "profilepicture", "phone"],
-            })
-            .limit(3)
-            .sort({ datetime: 1 })
-            .then((userData) => {
-              Schedule.find({
-                $and: [{ mentor: session._id }, { approve: "false" }],
-              })
-                .countDocuments()
-                .then((waitingSchedule) => {
-                  Schedule.find({
-                    $and: [{ mentor: session._id }, { approve: "reject" }],
-                  })
-                    .countDocuments()
-                    .then((rejectSchedule) => {
-                      Withdraw.find({
-                        $and: [{ mentor: session._id }, { status: false }],
-                      })
-                        .countDocuments()
-                        .then((waitingWithdraw) => {
-                          Withdraw.find({
-                            $and: [{ mentor: session._id }, { status: true }],
-                          })
-                            .countDocuments()
-                            .then((withdrawSuccess) => {
-                              Schedule.findOne({
-                                $and: [
-                                  { mentor: session._id },
-                                  { approve: "true" },
-                                  { status: false },
-                                ],
-                              })
-                                .sort({ datetime: 1 })
-                                .then((nextMentoring) => {
-                                  Withdraw.aggregate([
-                                    {
-                                      $match: {
-                                        $and: [
-                                          { mentor: session._id },
-                                          { status: true },
-                                        ],
-                                      },
-                                    },
-                                    {
-                                      $group: {
-                                        _id: null,
-                                        total: { $sum: "$total" },
-                                      },
-                                    },
-                                  ]).then((totalWithdrawData) => {
-                                    console.log(totalWithdrawData);
-                                    let totalWithdraw;
-                                    if (totalWithdrawData.length == 0) {
-                                      totalWithdraw = 0;
-                                    } else {
-                                      totalWithdraw =
-                                        totalWithdrawData[0].total;
-                                    }
-                                    console.log("xx" + totalWithdraw);
-                                    Schedule.find({
-                                      $and: [
-                                        { mentor: session._id },
-                                        { approve: "true" },
-                                        { status: false },
-                                      ],
-                                    })
-                                      .countDocuments()
-                                      .then((incomingSchedule) => {
-                                        res.render("back/mentor/dashboard", {
-                                          mentor: mentor,
-                                          currency: currency,
-                                          session: session,
-                                          totalClient: totalClient,
-                                          totalReview: totalReview,
-                                          voca: voca,
-                                          userData: userData,
-                                          moment: moment,
-                                          waitingSchedule: waitingSchedule,
-                                          rejectSchedule: rejectSchedule,
-                                          waitingWithdraw: waitingWithdraw,
-                                          withdrawSuccess: withdrawSuccess,
-                                          nextMentoring: nextMentoring,
-                                          totalWithdraw: totalWithdraw,
-                                          incomingSchedule: incomingSchedule,
-                                        });
-                                      });
-                                  });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findOne({ _id: session._id }).select({
+    desc: 0,
+    password: 0,
+  });
 
-exports.postMentorStatus = (req, res, next) => {
+  const totalClient = await Payment.countDocuments({
+    $and: [{ mentor: session._id }, { status: true }],
+  });
+
+  const totalReview = await Review.countDocuments({ mentor: session._id });
+
+  const userData = await Schedule.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  })
+    .populate({
+      path: "user",
+      select: ["username", "email", "profilepicture", "phone"],
+    })
+    .limit(3)
+    .sort({ datetime: 1 });
+
+  const waitingSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "false" }],
+  }).countDocuments();
+
+  const rejectSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "reject" }],
+  }).countDocuments();
+
+  const waitingWithdraw = await Withdraw.find({
+    $and: [{ mentor: session._id }, { status: false }],
+  }).countDocuments();
+
+  const withdrawSuccess = await Withdraw.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
+
+  const nextMentoring = await Schedule.findOne({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).sort({ datetime: 1 });
+
+  console.log(chalk.white.inverse(nextMentoring));
+
+  const totalWithdrawData = await Withdraw.aggregate([
+    {
+      $match: {
+        $and: [{ mentor: session._id }, { status: true }],
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$total" },
+      },
+    },
+  ]);
+
+  let totalWithdraw;
+  if (totalWithdrawData.length == 0) {
+    totalWithdraw = 0;
+  } else {
+    totalWithdraw = totalWithdrawData[0].total;
+  }
+
+  const incomingSchedule = await Schedule.find({
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).countDocuments();
+
+  res.render("back/mentor/dashboard", {
+    mentor: mentor,
+    currency: currency,
+    session: session,
+    totalClient: totalClient,
+    totalReview: totalReview,
+    voca: voca,
+    userData: userData,
+    moment: moment,
+    waitingSchedule: waitingSchedule,
+    rejectSchedule: rejectSchedule,
+    waitingWithdraw: waitingWithdraw,
+    withdrawSuccess: withdrawSuccess,
+    nextMentoring: nextMentoring,
+    totalWithdraw: totalWithdraw,
+    incomingSchedule: incomingSchedule,
+  });
+});
+
+exports.postMentorStatus = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
   const mentorstatus = req.body.mentorstatus;
   const mentorusername = voca.slugify(req.body.mentorusername);
@@ -137,11 +123,11 @@ exports.postMentorStatus = (req, res, next) => {
     name: roomName,
     privacy: "public",
   };
+
   axios
     .post("https://api.daily.co/v1/rooms", data, {
       headers: {
-        Authorization:
-          "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13",
+        Authorization: process.env.DAILYCO_API_KEY,
       },
     })
     .then(function (response) {
@@ -151,54 +137,53 @@ exports.postMentorStatus = (req, res, next) => {
       console.log(error);
     });
 
-  Mentor.findById(req.session.mentor._id)
-    .then((mentor) => {
-      mentor.mentorstatus = mentorstatus;
-      mentor.videocallroom = roomName;
-      return mentor.save().then(() => {
-        res.redirect("/mentor/profile");
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(req.session.mentor._id);
+  mentor.mentorstatus = mentorstatus;
+  mentor.videocallroom = roomName;
+  await mentor.save();
+  res.redirect("/mentor/profile");
+});
 
-exports.getProfile = (req, res, next) => {
+exports.getProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findById(session._id)
-    .then((mentor) => {
-      res.render("back/mentor/profile", {
-        mentor: mentor,
-        session: session,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profile", {
+    mentor: mentor,
+    session: session,
+  });
+});
 
-exports.getPayment = (req, res, next) => {
+exports.getPayment = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
+  let lastPaymentId;
+  let lastPaymentDate;
+  const payment = await Payment.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  })
     .populate("user", "username email")
-    .sort({ _id: -1 })
-    .then((payment) => {
-      Mentor.findById(session._id).then((mentor) => {
-        res.render("back/mentor/payment", {
-          mentor: mentor,
-          payment: payment,
-          voca: voca,
-          moment: moment,
-          currency: currency,
-          session: session,
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ _id: -1 });
 
-exports.getPaymentJson = (req, res, next) => {
+  if (payment.length > 0) {
+    lastPaymentId = payment[0]._id;
+    lastPaymentDate = payment[0].datetime;
+  }
+
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/payment", {
+    mentor: mentor,
+    payment: payment,
+    voca: voca,
+    moment: moment,
+    currency: currency,
+    session: session,
+    lastPaymentId: lastPaymentId,
+    lastPaymentDate: lastPaymentDate,
+  });
+});
+
+exports.getPaymentJson = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Payment.aggregate([
+  const paymentData = await Payment.aggregate([
     {
       $match: { mentor: session._id },
     },
@@ -210,37 +195,28 @@ exports.getPaymentJson = (req, res, next) => {
     },
     { $sort: { _id: -1 } },
     { $limit: 6 },
-  ])
-    .then((paymentData) => {
-      Payment.find({ $and: [{ mentor: session._id }, { status: true }] })
-        .countDocuments()
-        .then((total) => {
-          if (total) {
-            res
-              .status(200)
-              .json({ message: "true", data: paymentData, total: total });
-          } else {
-            res.json({ message: "No Mentor Data", data: 0 });
-          }
-        });
-    })
+  ]);
 
-    .catch((err) => console.log(err));
-};
+  const total = await Payment.find({
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
 
-exports.getUpdateProfile = (req, res, next) => {
+  if (!total || total.length == 0) {
+    return res.json({ message: "No Mentor Data", data: 0 });
+  }
+  res.status(200).json({ message: true, data: paymentData, total: total });
+});
+
+exports.getUpdateProfile = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findById(session._id)
-    .then((mentor) => {
-      res.render("back/mentor/profileUpdate", {
-        mentor: mentor,
-        session: session,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profileUpdate", {
+    mentor: mentor,
+    session: session,
+  });
+});
 
-exports.updateProfile = (req, res, next) => {
+exports.updateProfile = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
   const price = req.body.price;
@@ -256,8 +232,9 @@ exports.updateProfile = (req, res, next) => {
   const github = req.body.github;
   const linkedin = req.body.linkedin;
   const skill = req.body.skill;
-  const bankname = req.body.bankname;
-  const bankaccount = req.body.bankaccount;
+  const bankcode = req.body.bankcode;
+  const bankaccountnumber = req.body.bankaccountnumber;
+  const bankaccountusername = req.body.bankaccountusername;
   const profilepicture = req.files["profilepicture"];
   const coverpicture = req.files["coverpicture"];
 
@@ -267,441 +244,342 @@ exports.updateProfile = (req, res, next) => {
   console.log(req.files["coverpicture"]);
   console.log("================");
   console.log(req.files);
-  Mentor.findOne({ _id: id })
-    .then((mentor) => {
-      mentor.username = username;
-      mentor.price = price;
-      mentor.city = city;
-      mentor.job = job;
 
-      if (profilepicture) {
-        fileHelper.deleteFile(mentor.profilepicture);
-        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      } else {
-        mentor.profilepicture = req.files["profilepicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      }
+  const mentor = await Mentor.findOne({ _id: id });
 
-      if (coverpicture) {
-        // fileHelper.deleteFile(mentor.coverpicture);
-        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      } else {
-        mentor.coverpicture = req.files["coverpicture"][0].path.replace(
-          "\\",
-          "/"
-        );
-      }
+  mentor.username = username;
+  mentor.price = price;
+  mentor.city = city;
+  mentor.job = job;
 
-      mentor.phone = phone;
-      mentor.twitter = twitter;
-      mentor.github = github;
-      mentor.linkedin = linkedin;
-      mentor.experience = experience;
-      mentor.portofolio = portofolio;
-      mentor.cv = cv;
-      mentor.bio = bio;
-      mentor.desc = desc;
-      mentor.skill = skill;
-      mentor.bankname = bankname;
-      mentor.bankaccount = bankaccount;
+  if (profilepicture) {
+    fileHelper.deleteFile(mentor.profilepicture);
+    mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+      "\\",
+      "/"
+    );
+  }
 
-      return mentor.save();
-    })
-    .then((result) => {
-      console.log(result);
-      console.log("Profile Updated");
-      res.redirect("/mentor/profile");
-    })
-    .catch((err) => console.log(err));
-};
+  if (coverpicture) {
+    // fileHelper.deleteFile(mentor.coverpicture);
+    mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
+  }
 
-exports.getExam = (req, res, next) => {
+  mentor.phone = phone;
+  mentor.twitter = twitter;
+  mentor.github = github;
+  mentor.linkedin = linkedin;
+  mentor.experience = experience;
+  mentor.portofolio = portofolio;
+  mentor.cv = cv;
+  mentor.bio = bio;
+  mentor.desc = desc;
+  mentor.skill = skill;
+  mentor.bankcode = bankcode;
+  mentor.bankaccountnumber = bankaccountnumber;
+  mentor.bankaccountusername = bankaccountusername;
+
+  const result = await mentor.save();
+
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/profile");
+});
+
+exports.getExam = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Admin.findOne({ level: "admin" })
-    .then((admin) => {
-      // ! Bug - Handle eror , kalau category exam belum di set admin
-      console.log(admin.category[0].name);
+  const admin = await Admin.findOne({ level: "admin" });
+  // ! Bug - Handle eror , kalau category exam belum di set admin
+  // console.log(admin.category[0].name);
+  if (!admin) {
+    console.log("Admin not found");
+    return res.render("layouts/500");
+  }
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/exam", {
+    mentor: mentor,
+    admin: admin,
+    session: session,
+  });
+});
 
-      if (!admin) {
-        console.log("Admin not found");
-        res.render("layouts/500");
-      } else {
-        Mentor.findById(session._id)
-          .then((mentor) => {
-            res.render("back/mentor/exam", {
-              mentor: mentor,
-              admin: admin,
-              session: session,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-exports.postExam = (req, res, next) => {
+exports.postExam = asyncHandler(async (req, res, next) => {
   const expertise = req.body.expertise;
   const id = req.session.mentor._id;
-  Mentor.findById(id)
-    .then((mentor) => {
-      mentor.expertise = expertise;
-      return mentor.save();
-    })
-    .then((result) => {
-      res.redirect("/mentor/exam/begin");
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(id);
+  mentor.expertise = expertise;
+  const result = await mentor.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/exam/begin");
+});
 
-exports.postBeginExam = (req, res, next) => {
+exports.postBeginExam = asyncHandler(async (req, res, next) => {
   const examstatus = req.body.examstatus;
-  Mentor.findById(req.session.mentor._id)
-    .then((mentor) => {
-      mentor.examstatus = examstatus;
-      return mentor.save();
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.getBeginExam = (req, res, next) => {
-  const session = req.session.mentor;
-  Admin.findOne({ level: "admin" }).then((admin) => {
-    if (!admin) {
-      console.log("Admin not found");
-    } else {
-      Mentor.findById(session._id)
-        .then((mentor) => {
-          console.log("------");
-          // * Compare
-          if (!mentor.expertise) {
-            res.render("layouts/404");
-            console.log("Not Auhtorize");
-          } else if (mentor.examstatus == true) {
-            res.redirect("/mentor/dashboard");
-            console.log("Exam Finished");
-          } else {
-            let testlink;
-            if (mentor.expertise == admin.category[0].name) {
-              testlink = admin.category[0].testlink;
-            } else if (mentor.expertise == admin.category[1].name) {
-              testlink = admin.category[1].testlink;
-            } else if (mentor.expertise == admin.category[2].name) {
-              testlink = admin.category[2].testlink;
-            }
-            res.render("back/mentor/begin", {
-              mentor: mentor,
-              admin: admin,
-              testlink: testlink,
-              session: session,
-            });
-          }
-        })
-        .catch((err) => console.log(err));
-    }
+  const mentor = await Mentor.findById(req.session.mentor._id);
+  mentor.examstatus = examstatus;
+  await mentor.save();
+  return longpoll.publish("/polladmin", {
+    message: "Incoming New Mentor Exam",
+    data: true,
   });
-};
+});
 
-exports.getSchedule = (req, res, next) => {
+exports.getBeginExam = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Schedule.find({ mentor: session._id })
+  const admin = await Admin.findOne({ level: "admin" });
+
+  if (!admin) {
+    console.log("Admin not found");
+    return res.render("layouts/500");
+  }
+  const mentor = await Mentor.findById(session._id);
+  if (!mentor.expertise) {
+    console.log("Not Auhtorize");
+    return res.render("layouts/404");
+  } else if (mentor.examstatus == "true") {
+    console.log("Exam Finished");
+    res.redirect("/mentor/dashboard");
+  } else {
+    let testlink;
+    if (mentor.expertise == admin.category[0].name) {
+      testlink = admin.category[0].testlink;
+    } else if (mentor.expertise == admin.category[1].name) {
+      testlink = admin.category[1].testlink;
+    } else if (mentor.expertise == admin.category[2].name) {
+      testlink = admin.category[2].testlink;
+    }
+    res.render("back/mentor/begin", {
+      mentor: mentor,
+      admin: admin,
+      testlink: testlink,
+      session: session,
+    });
+  }
+});
+
+exports.getSchedule = asyncHandler(async (req, res, next) => {
+  const session = req.session.mentor;
+  const schedule = await Schedule.find({ mentor: session._id })
     .populate({ path: "user", select: ["username", "email"] })
-    .sort({ _id: -1 })
-    .then((schedule) => {
-      Mentor.findById(session._id).then((mentor) => {
-        res.render("back/mentor/schedule", {
-          mentor: mentor,
-          schedule: schedule,
-          moment: moment,
-          session: session,
-          voca: voca,
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ _id: -1 });
+  const mentor = await Mentor.findById(session._id);
 
-exports.getScheduleJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Schedule.find({
-    $and: [{ mentor: session._id }, { status: false }],
-  })
-    .limit(6)
-    .sort({ datetime: 1 })
-    .populate("user", "username phone")
-    .then((userData) => {
-      Schedule.find({ mentor: session._id })
-        .countDocuments()
-        .then((schedule) => {
-          if (schedule) {
-            res.status(200).json({
-              status: "schedule Fetched",
-              data: userData,
-              schedule: schedule,
-            });
-          } else {
-            res.json({ status: "No Schedule Found" });
-          }
-        });
-    })
+  res.render("back/mentor/schedule", {
+    mentor: mentor,
+    schedule: schedule,
+    moment: moment,
+    session: session,
+    voca: voca,
+  });
+});
 
-    .catch((err) => console.log(err));
-};
-
-exports.postUpdateSchedule = (req, res, next) => {
+exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const approve = req.body.approve;
-  const link = req.body.link;
 
-  Schedule.findById(id)
-    .then((schedule) => {
-      schedule.approve = approve;
-      schedule.link = link;
-      return schedule.save();
-    })
-    .then((result) => {
-      console.log(result);
-      res.redirect("/mentor/schedule");
-    })
-    .catch((err) => console.log(err));
-};
+  const schedule = await Schedule.findById(id)
+    .populate("user", "email")
+    .populate("mentor", "email");
+  schedule.approve = approve;
 
-exports.getMentoring = (req, res, next) => {
+  // ? buat apa const status dibawah ?
+  const status = schedule.approve;
+  const datetime = schedule.datetime;
+
+  // ** Waktu di jadwal , Dengan format normal (ISO time)
+  const calendarTime = moment(datetime).format("LLLL");
+  // ** Waktu di jadwal , dikurangi 1 Jam dan dirubah ke format UNIX time
+  const unixTime = moment(datetime).subtract(15, "minutes").unix();
+  console.log(chalk.green.inverse(unixTime));
+
+  const userEmail = schedule.user.email;
+  const mentorEmail = schedule.mentor.email;
+
+  const result = await schedule.save();
+  console.log(chalk.yellow.inverse(result));
+
+  // ** Polling
+  const userId = result.user._id;
+
+  res.redirect("/mentor/schedule");
+
+  // ** Send Email Before Mentoring Come
+  // if (status == "true") {
+  //   const msg = {
+  //     to: [userEmail, mentorEmail],
+  //     send_each_at: [unixTime, unixTime],
+  //     from: "expertassist@example.com",
+  //     subject: "⏲ Incoming Mentoring Notification",
+  //     text: "Dont Forget to attend to your mentoring session",
+  //     html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
+  //   };
+  //   console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
+  //   return sgMail.send(msg);
+  // }
+
+  return longpoll.publish("/polluser", {
+    id: userId,
+    message: "Schedule Approve Notification",
+    data: true,
+  });
+});
+
+exports.getMentoring = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
   const dateTimeNow = new Date();
-  Schedule.findOne({
+  const schedule = await Schedule.findOne({
     $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
   })
     .populate("user", "username")
-    .sort({ datetime: 1 })
-    .then((schedule) => {
-      let dateTimeSchedule = "";
-      if (schedule) {
-        console.log(chalk.red.inverse("Array Schedule Ada Isinya"));
-        dateTimeSchedule = schedule.datetime;
-      } else {
-        console.log(chalk.redBright.inverse("Array Schedule Kosong"));
-      }
-      console.log(chalk.blueBright.inverse(schedule));
-      res.render("back/mentor/mentoring", {
-        schedule: schedule,
-        mentor: req.session.mentor._id,
-        dateTimeSchedule: dateTimeSchedule,
-        dateTimeNow: dateTimeNow,
-        moment: moment,
-        session: session,
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    .sort({ datetime: 1 });
 
-exports.getMentoringJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Schedule.findOne({ mentor: session._id })
-    .then((schedule) => {
-      if (schedule) {
-        res
-          .status(200)
-          .json({ message: "Fetched Mentoring", mentoring: schedule });
-      } else {
-        res.json({ message: "Mentoring Data is Empty" });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  let dateTimeSchedule = "";
+  if (schedule) {
+    console.log(chalk.red.inverse("Array Schedule Ada Isinya"));
+    dateTimeSchedule = schedule.datetime;
+  } else {
+    console.log(chalk.redBright.inverse("Array Schedule Kosong"));
+  }
+  console.log(chalk.blueBright.inverse(schedule));
+  res.render("back/mentor/mentoring", {
+    schedule: schedule,
+    mentor: req.session.mentor._id,
+    dateTimeSchedule: dateTimeSchedule,
+    dateTimeNow: dateTimeNow,
+    moment: moment,
+    session: session,
+  });
+});
 
-exports.getLive = (req, res, next) => {
+exports.getLive = asyncHandler(async (req, res, next) => {
   const id = req.session.mentor._id;
-  Schedule.findOne({ mentor: id })
-    .sort({ _id: -1 })
-    .then((schedule) => {
-      console.log(chalk.blue.inverse(schedule));
-      const dateTimeSchedule = schedule.datetime;
-      if (schedule.approve == "false" || schedule.approve == "reject") {
-        res.render("layouts/404");
-        console.log("Not Auhtorize");
-      } else if (schedule.approve == "true") {
-        res.render("back/mentor/live", {
-          schedule: schedule,
-          mentor: req.session.mentor._id,
-          dateTimeSchedule: dateTimeSchedule,
-        });
-      }
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.postFinishMentoring = (req, res, next) => {
-  const id = req.body.id;
-  const status = req.body.status;
-  Schedule.findById(id)
-    .then((schedule) => {
-      schedule.status = status;
-      return schedule.save();
-    })
-    .then((result) => {
-      console.log(chalk.bgBlue(result));
-      res.redirect("/mentor/schedule");
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.getReview = (req, res, next) => {
-  const session = req.session.mentor;
-
-  Review.find({ mentor: session._id })
+  const schedule = await Schedule.findOne({ mentor: id })
     .sort({ _id: -1 })
     .populate("user", "username")
-    .exec()
-    .then((review) => {
-      console.log(chalk.blueBright(review));
-      Schedule.findOne({
-        $and: [{ mentor: session._id }, { approve: true }],
-      })
-        .then((schedule) => {
-          Mentor.findById(session._id).then((mentor) => {
-            res.render("back/mentor/review", {
-              mentor: mentor,
-              review: review,
-              moment: moment,
-              voca: voca,
-              schedule: schedule,
-              session: session,
-            });
-          });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+    .populate("mentor", "videocallroom");
+  console.log(chalk.blue.inverse("live mentor:" + schedule));
+  const endTime = schedule.endtime;
+  if (schedule.approve == "false" || schedule.approve == "reject") {
+    console.log("Not Auhtorize");
+    return res.render("layouts/404");
+  }
+  let momentStartTime = moment(schedule.datetime).format("LTS");
+  let momentEndTime = moment(schedule.endtime).format("LTS");
+  res.render("back/mentor/live", {
+    schedule: schedule,
+    mentor: req.session.mentor._id,
+    endTime: endTime,
+    momentStartTime: momentStartTime,
+    momentEndTime: momentEndTime,
+    voca: voca,
+  });
+});
 
-exports.getReviewJson = (req, res, next) => {
+exports.postFinishMentoring = asyncHandler(async (req, res, next) => {
+  const id = req.body.id;
+  const status = req.body.status;
+  const schedule = await Schedule.findById(id);
+  schedule.status = status;
+  await schedule.save();
+  res.redirect("/mentor/schedule");
+});
+
+exports.getReview = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
+  const review = await Review.find({ mentor: session._id })
+    .sort({ _id: -1 })
+    .populate("user", "username")
+    .exec();
+  const schedule = await Schedule.findOne({
+    $and: [{ mentor: session._id }, { approve: true }],
+  });
+  const mentor = await Mentor.findById(session._id);
 
-  Review.find({ mentor: session._id })
-    .countDocuments()
-    .then((review) => {
-      if (review) {
-        res.status(200).json({ message: "Successfully Fetch", review: review });
-      } else {
-        res.json({ message: "No Review Data", review: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  res.render("back/mentor/review", {
+    mentor: mentor,
+    review: review,
+    moment: moment,
+    voca: voca,
+    schedule: schedule,
+    session: session,
+  });
+});
 
-exports.getWithdraw = (req, res, next) => {
+exports.getWithdraw = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
-  Mentor.findById(session._id)
-    .then((mentor) => {
-      if (!mentor) {
-        console.log("No Mentor");
-      } else if (mentor) {
-        console.log(chalk.yellow.inverse(mentor.income));
-        Payment.findOne({ mentor: session._id })
-          .then((payment) => {
-            console.log(chalk.blue(payment));
-            Withdraw.find({ mentor: session._id })
-              .sort({ _id: -1 })
-              .then((withdraw) => {
-                let lastWithdrawId = "";
-                let lastDatetime = "";
+  const mentor = await Mentor.findById(session._id);
+  if (!mentor) {
+    console.log("No Mentor");
+    return res.render("layouts/500");
+  }
+  const payment = await Payment.findOne({ mentor: session._id });
+  console.log(chalk.blue(payment));
+  const withdraw = await Withdraw.find({ mentor: session._id }).sort({
+    _id: -1,
+  });
 
-                if (withdraw.length > 0) {
-                  console.log(chalk.redBright.inverse("Ada isinya"));
-                  lastWithdrawId = withdraw[0]._id;
-                  lastDatetime = withdraw[0].datetime;
-                  console.log(chalk.redBright.inverse(lastWithdrawId));
-                } else {
-                  console.log(chalk.red.inverse("Withdraw Array Kosong"));
-                }
+  let lastWithdrawId = "";
+  let lastDatetime = "";
 
-                res.render("back/mentor/withdraw", {
-                  moment: moment,
-                  voca: voca,
-                  mentor: mentor,
-                  payment: payment,
-                  withdraw: withdraw,
-                  currency: currency,
-                  session: session,
-                  lastWithdrawId: lastWithdrawId,
-                  lastDatetime: lastDatetime,
-                });
-              })
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => console.log(err));
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  if (withdraw.length > 0) {
+    console.log(chalk.redBright.inverse("Ada isinya"));
+    lastWithdrawId = withdraw[0]._id;
+    lastDatetime = withdraw[0].datetime;
+    console.log(chalk.redBright.inverse(lastWithdrawId));
+  } else {
+    console.log(chalk.red.inverse("Withdraw Array Kosong"));
+  }
 
-exports.getWithdrawJson = (req, res, next) => {
-  const session = req.session.mentor;
-  Withdraw.find({ $and: [{ mentor: session._id }, { status: true }] })
-    .countDocuments()
-    .then((withdraw) => {
-      if (withdraw) {
-        res
-          .status(200)
-          .json({ message: "Withdraw Fetched", withdraw: withdraw });
-      } else {
-        res.json({ message: "Withdraw data is empty", withdraw: 0 });
-      }
-    })
-    .catch((err) => console.log(err));
-};
+  res.render("back/mentor/withdraw", {
+    moment: moment,
+    voca: voca,
+    mentor: mentor,
+    payment: payment,
+    withdraw: withdraw,
+    currency: currency,
+    session: session,
+    lastWithdrawId: lastWithdrawId,
+    lastDatetime: lastDatetime,
+  });
+});
 
-exports.postWithdraw = (req, res, next) => {
+exports.postWithdraw = asyncHandler(async (req, res, next) => {
   const mentor = req.body.mentor;
-  const total = req.body.total;
+  const amount = req.body.amount;
   const note = req.body.note;
   const initialincome = req.body.initialincome;
 
   const tax = 0.05;
 
-  const adminIncome = total * tax;
-  const finalTotal = total - adminIncome;
+  const adminIncome = amount * tax;
+  const total = amount - adminIncome;
 
   const withdraw = new Withdraw({
     initialincome: initialincome,
     mentor: mentor,
-    total: finalTotal,
+    amount: amount,
+    total: total,
     note: note,
     adminincome: adminIncome,
   });
-  withdraw
-    .save()
-    .then((result) => {
-      console.log(chalk.yellow.inverse(result));
-      res.redirect("/mentor/withdraw");
-    })
-    .catch((err) => console.log(err));
-};
 
-exports.deleteWithdraw = (req, res, next) => {
+  const result = await withdraw.save();
+  console.log(chalk.yellow.inverse(result));
+
+  res.redirect("/mentor/withdraw");
+  return longpoll.publish("/polladmin", {
+    message: "New Withdraw Request Notification",
+    data: true,
+  });
+});
+
+exports.deleteWithdraw = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
-  Withdraw.findByIdAndDelete(id)
-    .then((withdraw) => {
-      console.log(chalk.yellow.inverse(withdraw));
-      res.redirect("/mentor/withdraw");
-    })
-    .catch((err) => console.log(err));
-};
+  const withdraw = await Withdraw.findByIdAndDelete(id);
+  console.log(chalk.yellow.inverse(withdraw));
+  res.redirect("/mentor/withdraw");
+});
 
-exports.postChangePassword = (req, res, next) => {
+exports.postChangePassword = asyncHandler(async (req, res, next) => {
   const id = req.body.id;
   const password = req.body.password;
   const newPassword = req.body.newPassword;
@@ -714,31 +592,21 @@ exports.postChangePassword = (req, res, next) => {
     console.log(chalk.green.inverse("lulus uji express-validator"));
   }
 
-  Mentor.findById(id)
-    .then((mentor) => {
-      const oldPassword = mentor.password;
-      bcrypt.compare(password, oldPassword).then((doMatch) => {
-        if (doMatch) {
-          return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
-            Mentor.findById(id)
-              .then((mentors) => {
-                mentors.password = hashedPassword;
-                return mentors.save().then((result, err) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    res.statsu(201).json(result);
-                    console.log(chalk.yellowBright(result));
-                  }
-                });
-              })
-              .catch((err) => console.log(err));
-          });
-        } else {
-          console.log(chalk.redBright("password not match"));
-          res.status(422).json({ error: "password not match" });
-        }
-      });
-    })
-    .catch((err) => console.log(err));
-};
+  const mentor = await Mentor.findById(id);
+
+  const oldPassword = mentor.password;
+  const doMatch = await bcrypt.compare(password, oldPassword);
+
+  if (doMatch) {
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const mentors = await Mentor.findById(id);
+    mentors.password = hashedPassword;
+
+    const result = await mentors.save();
+    console.log(chalk.yellowBright(result));
+    res.status(201).json(result);
+  } else {
+    console.log(chalk.redBright("password not match"));
+    res.status(422).json({ error: "password not match" });
+  }
+});

@@ -2,24 +2,33 @@ require("pretty-error").start();
 const express = require("express");
 const router = express.Router();
 const frontController = require("../controllers/front");
+const routeCache = require("route-cache");
 
-router.get("/", frontController.getIndex);
+router.get("/", routeCache.cacheSeconds(600), frontController.getIndex);
 router.get("/search", frontController.getSearch);
 
-router.get("/blog", frontController.getAllBlog);
-router.get("/blog/:id", frontController.getDetailBlog);
+router.get("/blog", routeCache.cacheSeconds(600), frontController.getAllBlog);
+router.get(
+  "/blog/:id",
+  routeCache.cacheSeconds(600),
+  frontController.getDetailBlog
+);
 
-// ! THIS IS THE BUG
-// router.get("/mentor/:id", frontController.getDetailMentor);
+router.get(
+  "/mdetail/:id",
+  routeCache.cacheSeconds(60),
+  frontController.getDetailMentor
+);
 
-router.get("/mdetail/:id", frontController.getDetailMentor);
-
-router.get("/mlist", frontController.getMentorList);
+router.get(
+  "/mlist",
+  routeCache.cacheSeconds(600),
+  frontController.getMentorList
+);
 router.get("/api/mlists", frontController.getMentorListJson);
 router.get("/filter", frontController.getFilter);
 router.get("/sort", frontController.getSort);
 
-// FAQ
-router.get("/faq", frontController.getFaq);
+router.get("/faq", routeCache.cacheSeconds(600), frontController.getFaq);
 
 module.exports = router;

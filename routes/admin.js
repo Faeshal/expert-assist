@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 const adminContoller = require("../controllers/admin");
 const isAuth = require("../middleware/is-auth");
+const longpoll = require("express-longpoll")(router, { DEBUG: true });
+
+// * Polling for Mentor
+longpoll.create("/pollwithdraw");
 
 // * Welcome Dashboard
 router.get("/admin/dashboard", isAuth, adminContoller.getDashboard);
@@ -31,18 +35,13 @@ router.post("/admin/faq", isAuth, adminContoller.postFaq);
 router.post("/admin/faq/update", isAuth, adminContoller.updateFaq);
 router.post("/admin/faq/delete", isAuth, adminContoller.deleteFaq);
 
-// * News
-router.get("/admin/news", isAuth, adminContoller.getNews);
-router.post("/admin/news", isAuth, adminContoller.postNews);
-router.post("/admin/news/update", isAuth, adminContoller.updateNews);
-router.post("/admin/news/delete", isAuth, adminContoller.deleteNews);
-
 // * Mentor
 router.get("/admin/mentor/all", adminContoller.getMentorAll);
 router.post("/admin/mentor/all", adminContoller.postMentorBlock);
 router.get("/admin/mentor/exam", adminContoller.getMentorExam);
 router.get("/api/admin/mentorexams", adminContoller.getMentorExamJson);
 router.post("/admin/mentor/exam/update", adminContoller.postScore);
+router.post("/admin/mentor/exam/reset", adminContoller.resetExam);
 router.get("/admin/mentor/block", adminContoller.getBlockMentor);
 
 // ** User

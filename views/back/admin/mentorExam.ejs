@@ -38,32 +38,36 @@
     </div>
   </div>
   <!-- Page content -->
+
   <div class="container-fluid mt--6">
     <div class="card">
       <!-- Card header -->
-      <div class="card-header border-0">
-        <div class="row">
-          <div class="col-6">
-            <h3 class="mb-0">Mentor Table</h3>
-          </div>
-          <div class="col-6 text-right">
-            <a
-              href="#"
-              class="btn btn-sm btn-neutral btn-round btn-icon"
-              data-toggle="tooltip"
-              data-original-title="Edit product"
-            >
-              <span class="btn-inner--icon"
-                ><i class="fas fa-user-edit"></i
-              ></span>
-              <span class="btn-inner--text">Export</span>
-            </a>
+      <form action="/admin/mentor/exam/reset" method="POST">
+        <div class="card-header border-0">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="mb-0">Mentor Table</h3>
+            </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="col-6 text-right">
+              <button
+                type="submit"
+                class="btn btn-sm btn-neutral btn-round btn-icon"
+                data-toggle="tooltip"
+                data-original-title="Start New Exam"
+              >
+                <span class="btn-inner--icon"
+                  ><i class="fas fa-sync mr-1"></i>
+                </span>
+                <span class="btn-inner--text">Reset Exam</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
       <!-- Light table -->
       <div class="table-responsive">
-        <table class="table align-items-center table-flush"  id="mytable" >
+        <table class="table align-items-center table-flush" id="mytable">
           <thead class="thead-light">
             <tr>
               <th>Username</th>
@@ -101,10 +105,18 @@
                 >
               </td>
               <td class="text-center">
-                <%if (mentorData.examstatus === true) {%>
-                <b class="font-weight-bold text-blue">Finished</b>
-                <% } else { %>
-                <b class="font-weight-bold text-danger">Not Yet</b>
+                <%if (mentorData.examstatus === "true") {%>
+                <b class="font-weight-bold text-dark badge badge-primary"
+                  >Finished</b
+                >
+                <% }else if(mentorData.examstatus === "reject"){%>
+                <b class="font-weight-bold text-white badge badge-dark"
+                  >reject</b
+                >
+                <% }else { %>
+                <b class="font-weight-bold text-dark badge badge-danger"
+                  >Not Yet</b
+                >
                 <% } %>
               </td>
               <td class="table-actions text-center tdedit">
@@ -161,13 +173,13 @@
               <div class="form-group">
                 <label for="username">Result</label>
                 <select
-                  class="form-control target text-dark font-weight-bold "
-                  name="mentorstatus"
+                  class="form-control target text-dark font-weight-bold"
+                  name="examstatus"
                   required
                 >
                   <option value="" selected>Exam result is...</option>
-                  <option value="new">Qualified</option>
-                  <option value="false">UnQualified</option>
+                  <option value="true">Qualified</option>
+                  <option value="reject">UnQualified</option>
                 </select>
               </div>
             </div>
@@ -183,8 +195,8 @@
     </div>
     <!-- Jquery  -->
     <script>
-      $(document).ready(function() {
-        $(".tdedit").on("click", ".edit", function() {
+      $(document).ready(function () {
+        $(".tdedit").on("click", ".edit", function () {
           var id = $(this).data("id");
           console.log(id);
           var username = $(this).data("username");

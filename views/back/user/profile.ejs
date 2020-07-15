@@ -251,11 +251,12 @@
                         type="text"
                         class="form-control form-control-sm username text-dark"
                         name="username"
+                        id="username"
                       />
                     </div>
                   </div>
                   <div class="col-sm-6">
-                    <div class="form-group">
+                    <div class="form-group">  
                       <input type="hidden" name="id" class="id" />
                       <label for="recipient-name" class="col-form-label"
                         >Profile Picture</label
@@ -314,9 +315,10 @@
                         >Phone</label
                       >
                       <input
-                        type="text"
+                        type="number"
                         class="form-control form-control-sm phone text-dark"
                         name="phone"
+                        id="phone"
                       />
                     </div>
                   </div>
@@ -382,13 +384,31 @@
       $(document).ready(function () {
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Data Successfully Submit",
-          }).then(function () {
-            $("#formUpdateProfile").submit();
-          });
+          let username = $("#username").val();
+          let phone = $("#phone").val();
+          if (username == "") {
+            Swal.fire(
+              "Username is Empty",
+              "Please fill the username first",
+              "warning"
+            );
+            $("#username").addClass("border border-danger");
+          } else if (phone == "") {
+            Swal.fire(
+              "Phone Number is Empty",
+              "Please fill your phone number first",
+              "warning"
+            );
+            $("#phone").addClass("border border-danger");
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Success!",
+              text: "Data Successfully Submit",
+            }).then(function () {
+              $("#formUpdateProfile").submit();
+            });
+          }
         });
 
         $("#user-card").on("click", ".update", function () {

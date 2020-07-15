@@ -15,7 +15,7 @@ router.post(
       .normalizeEmail(),
     body("username", "Please Give some username").not().isEmpty().trim(),
     body("password", "Please enter a password at least 3 character")
-      .isLength({ min: 3 })
+      .isLength({ min: 4 })
       .isAlphanumeric()
       .trim(),
     body("level", "Please Select a Role").not().isEmpty(),
@@ -28,7 +28,9 @@ router.post(
   ],
   authController.postRegister
 );
+
 router.get("/login", authController.getLogin);
+
 router.post(
   "/login",
   [

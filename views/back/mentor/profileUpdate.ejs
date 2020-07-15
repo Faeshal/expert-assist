@@ -124,17 +124,17 @@
               </h4>
 
               <div class="row py-3 align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                   <label>Bank Name</label>
                   <select
-                    id="bankname"
+                    id="bankcode"
                     class="form-control experience text-dark"
-                    name="bankname"
-                    value="<%=mentor.bankname%>"
+                    name="bankcode"
+                    value="<%=mentor.bankcode%>"
                     required
                   >
-                   <option value="<%=mentor.bankname%>" selected hidden
-                      ><%=mentor.bankname%></option
+                   <option value="<%=mentor.bankcode%>" selected hidden
+                      ><%=mentor.bankcode%></option
                     >
                     <option value="BRI">BRI</option>
                     <option value="BCA">BCA</option>
@@ -144,15 +144,27 @@
                     <option value="Muamalat">MUAMALAT</option>
                   </select>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                   <label>Account Number</label>
                   <input
                     type="number"
-                    id="bankaccount"
+                    id="bankaccountnumber"
                     class="form-control text-dark"
-                    name="bankaccount"
-                    placeholder="bankaccount"
-                    value="<%=mentor.bankaccount%>"
+                    name="bankaccountnumber"
+                    placeholder="bankaccountnumber"
+                    value="<%=mentor.bankaccountnumber%>"
+                    required
+                  />
+                </div>
+                 <div class="col-lg-4">
+                  <label>Account Username</label>
+                  <input
+                    type="text"
+                    id="bankaccountusername"
+                    class="form-control text-dark"
+                    name="bankaccountusername"
+                    placeholder="bankaccountusername"
+                    value="<%=mentor.bankaccountusername%>"
                     required
                   />
                 </div>
@@ -303,15 +315,17 @@
           e.preventDefault();
           let username = $("#username").val();
           let price = $("#price").val();
-          let bankname = $("#bankname").val();
-          let bankaccount = $("#bankaccount").val();
+          let bankcode = $("#bankcode").val();
+          let bankaccountnumber = $("#bankaccountnumber").val();
+          let bankaccountusername = $("#bankaccountusername").val();
           let phone = $("#phone").val();
 
           if (
             username == "" ||
             price == "" ||
-            bankname == "" ||
-            bankaccount == "" ||
+            bankcode == "" ||
+            bankaccountnumber == "" ||
+            bankaccountusername == "" ||
             phone == ""
           ) {
             Swal.fire(

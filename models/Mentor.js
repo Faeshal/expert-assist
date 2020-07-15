@@ -7,7 +7,6 @@ const MentorSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  title: String,
   username: String,
   level: String,
   profilepicture: String,
@@ -37,8 +36,8 @@ const MentorSchema = new mongoose.Schema({
     default: 0,
   },
   examstatus: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "false",
   },
   mentorstatus: {
     type: String,
@@ -48,8 +47,9 @@ const MentorSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  bankname: String,
-  bankaccount: String,
+  bankcode: String,
+  bankaccountnumber: Number,
+  bankaccountusername: String,
   videocallroom: String,
 });
 

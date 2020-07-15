@@ -27,13 +27,17 @@
           </div>
           <div class="col-lg-6 col-5 text-right">
             <a
-              href="javascript:void(0);"
+              href="https://dashboard.xendit.co/invoices"
+              target="_blank"
               class="btn btn-sm btn-neutral tombolTambahData"
-              data-toggle="modal"
-              data-target="#modal-form"
-              >New</a
+              >Payment</a
             >
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+            <a
+              href="https://dashboard.xendit.co/disbursements"
+              target="_blank"
+              class="btn btn-sm btn-neutral"
+              >Withdraw</a
+            >
           </div>
         </div>
       </div>
@@ -69,11 +73,15 @@
             </div>
             <!-- Light Table -->
             <div class="table-responsive">
-              <table class="table table-hover align-items-center table-flush" id="mytable">
+              <table
+                class="table table-hover align-items-center table-flush"
+                id="mytable"
+              >
                 <thead class="thead-light">
                   <tr>
                     <th>Mentor</th>
-                    <th class="text-center">Bank</th>
+                    <th class="text-center">Bank Code</th>
+                    <th class="text-center">Number</th>
                     <th class="text-center">Total (-5%)</th>
                     <th class="text-center">Date</th>
                     <th class="text-center">Time</th>
@@ -90,22 +98,29 @@
                     </td>
                     <td class="table-user text-center">
                       <h5 class="text-muted">
-                        <%= withdrawData.mentor.bankaccount %>
+                        <%= withdrawData.mentor.bankcode %>
                       </h5>
                     </td>
                     <td class="table-user text-center">
-                      <b> Rp.<%= currency(withdrawData.total, { precision: 0
-                        }).format()%></b>
+                      <h5 class="text-muted">
+                        <%= withdrawData.mentor.bankaccountnumber %>
+                      </h5>
                     </td>
-                    <td class="text-center">
-                      <h5 class="text-primary"
-                        ><%= moment(withdrawData.datetime).format("LL") %></h5
+                    <td class="table-user text-center">
+                      <b>
+                        Rp.<%= currency(withdrawData.total, { precision: 0
+                        }).format()%></b
                       >
                     </td>
                     <td class="text-center">
-                      <h5  class="text-primary">
-                        <%= moment(withdrawData.datetime).format("LT") %></h5
-                      >
+                      <h5 class="text-primary">
+                        <%= moment(withdrawData.datetime).format("LL") %>
+                      </h5>
+                    </td>
+                    <td class="text-center">
+                      <h5 class="text-primary">
+                        <%= moment(withdrawData.datetime).format("LT") %>
+                      </h5>
                     </td>
 
                     <td class="table-user text-center">
@@ -120,11 +135,17 @@
                       <% } %>
                     </td>
                     <td class="table-user text-center">
-                       <b> Rp.<%= currency(withdrawData.adminincome, { precision: 0
-                        }).format()%></b>
+                      <b>
+                        Rp.<%= currency(withdrawData.adminincome, { precision: 0
+                        }).format()%></b
+                      >
                     </td>
                     <td class="text-center">
-                      <form action="/admin/withdraw/update" method="POST">
+                      <form
+                        id="formWithdraw"
+                        action="/admin/withdraw/update"
+                        method="POST"
+                      >
                         <input
                           type="hidden"
                           name="_csrf"
@@ -144,8 +165,7 @@
 
                         <% if(withdrawData.status==false) { %>
                         <button
-                          type="submit"
-                          onclick="return confirm('Confirm this withdraw ?');"
+                          id="btnAction"
                           class="table-action btn btn-sm"
                           data-toggle="tooltip"
                           data-original-title="confirm withdraw"
@@ -170,3 +190,18 @@
     <%-include('../../layouts/back/admin/footer.ejs')%>
   </div>
 </div>
+
+<script>
+  $(document).ready(() => {
+    $("#btnAction").click((e) => {
+      e.preventDefault();
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Withdraw Transfer Send to Payment Gateway",
+      }).then(() => {
+        $("#formWithdraw").submit();
+      });
+    });
+  });
+</script>

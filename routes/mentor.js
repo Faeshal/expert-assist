@@ -5,6 +5,7 @@ const mentorController = require("../controllers/mentor");
 const multer = require("multer");
 const isAuth = require("../middleware/is-auth");
 const { body } = require("express-validator");
+const longpoll = require("express-longpoll")(router, { DEBUG: true });
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
@@ -35,6 +36,12 @@ const upload = multer({
     fileSize: 1000000, // 1 mb in bytes
   },
 });
+
+// * Polling For User
+longpoll.create("/polluser");
+
+// * Polling for Admin
+longpoll.create("/polladmin");
 
 // * Dashboard
 router.get("/mentor/dashboard", isAuth, mentorController.getDashboard);
@@ -85,7 +92,6 @@ router.post("/mentor/exam/begin", isAuth, mentorController.postBeginExam);
 
 // * Schedule
 router.get("/mentor/schedule", isAuth, mentorController.getSchedule);
-router.get("/api/mentor/schedules", isAuth, mentorController.getScheduleJson);
 router.post(
   "/mentor/schedule/update",
   isAuth,
@@ -94,17 +100,14 @@ router.post(
 
 // * Mentoring
 router.get("/mentor/mentoring", isAuth, mentorController.getMentoring);
-router.get("/api/mentor/lives", isAuth, mentorController.getMentoringJson);
 router.get("/mentor/mentoring/live", mentorController.getLive);
 router.post("/mentor/mentoring/finish", mentorController.postFinishMentoring);
 
 // * Review
 router.get("/mentor/review", isAuth, mentorController.getReview);
-router.get("/api/mentor/reviews", isAuth, mentorController.getReviewJson);
 
 // * withdraw
 router.get("/mentor/withdraw", isAuth, mentorController.getWithdraw);
-router.get("/api/mentor/withdraws", isAuth, mentorController.getWithdrawJson);
 router.post("/mentor/withdraw", isAuth, mentorController.postWithdraw);
 router.post("/mentor/withdraw/delete", isAuth, mentorController.deleteWithdraw);
 

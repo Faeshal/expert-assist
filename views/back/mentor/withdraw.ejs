@@ -27,16 +27,6 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <a
-              href="javascript:void(0);"
-              class="btn btn-sm btn-neutral tombolTambahData"
-              data-toggle="modal"
-              data-target="#modal-form"
-              >New</a
-            >
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-          </div>
         </div>
       </div>
     </div>
@@ -44,7 +34,7 @@
   <!-- Page content -->
   <div class="container-fluid mt--6">
     <div class="row">
-      <div class="col-lg-5">
+      <div class="col-lg-4">
         <div class="card-wrapper">
           <!-- Input groups -->
           <div class="card">
@@ -82,7 +72,6 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="income">Your Income</label>
-
                       <input type="text" class="form-control form-control-sm
                       border-success bg-secondary font-weight-bold text-dark"
                       id="income" readonly="true"
@@ -97,20 +86,20 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="total">Withdraw</label>
+                      <label for="amount">Withdraw</label>
                       <input
                         type="number"
-                        class="form-control"
-                        id="total"
-                        name="total"
+                        class="form-control text-dark font-weight-bold"
+                        id="amount"
+                        name="amount"
                       />
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="total">Tax</label>
+                      <label for="tax">Tax</label>
                       <input
-                        class="form-control bg-secondary text-dark border-info"
+                        class="form-control bg-secondary text-dark border-info font-weight-bold"
                         value="5%"
                         readonly="true"
                       />
@@ -162,7 +151,7 @@
         </div>
       </div>
 
-      <div class="col-lg-7 mx-auto">
+      <div class="col-lg-8 mx-auto">
         <div class="card-wrapper">
           <!-- CATEGORY TABLE -->
           <div class="card">
@@ -205,10 +194,14 @@
             </div>
             <% } else { %>
             <div class="table-responsive">
-              <table class="table align-items-center table-flush" id="mytable">
+              <table
+                class="table align-items-center table-flush"
+                id="withdraw_table"
+              >
                 <thead class="thead-light">
                   <tr>
-                    <th id="total">Total</th>
+                    <th id="amount">Amount</th>
+                    <th id="total">Total (-5%)</th>
                     <th id="date">Date</th>
                     <th id="time">Time</th>
                     <th class="text-center" id="status">Status</th>
@@ -221,9 +214,15 @@
                     id="baris1"
                     class="<%= withdrawData.status == true ? 'bg-white' : 'bg-white' %>"
                   >
+                    <td class="table-user text-muted">
+                      Rp
+                      <%=currency(withdrawData.amount,{separator:",",precision:0}).format()
+                      %>
+                    </td>
                     <td class="table-user">
                       <b
-                        >Rp <%=currency(withdrawData.total,{separator:",",precision:0}).format()
+                        >Rp
+                        <%=currency(withdrawData.total,{separator:",",precision:0}).format()
                         %>
                       </b>
                     </td>
@@ -248,9 +247,9 @@
                       </span>
                       <% } %>
                     </td>
-                   
+
                     <td class="text-center">
-                     <% if(withdrawData.status==false) { %>
+                      <% if(withdrawData.status==false) { %>
                       <form
                         id="deleteForm"
                         action="/mentor/withdraw/delete"
@@ -276,11 +275,10 @@
                           <i class="fas fa-trash"></i>
                         </button>
                       </form>
-                       <% } else{ %>
-                        <i class="fas fa-check-circle text-success"></i>
-                       <%}%>
+                      <% } else{ %>
+                      <i class="fas fa-check-circle text-success"></i>
+                      <%}%>
                     </td>
-                   
                   </tr>
                   <% }) %>
                 </tbody>
@@ -296,29 +294,46 @@
 
     <script>
       $(document).ready(function () {
+        $("#withdraw_table").DataTable({
+        pageLength: 4,
+        lengthMenu: [4 , 10, 20],
+        ordering: false,
+        stateSave: true,
+        pagingType: "simple_numbers",
+        language: {
+          paginate: {
+            first: "«",
+            previous: "‹",
+            next: "›",
+            last: "»",
+          },
+        },
+        responsive: true,
+        });
+
         $("#buttonAlert").click(function (e) {
           e.preventDefault();
-          let total = $("#total").val();
-          if (total == null || total == "") {
+          let amount = $("#amount").val();
+          if (amount == null || amount == "") {
             Swal.fire(
               "Input Kosong",
               "Silahkan isi nilai dana terlebih dahulu",
               "warning"
             );
-          } else if (total < 10000) {
+          } else if (amount < 10000) {
             Swal.fire(
               "Dana Terlalu Kecil",
               "Minimal Pencairan Dana Rp. 10.000",
               "warning"
             );
-            $("#total").val("");
-          } else if (total > <%-mentor.income%> ) {
+            $("#amount").val("");
+          } else if (amount > <%-mentor.income%> ) {
             Swal.fire(
               "Dana Tidak Cukup",
-              "Perhatikan Total Nilai Income Anda Sebelum Submit",
+              "Perhatikan amount Nilai Income Anda Sebelum Submit",
               "warning"
             );
-            $("#total").val("");
+            $("#amount").val("");
           } else {
             Swal.fire({
               icon: "success",
@@ -347,7 +362,7 @@
           doc.text("Last Withdraw ID : <%-lastWithdrawId%>", 15, 55);
           doc.text("Last Witdraw Date : <%-lastDatetime%>", 15, 60);
 
-          var res = doc.autoTableHtmlToJson(document.getElementById("mytable"));
+          var res = doc.autoTableHtmlToJson(document.getElementById("withdraw_table"));
           var columns = [
             res.columns[0],
             res.columns[1],

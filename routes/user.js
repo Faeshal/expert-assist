@@ -5,6 +5,7 @@ const multer = require("multer");
 const userController = require("../controllers/user");
 const isAuth = require("../middleware/is-auth");
 const { body } = require("express-validator");
+const longpoll = require("express-longpoll")(router, { DEBUG: true });
 
 // * Inisialisasi Multer
 const fileStorage = multer.diskStorage({
@@ -37,6 +38,9 @@ const upload = multer({
   },
 });
 
+// * Longpoll for mentor
+longpoll.create("/poolmentor");
+
 // * Dashboard
 router.get("/user/dashboard", isAuth, userController.getDashboard);
 
@@ -48,7 +52,6 @@ router.post(
   upload.single("profilepicture"),
   userController.updateProfile
 );
-
 router.post(
   "/user/profile/changepassword",
   [
@@ -61,19 +64,15 @@ router.post(
 
 // * Payment
 router.post("/pay", userController.postPayment);
-router.get("/stripe/:id", userController.getStripe);
-router.get("/payment/success/:id", userController.postStripeSuccess);
-router.get("/payment/cancel/:id", userController.postStripeCancel);
+router.get("/payment/success/:id", userController.postXenditSuccess);
+router.get("/payment/cancel/:id", userController.postXenditCancel);
 router.get("/api/user/payments", isAuth, userController.getPaymentJson);
-
-// User Dashboard
 router.get("/user/payment", isAuth, userController.getPayment);
 
 // * Scheduling
 router.get("/user/schedule", isAuth, userController.getSchedule);
-router.get("/api/user/schedules", isAuth, userController.getScheduleJson);
 router.post("/user/schedule", isAuth, userController.postSchedule);
-router.post("/user/schedule/edit", userController.psotEditSchedule);
+router.post("/user/schedule/edit", userController.postEditSchedule);
 
 // * mentoring
 router.get("/user/mentoring", isAuth, userController.getMentoring);

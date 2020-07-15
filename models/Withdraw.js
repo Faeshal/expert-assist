@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const WithdrawSchema = new mongoose.Schema({
-  initialincome: Number,
+  amount: Number,
   total: Number,
   mentor: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +16,6 @@ const WithdrawSchema = new mongoose.Schema({
     default: false,
   },
   adminincome: Number,
-  mentorincome: Number,
 });
 
 module.exports = mongoose.model("Withdraw", WithdrawSchema);
