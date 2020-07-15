@@ -1,4 +1,5 @@
 require("pretty-error").start();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const asyncHandler = require("express-async-handler");
@@ -18,9 +19,7 @@ const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
 const longpoll = require("express-longpoll")(app, { DEBUG: true });
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(
-  "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"
-);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // * Payment Gateway
 const x = require("../middleware/xendit");
 const { Invoice } = x;

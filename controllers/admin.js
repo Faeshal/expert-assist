@@ -1,4 +1,5 @@
 require("pretty-error").start();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const Admin = require("../models/Admin");
@@ -17,9 +18,7 @@ const longpoll = require("express-longpoll")(app, { DEBUG: true });
 const asyncHandler = require("express-async-handler");
 const routeCache = require("route-cache");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(
-  "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"
-);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // * Xendit Withdraw Transfer
 const x = require("../middleware/xendit");
 const { Disbursement } = x;

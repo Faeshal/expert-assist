@@ -1,4 +1,5 @@
 require("pretty-error").start();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const Mentor = require("../models/Mentor");
@@ -18,9 +19,7 @@ const { validationResult } = require("express-validator");
 const longpoll = require("express-longpoll")(app);
 const asyncHandler = require("express-async-handler");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(
-  "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"
-);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
   const session = req.session.mentor;
@@ -128,8 +127,7 @@ exports.postMentorStatus = asyncHandler(async (req, res, next) => {
   axios
     .post("https://api.daily.co/v1/rooms", data, {
       headers: {
-        Authorization:
-          "Bearer 6535fe7995967cb3772d206bdc68f43f0e02d3d512243745c1cb747987b06c13",
+        Authorization: process.env.DAILYCO_API_KEY,
       },
     })
     .then(function (response) {
