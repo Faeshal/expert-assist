@@ -4,17 +4,15 @@
 ![https://i.postimg.cc/zBzB0RV8/Screenshot-3.png](https://i.postimg.cc/zBzB0RV8/Screenshot-3.png)
 
 ## **What is Expert Assist ?**
-Expert Asisst is Web Application **for connectiing user and competent mentor in video conference**. For What ?  Off Course For Solving problem together with the expert. We ensure the mentor that exist is competent because we give test to mentor before they can interact with users.
+Expert Asisst is Web Application **for connecting user and competent mentor in video conference**. For What ?  Off Course For Solving problem together with the expert. We ensure the mentor that exist is competent because we give test to mentor before they can interact with users.
 
-Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and using Docker for containerized the app.
-
-![https://i.postimg.cc/y8RkdHM4/Screenshot-4.**png**](https://i.postimg.cc/y8RkdHM4/Screenshot-4.png)
-
+Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and using Docker for containerization the app. We'are using docker compose too for managing multi container. For container management we'are using portainer, for Load Balancer handle by HaProxy and much more.
+![https://i.postimg.cc/rpCs19yf/Screenshot-5.png](https://i.postimg.cc/rpCs19yf/Screenshot-5.png)
 
 ## **List Of Feature** 🔥
-![https://i.postimg.cc/rpCs19yf/Screenshot-5.png](https://i.postimg.cc/rpCs19yf/Screenshot-5.png)
-1. Off Course, Video Call Feature with countdown timer based on users payment.
 ![https://i.postimg.cc/QMrVKzDB/Screenshot-6.png](https://i.postimg.cc/QMrVKzDB/Screenshot-6.png)
+
+1. Off Course, Video Call Feature with countdown timer based on users payment.
 2. Integrated with Xendit Payment Gateway for payment automation.
 3. Integrated with Sendgrid Email API for sending Reset Password request, Sending Mentoring Alert etc.
 4. Long Polling mechanism for realtime alert.
@@ -51,7 +49,6 @@ Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and u
 * Review
 * Withdraw
 * Blog
-* News
 * Message
 * Comment
 * FAQ
@@ -65,10 +62,12 @@ Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and u
 * Mentor List 
 * Blog with Commenting System
 
+![https://i.postimg.cc/y8RkdHM4/Screenshot-4.**png**](https://i.postimg.cc/y8RkdHM4/Screenshot-4.png)
+
 ## **Installation Step 🎊:**
 1. Change **example.env** to **.env**
 2. Fill the variable with **your own API KEY & MongoDB Database Connection String**
-3. Run the server npm run dev
+3. Run the server **npm run dev**
 4. Access to localhost:3000
 5. That's it 
 
@@ -77,4 +76,7 @@ Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and u
 2. Because now it's using **load balancer**, access to localhost:80 
 4. Up & Running 
 
+**Definetly this app is not perfect, a lot of improvements can be done. Anyway Fell free to contact me. Thank You.**
+
+🗡[faeshal.com](https://faeshal.com) - 2020
 
