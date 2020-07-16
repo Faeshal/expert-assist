@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   app:
-    image: faeshal/expert-assist:1.0
+    build: .
     restart: on-failure
   boatswain:
     image: boatswainio/boatswain:0.2.11
