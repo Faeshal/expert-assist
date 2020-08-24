@@ -1,20 +1,20 @@
-require("pretty-error").start();
-const asyncHandler = require("express-async-handler");
-const Admin = require("../models/Admin");
-const Mentor = require("../models/Mentor");
-const Review = require("../models/Review");
-const Schedule = require("../models/Schedule");
-const chalk = require("chalk");
-const currency = require("currency.js");
-const ITEMS_PER_PAGE = 9;
-const voca = require("voca");
-const moment = require("moment");
-const routeCache = require("route-cache");
+require('pretty-error').start()
+const asyncHandler = require('express-async-handler')
+const Admin = require('../models/Admin')
+const Mentor = require('../models/Mentor')
+const Review = require('../models/Review')
+const Schedule = require('../models/Schedule')
+const chalk = require('chalk')
+const currency = require('currency.js')
+const ITEMS_PER_PAGE = 9
+const voca = require('voca')
+const moment = require('moment')
+const routeCache = require('route-cache')
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
-  const session = req.session;
+  const session = req.session
   const newMentor = await Mentor.find({
-    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+    $or: [{ mentorstatus: 'true' }, { mentorstatus: 'new' }]
   })
     .select({
       username: 1,
@@ -23,11 +23,11 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
       expertise: 1,
       experience: 1,
       profilepicture: 1,
-      job: 1,
+      job: 1
     })
     .limit(7)
-    .sort({ _id: -1 });
-  const bestMentor = await Mentor.find({ mentorstatus: "true" })
+    .sort({ _id: -1 })
+  const bestMentor = await Mentor.find({ mentorstatus: 'true' })
     .select({
       username: 1,
       city: 1,
@@ -35,12 +35,12 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
       expertise: 1,
       experience: 1,
       profilepicture: 1,
-      job: 1,
+      job: 1
     })
     .limit(7)
-    .sort({ rating: -1 });
+    .sort({ rating: -1 })
   const cheapestMentor = await Mentor.find({
-    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+    $or: [{ mentorstatus: 'true' }, { mentorstatus: 'new' }]
   })
     .select({
       username: 1,
@@ -49,19 +49,19 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
       expertise: 1,
       experience: 1,
       profilepicture: 1,
-      job: 1,
+      job: 1
     })
     .limit(7)
-    .sort({ price: 1 });
+    .sort({ price: 1 })
 
-  res.render("front/index", {
+  res.render('front/index', {
     session: session,
     newMentor: newMentor,
     bestMentor: bestMentor,
     cheapestMentor: cheapestMentor,
-    currency: currency,
-  });
-});
+    currency: currency
+  })
+})
 
 exports.getAllBlog = (req, res, next) => {
   // *FindOne mengembalikan object
@@ -72,104 +72,105 @@ exports.getAllBlog = (req, res, next) => {
       $project: {
         blog: {
           $filter: {
-            input: "$blog",
-            as: "blog",
+            input: '$blog',
+            as: 'blog',
             cond: {
-              $eq: ["$$blog.status", true],
-            },
-          },
-        },
-      },
-    },
+              $eq: ['$$blog.status', true]
+            }
+          }
+        }
+      }
+    }
   ])
-    .then((admins) => {
+    .then(admins => {
       if (!admins) {
-        console.log("No Admins Data");
-        res.redirect("/");
+        console.log('No Admins Data')
+        res.redirect('/')
       } else {
         // console.log(admins);
         // console.log("===========Convert To Object Below=============");
-        var after = {};
+        var after = {}
         admins.forEach(function (obj) {
           // obj here is the element of the array, i.e. object
           // Looping over all the keys of the object
           Object.keys(obj).forEach(function (key) {
             // key here is the key of the object
-            after[key] = obj[key];
-          });
-        });
+            after[key] = obj[key]
+          })
+        })
 
         // console.log(after);
 
-        var blog = after.blog;
-        res.render("front/blog", {
+        var blog = after.blog
+        res.render('front/blog', {
           admin: admins,
           blog: blog,
-          moment: moment,
-        });
+          moment: moment
+        })
       }
     })
-    .catch((err) => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 exports.getFaq = asyncHandler(async (req, res, next) => {
-  const admin = await Admin.find().select({ faq: 1 });
-  res.render("front/faq", {
+  const admin = await Admin.find().select({ faq: 1 })
+  res.render('front/faq', {
     admin: admin,
-    voca: voca,
-  });
-});
+    voca: voca
+  })
+})
 
 exports.getDetailBlog = (req, res, next) => {
-  id = req.params.id;
-  Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
-    .then((admins) => {
-      let blog = admins.blog[0];
+  id = req.params.id
+  Admin.findOne({ 'blog._id': id }, { 'blog.$': 1 })
+    .then(admins => {
+      let blog = admins.blog[0]
       Admin.find({ status: true })
-        .then((admins2) => {
-          let allBlog = admins2[0].blog;
-          res.render("front/blogDetail", {
+        .then(admins2 => {
+          let allBlog = admins2[0].blog
+          res.render('front/blogDetail', {
             blog: blog,
             allBlog: allBlog,
-            moment: moment,
-          });
+            moment: moment
+          })
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err))
     })
-    .catch((err) => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 exports.getDetailMentor = (req, res, next) => {
-  const id = req.params.id;
-  let userId = req.session.user;
-  console.log(chalk.white.inverse(userId));
-  routeCache.removeCache("/mdetail/:id");
+  const id = req.params.id
+  let userId = req.session.user
+  console.log(chalk.white.inverse(userId))
+  routeCache.removeCache('/mdetail/:id')
 
   if (!userId) {
-    console.log(chalk.blue.inverse("No User Session"));
-    console.log(chalk.redBright.inverse(userId));
-    userId = "xxx";
+    console.log(chalk.blue.inverse('No User Session'))
+    console.log(chalk.redBright.inverse(userId))
+    userId = 'xxx'
   } else if (userId) {
-    console.log(chalk.blue.inverse("User Session Found"));
-    userId = req.session.user._id;
-    console.log(chalk.yellow.inverse(userId));
+    console.log(chalk.blue.inverse('User Session Found'))
+    userId = req.session.user._id
+    console.log(chalk.yellow.inverse(userId))
   }
 
   Mentor.findOne({ _id: id })
-    .then((mentor) => {
-      let skillString = mentor.skill;
+    .then(mentor => {
+      let skillString = mentor.skill
       Schedule.find({
-        $and: [{ mentor: id }, { approve: true }, { status: false }],
+        $and: [{ mentor: id }, { approve: true }, { status: false }]
       })
         .limit(4)
         .sort({ datetime: 1 })
-        .then((schedule) => {
-          let skillString = mentor.skill;
+        .then(schedule => {
+          let skillString = mentor.skill
           Review.find({ mentor: id })
-            .populate("user", "username profilepicture")
+            .sort({ _id: -1 })
+            .populate('user', 'username profilepicture')
             .limit(5)
-            .then((review) => {
-              res.render("front/mentorDetail", {
+            .then(review => {
+              res.render('front/mentorDetail', {
                 mentor: mentor,
                 userId: userId,
                 schedule: schedule,
@@ -177,31 +178,31 @@ exports.getDetailMentor = (req, res, next) => {
                 voca: voca,
                 skillString: skillString,
                 currency: currency,
-                review: review,
-              });
-            });
-        });
+                review: review
+              })
+            })
+        })
     })
-    .catch((err) => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 exports.getSearch = (req, res, next) => {
-  const search = req.query.search;
-  const trim = voca.trim(search);
+  const search = req.query.search
+  const trim = voca.trim(search)
   // const searchTrim = search.trim();
-  const page = +req.query.page || 1;
-  let totalMentors = 1;
-  if (trim == "page=1" || trim == null || trim == "") {
-    console.log("Redirect harusnya");
-    res.redirect("/mlist");
+  const page = +req.query.page || 1
+  let totalMentors = 1
+  if (trim == 'page=1' || trim == null || trim == '') {
+    console.log('Redirect harusnya')
+    res.redirect('/mlist')
   } else {
     Mentor.find({
-      $text: { $search: trim },
+      $text: { $search: trim }
     })
       .sort({ _id: -1 })
-      .then((mentor) => {
+      .then(mentor => {
         Mentor.countDocuments().then(() => {
-          res.render("front/mentorList", {
+          res.render('front/mentorList', {
             mentor: mentor,
             currency: currency,
             totalMentors: totalMentors,
@@ -210,22 +211,22 @@ exports.getSearch = (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: 0,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-          });
-        });
+            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE)
+          })
+        })
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err))
   }
-};
+}
 
 exports.getMentorList = asyncHandler(async (req, res, next) => {
-  const page = +req.query.page || 1;
-  let totalMentors;
-  const numMentors = await Mentor.countDocuments();
-  totalMentors = numMentors;
+  const page = +req.query.page || 1
+  let totalMentors
+  const numMentors = await Mentor.countDocuments()
+  totalMentors = numMentors
 
   const mentor = await Mentor.find({
-    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+    $or: [{ mentorstatus: 'true' }, { mentorstatus: 'new' }]
   })
     .select({
       username: 1,
@@ -233,12 +234,12 @@ exports.getMentorList = asyncHandler(async (req, res, next) => {
       rating: 1,
       job: 1,
       city: 1,
-      price: 1,
+      price: 1
     })
     .skip((page - 1) * ITEMS_PER_PAGE)
-    .limit(ITEMS_PER_PAGE);
+    .limit(ITEMS_PER_PAGE)
 
-  res.render("front/mentorList", {
+  res.render('front/mentorList', {
     mentor: mentor,
     currency: currency,
     currentPage: page,
@@ -246,65 +247,65 @@ exports.getMentorList = asyncHandler(async (req, res, next) => {
     hasPreviousPage: page > 1,
     nextPage: page + 1,
     previousPage: page - 1,
-    lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-  });
-});
+    lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE)
+  })
+})
 
 exports.getMentorListJson = (req, res, next) => {
   Mentor.find()
-    .then((mentor) => {
-      Mentor.countDocuments().then((total) => {
+    .then(mentor => {
+      Mentor.countDocuments().then(total => {
         if (mentor) {
-          res.status(200).json({ message: true, data: mentor, total: total });
+          res.status(200).json({ message: true, data: mentor, total: total })
         } else {
-          res.json({ message: "No Mentor Data", total: 0 });
+          res.json({ message: 'No Mentor Data', total: 0 })
         }
-      });
+      })
     })
-    .catch((err) => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 exports.getFilter = (req, res, next) => {
-  let totalMentors;
-  let page = 1;
-  let expertise = req.query.expertise || "";
-  let rating = req.query.rating;
-  let fPrice = 0;
-  let lPrice = 10000000;
-  let gte = 0;
-  let lte = 10;
-  if (rating == "standard") {
-    gte = 0;
-    lte = 4;
-  } else if (rating == "good") {
-    gte = 5;
-    lte = 7;
-  } else if (rating == "excelent") {
-    gte = 8;
-    lte = 10;
+  let totalMentors
+  let page = 1
+  let expertise = req.query.expertise || ''
+  let rating = req.query.rating
+  let fPrice = 0
+  let lPrice = 10000000
+  let gte = 0
+  let lte = 10
+  if (rating == 'standard') {
+    gte = 0
+    lte = 4
+  } else if (rating == 'good') {
+    gte = 5
+    lte = 7
+  } else if (rating == 'excelent') {
+    gte = 8
+    lte = 10
   }
-  let price = req.query.price;
-  if (price == "below100") {
-    fPrice = 0;
-    lPrice = 99000;
-  } else if (price == "100to200") {
-    fPrice = 100000;
-    lPrice = 200000;
-  } else if (price == "above200") {
-    fPrice = 200001;
-    lPrice = 10000000;
+  let price = req.query.price
+  if (price == 'below100') {
+    fPrice = 0
+    lPrice = 99000
+  } else if (price == '100to200') {
+    fPrice = 100000
+    lPrice = 200000
+  } else if (price == 'above200') {
+    fPrice = 200001
+    lPrice = 10000000
   }
-  if (expertise == "") {
+  if (expertise == '') {
     Mentor.find({
       $and: [
         {
           rating: { $gte: gte, $lte: lte },
-          price: { $gte: fPrice, $lte: lPrice },
-        },
-      ],
-    }).then((mentor) => {
+          price: { $gte: fPrice, $lte: lPrice }
+        }
+      ]
+    }).then(mentor => {
       Mentor.countDocuments().then(() => {
-        res.render("front/mentorList", {
+        res.render('front/mentorList', {
           mentor: mentor,
           currency: currency,
           totalMentors: totalMentors,
@@ -313,23 +314,23 @@ exports.getFilter = (req, res, next) => {
           hasPreviousPage: page > 1,
           nextPage: 0,
           previousPage: page - 1,
-          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-        });
-      });
-    });
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE)
+        })
+      })
+    })
   } else {
     Mentor.find({
       $and: [
         { expertise: expertise },
         {
           rating: { $gte: gte, $lte: lte },
-          price: { $gte: fPrice, $lte: lPrice },
-        },
-      ],
+          price: { $gte: fPrice, $lte: lPrice }
+        }
+      ]
     })
-      .then((mentor) => {
+      .then(mentor => {
         Mentor.countDocuments().then(() => {
-          res.render("front/mentorList", {
+          res.render('front/mentorList', {
             mentor: mentor,
             currency: currency,
             totalMentors: totalMentors,
@@ -338,23 +339,23 @@ exports.getFilter = (req, res, next) => {
             hasPreviousPage: page > 1,
             nextPage: 0,
             previousPage: page - 1,
-            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-          });
-        });
+            lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE)
+          })
+        })
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err))
   }
-};
+}
 
 exports.getSort = (req, res, next) => {
-  let sort = req.query.sort;
-  let totalMentors;
-  let page = 1;
+  let sort = req.query.sort
+  let totalMentors
+  let page = 1
   Mentor.find()
     .sort({ [sort]: -1 })
-    .then((mentor) => {
+    .then(mentor => {
       Mentor.countDocuments().then(() => {
-        res.render("front/mentorList", {
+        res.render('front/mentorList', {
           mentor: mentor,
           currency: currency,
           totalMentors: totalMentors,
@@ -363,9 +364,9 @@ exports.getSort = (req, res, next) => {
           hasPreviousPage: page > 1,
           nextPage: 0,
           previousPage: page - 1,
-          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE),
-        });
-      });
+          lastPage: Math.ceil(totalMentors / ITEMS_PER_PAGE)
+        })
+      })
     })
-    .catch((err) => console.log(err));
-};
+    .catch(err => console.log(err))
+}
