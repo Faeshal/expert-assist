@@ -13,6 +13,7 @@ const adminRoutes = require('./routes/admin')
 const mentorRoutes = require('./routes/mentor')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const MONGO_URI = process.env.MONGO_URI
 const MongoDBStore = require('connect-mongodb-session')(session)
 const path = require('path')
 const helmet = require('helmet')
@@ -46,7 +47,6 @@ app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 
 // * Session & Cookie
-const MONGO_URI = process.env.MONGO_URI
 const store = new MongoDBStore({
   uri: MONGO_URI
 })

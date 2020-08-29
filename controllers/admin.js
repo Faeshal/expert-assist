@@ -303,8 +303,6 @@ exports.postCategory = asyncHandler(async (req, res, next) => {
     testlink: testlink
   })
   const result = await admin.save()
-
-  console.log(chalk.yellow.inverse(result))
   res.redirect('/admin/category')
 })
 
