@@ -101,6 +101,34 @@
                         >Software Development</label
                       >
                     </div>
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="expertise3"
+                        name="expertise"
+                        class="custom-control-input"
+                        value="Business"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="expertise3"
+                        >Business</label
+                      >
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input
+                        type="radio"
+                        id="expertise4"
+                        name="expertise"
+                        class="custom-control-input"
+                        value="Data Science"
+                      />
+                      <label
+                        class="custom-control-label ml-1 text-muted"
+                        for="expertise4"
+                        >Data Science</label
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -272,6 +300,15 @@
               <div
                 class="employers-list position-relative pb-3 pt-3 pl-2 pr-2 border rounded"
               >
+                <% if(!mentorData.profilepicture){ %>
+                <img
+                  src="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Man-6-512.png"
+                  alt=""
+                  class="mx-auto d-block shadow border rounded-circle img-fluid mx-auto d-bloc"
+                  height="90"
+                  style="width: 50%;"
+                />
+                <% }%>
                 <img
                   src="<%= mentorData.profilepicture %>"
                   alt=""
@@ -412,13 +449,13 @@
   $(document).ready(() => {
     let option = {
       max_value: 10,
-      readonly: true,
-    };
-    $(".rate").rate(option);
+      readonly: true
+    }
+    $('.rate').rate(option)
 
-    $("#sortBy").change(() => {
-      $("#formSort").submit();
-    });
+    $('#sortBy').change(() => {
+      $('#formSort').submit()
+    })
 
     // $(
     //   "#selectBy,#sortBy,#customRadio1,#customRadio2,#customRadio3,#customRadio4,#customRadio5,#customCheck7,#customCheck8,#customCheck9,#customCheck10,#customCheck3,#customCheck4,#customRadio7,#customRadio12,#customRadio13,#customRadio14,#customRadio15"
@@ -430,5 +467,5 @@
     //       "Sorry We're on Deadline, This Feature is not ready to use. But You can use our search bar",
     //   });
     // });
-  });
+  })
 </script>

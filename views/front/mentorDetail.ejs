@@ -6,11 +6,19 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="text-center text-white">
+          <% if(!mentor.profilepicture){ %>
+          <img
+            src="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Man-6-512.png"
+            style="width: 23%;"
+            class="mb-3"
+          />
+          <% }else{%>
           <img
             src="/<%=mentor.profilepicture%>"
             style="width: 23%;"
             class="mb-3"
           />
+          <%}%>
           <h3 class="text-uppercase title"><%=mentor.username %></h3>
           <div
             style="font-size: 30px; color: orange;"
@@ -400,17 +408,17 @@
 <script src="/back/assets/js/rater.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-  function sweet() {
-    Swal.fire("Alert!", "You Must Login as User", "info");
+  function sweet () {
+    Swal.fire('Alert!', 'You Must Login as User', 'info')
   }
 </script>
 <script>
   $(document).ready(() => {
     let option = {
       max_value: 10,
-      readonly: true,
-    };
-    $(".rate").rate(option);
-    $(".review").rate(option);
-  });
+      readonly: true
+    }
+    $('.rate').rate(option)
+    $('.review').rate(option)
+  })
 </script>
