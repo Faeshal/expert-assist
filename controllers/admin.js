@@ -652,6 +652,7 @@ exports.getwithdrawJson = (req, res, next) => {
     { $sort: { _id: -1 } },
     { $limit: 6 }
   ])
+    .sort({ _id: 1 })
     .then(data => {
       Withdraw.countDocuments().then(total => {
         if (total) {
