@@ -76,20 +76,20 @@
                     <th>Room Name</th>
                     <th>Privacy</th>
                     <th>URL</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% data.forEach(datas=>{ %>
                   <tr>
                     <td class="table-user">
-                      <b class="text-muted"><%= datas.id %></b>
+                      <b class="text-muted"><%= v.truncate(datas.id,7) %></b>
                     </td>
                     <td class="table-user">
                       <b><%= datas.name %></b>
                     </td>
-                    <td>
+                    <td class="text-center">
                       <a href="#!" class="font-weight-bold"
                         ><%= datas.privacy %></a
                       >
@@ -99,12 +99,12 @@
                       <a href="#!" class="font-weight-bold"><%= datas.url %></a>
                     </td>
 
-                    <td class="table-user">
+                    <td class="table-user text-center">
                       <span class="badge badge-pill badge-success text-dark"
                         ><%= moment(datas.created_at).format("LL")%>
                       </span>
                     </td>
-                    <td class="table-user">
+                    <td class="table-user text-center">
                       <span class="badge badge-pill badge-warning text-dark"
                         ><%= moment(datas.created_at).format("LT")%>
                       </span>
