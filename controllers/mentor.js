@@ -1,97 +1,97 @@
-require('pretty-error').start()
-require('dotenv').config()
-const express = require('express')
-const app = express()
-const Mentor = require('../models/Mentor')
-const Admin = require('../models/Admin')
-const Review = require('../models/Review')
-const Payment = require('../models/Payment')
-const Schedule = require('../models/Schedule')
-const Withdraw = require('../models/Withdraw')
-const fileHelper = require('../util/file')
-const moment = require('moment')
-const currency = require('currency.js')
-const axios = require('axios')
-const chalk = require('chalk')
-const bcrypt = require('bcryptjs')
-const voca = require('voca')
-const { validationResult } = require('express-validator')
-const longpoll = require('express-longpoll')(app)
-const asyncHandler = require('express-async-handler')
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+require("pretty-error").start();
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const Mentor = require("../models/Mentor");
+const Admin = require("../models/Admin");
+const Review = require("../models/Review");
+const Payment = require("../models/Payment");
+const Schedule = require("../models/Schedule");
+const Withdraw = require("../models/Withdraw");
+const fileHelper = require("../util/file");
+const moment = require("moment");
+const currency = require("currency.js");
+const axios = require("axios");
+const chalk = require("chalk");
+const bcrypt = require("bcryptjs");
+const voca = require("voca");
+const { validationResult } = require("express-validator");
+const longpoll = require("express-longpoll")(app);
+const asyncHandler = require("express-async-handler");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getDashboard = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
+  const session = req.session.mentor;
   const mentor = await Mentor.findOne({ _id: session._id }).select({
     desc: 0,
-    password: 0
-  })
+    password: 0,
+  });
 
   const totalClient = await Payment.countDocuments({
-    $and: [{ mentor: session._id }, { status: true }]
-  })
+    $and: [{ mentor: session._id }, { status: true }],
+  });
 
-  const totalReview = await Review.countDocuments({ mentor: session._id })
+  const totalReview = await Review.countDocuments({ mentor: session._id });
 
   const userData = await Schedule.find({
-    $and: [{ mentor: session._id }, { status: false }]
+    $and: [{ mentor: session._id }, { status: false }],
   })
     .populate({
-      path: 'user',
-      select: ['username', 'email', 'profilepicture', 'phone']
+      path: "user",
+      select: ["username", "email", "profilepicture", "phone"],
     })
     .limit(3)
-    .sort({ datetime: 1 })
+    .sort({ datetime: 1 });
 
   const waitingSchedule = await Schedule.find({
-    $and: [{ mentor: session._id }, { approve: 'false' }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { approve: "false" }],
+  }).countDocuments();
 
   const rejectSchedule = await Schedule.find({
-    $and: [{ mentor: session._id }, { approve: 'reject' }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { approve: "reject" }],
+  }).countDocuments();
 
   const waitingWithdraw = await Withdraw.find({
-    $and: [{ mentor: session._id }, { status: false }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { status: false }],
+  }).countDocuments();
 
   const withdrawSuccess = await Withdraw.find({
-    $and: [{ mentor: session._id }, { status: true }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
 
   const nextMentoring = await Schedule.findOne({
-    $and: [{ mentor: session._id }, { approve: 'true' }, { status: false }]
-  }).sort({ datetime: 1 })
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).sort({ datetime: 1 });
 
-  console.log(chalk.white.inverse(nextMentoring))
+  console.log(chalk.white.inverse(nextMentoring));
 
   const totalWithdrawData = await Withdraw.aggregate([
     {
       $match: {
-        $and: [{ mentor: session._id }, { status: true }]
-      }
+        $and: [{ mentor: session._id }, { status: true }],
+      },
     },
     {
       $group: {
         _id: null,
-        total: { $sum: '$total' }
-      }
-    }
-  ])
+        total: { $sum: "$total" },
+      },
+    },
+  ]);
 
-  let totalWithdraw
+  let totalWithdraw;
   if (totalWithdrawData.length == 0) {
-    totalWithdraw = 0
+    totalWithdraw = 0;
   } else {
-    totalWithdraw = totalWithdrawData[0].total
+    totalWithdraw = totalWithdrawData[0].total;
   }
 
   const incomingSchedule = await Schedule.find({
-    $and: [{ mentor: session._id }, { approve: 'true' }, { status: false }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
+  }).countDocuments();
 
-  res.render('back/mentor/dashboard', {
+  res.render("back/mentor/dashboard", {
     mentor: mentor,
     currency: currency,
     session: session,
@@ -106,70 +106,70 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
     withdrawSuccess: withdrawSuccess,
     nextMentoring: nextMentoring,
     totalWithdraw: totalWithdraw,
-    incomingSchedule: incomingSchedule
-  })
-})
+    incomingSchedule: incomingSchedule,
+  });
+});
 
 exports.postMentorStatus = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const mentorstatus = req.body.mentorstatus
-  const mentorusername = voca.slugify(req.body.mentorusername)
-  const slugUsername = mentorusername
-  const firstString = voca.first(session._id, 3)
-  const lastString = voca.last(session._id, 3)
-  const roomName = slugUsername + '-' + firstString + lastString
+  const session = req.session.mentor;
+  const mentorstatus = req.body.mentorstatus;
+  const mentorusername = voca.slugify(req.body.mentorusername);
+  const slugUsername = mentorusername;
+  const firstString = voca.first(session._id, 3);
+  const lastString = voca.last(session._id, 3);
+  const roomName = slugUsername + "-" + firstString + lastString;
 
   let data = {
     name: roomName,
-    privacy: 'public'
-  }
+    privacy: "public",
+  };
 
   axios
-    .post('https://api.daily.co/v1/rooms', data, {
+    .post("https://api.daily.co/v1/rooms", data, {
       headers: {
-        Authorization: process.env.DAILYCO_API_KEY
-      }
+        Authorization: process.env.DAILYCO_API_KEY,
+      },
     })
     .then(function (response) {
-      console.log(chalk.yellow.inverse(response.data))
+      console.log(chalk.yellow.inverse(response.data));
     })
     .catch(function (error) {
-      console.log(error)
-    })
+      console.log(error);
+    });
 
-  const mentor = await Mentor.findById(req.session.mentor._id)
-  mentor.mentorstatus = mentorstatus
-  mentor.videocallroom = roomName
-  await mentor.save()
-  res.redirect('/mentor/profile')
-})
+  const mentor = await Mentor.findById(req.session.mentor._id);
+  mentor.mentorstatus = mentorstatus;
+  mentor.videocallroom = roomName;
+  await mentor.save();
+  res.redirect("/mentor/profile");
+});
 
 exports.getProfile = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const mentor = await Mentor.findById(session._id)
-  res.render('back/mentor/profile', {
+  const session = req.session.mentor;
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profile", {
     mentor: mentor,
-    session: session
-  })
-})
+    session: session,
+  });
+});
 
 exports.getPayment = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  let lastPaymentId
-  let lastPaymentDate
+  const session = req.session.mentor;
+  let lastPaymentId;
+  let lastPaymentDate;
   const payment = await Payment.find({
-    $and: [{ mentor: session._id }, { status: true }]
+    $and: [{ mentor: session._id }, { status: true }],
   })
-    .populate('user', 'username email')
-    .sort({ _id: -1 })
+    .populate("user", "username email")
+    .sort({ _id: -1 });
 
   if (payment.length > 0) {
-    lastPaymentId = payment[0]._id
-    lastPaymentDate = payment[0].datetime
+    lastPaymentId = payment[0]._id;
+    lastPaymentDate = payment[0].datetime;
   }
 
-  const mentor = await Mentor.findById(session._id)
-  res.render('back/mentor/payment', {
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/payment", {
     mentor: mentor,
     payment: payment,
     voca: voca,
@@ -177,363 +177,362 @@ exports.getPayment = asyncHandler(async (req, res, next) => {
     currency: currency,
     session: session,
     lastPaymentId: lastPaymentId,
-    lastPaymentDate: lastPaymentDate
-  })
-})
+    lastPaymentDate: lastPaymentDate,
+  });
+});
 
 exports.getPaymentJson = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
+  const session = req.session.mentor;
   const paymentData = await Payment.aggregate([
     {
-      $match: { mentor: session._id }
+      $match: { mentor: session._id },
     },
     {
       $group: {
-        _id: { $month: '$datetime' },
-        income: { $sum: '$total' }
-      }
+        _id: { $month: "$datetime" },
+        income: { $sum: "$total" },
+      },
     },
     { $sort: { _id: -1 } },
-    { $limit: 6 }
-  ])
+    { $limit: 6 },
+  ]);
 
   const total = await Payment.find({
-    $and: [{ mentor: session._id }, { status: true }]
-  }).countDocuments()
+    $and: [{ mentor: session._id }, { status: true }],
+  }).countDocuments();
 
   if (!total || total.length == 0) {
-    return res.json({ message: 'No Mentor Data', data: 0 })
+    return res.json({ message: "No Mentor Data", data: 0 });
   }
-  res.status(200).json({ message: true, data: paymentData, total: total })
-})
+  res.status(200).json({ message: true, data: paymentData, total: total });
+});
 
 exports.getUpdateProfile = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const mentor = await Mentor.findById(session._id)
-  res.render('back/mentor/profileUpdate', {
+  const session = req.session.mentor;
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/profileUpdate", {
     mentor: mentor,
-    session: session
-  })
-})
+    session: session,
+  });
+});
 
 exports.updateProfile = asyncHandler(async (req, res, next) => {
-  const id = req.body.id
-  const username = req.body.username
-  const price = req.body.price
-  const city = req.body.city
-  const job = req.body.job
-  const phone = req.body.phone
-  const cv = req.body.cv
-  const desc = req.body.desc
-  const bio = req.body.bio
-  const portofolio = req.body.portofolio
-  const experience = req.body.experience
-  const twitter = req.body.twitter
-  const github = req.body.github
-  const linkedin = req.body.linkedin
-  const skill = req.body.skill
-  const bankcode = req.body.bankcode
-  const bankaccountnumber = req.body.bankaccountnumber
-  const bankaccountusername = req.body.bankaccountusername
-  const profilepicture = req.files['profilepicture']
-  const coverpicture = req.files['coverpicture']
+  const id = req.body.id;
+  const username = req.body.username;
+  const price = req.body.price;
+  const city = req.body.city;
+  const job = req.body.job;
+  const phone = req.body.phone;
+  const cv = req.body.cv;
+  const desc = req.body.desc;
+  const bio = req.body.bio;
+  const portofolio = req.body.portofolio;
+  const experience = req.body.experience;
+  const twitter = req.body.twitter;
+  const github = req.body.github;
+  const linkedin = req.body.linkedin;
+  const skill = req.body.skill;
+  const bankcode = req.body.bankcode;
+  const bankaccountnumber = req.body.bankaccountnumber;
+  const bankaccountusername = req.body.bankaccountusername;
+  const profilepicture = req.files["profilepicture"];
+  const coverpicture = req.files["coverpicture"];
 
-  console.log('*********************')
-  console.log(req.files['profilepicture'])
-  console.log('================')
-  console.log(req.files['coverpicture'])
-  console.log('================')
-  console.log(req.files)
+  console.log("*********************");
+  console.log(req.files["profilepicture"]);
+  console.log("================");
+  console.log(req.files["coverpicture"]);
+  console.log("================");
+  console.log(req.files);
 
-  const mentor = await Mentor.findOne({ _id: id })
+  const mentor = await Mentor.findOne({ _id: id });
 
-  mentor.username = username
-  mentor.price = price
-  mentor.city = city
-  mentor.job = job
+  mentor.username = username;
+  mentor.price = price;
+  mentor.city = city;
+  mentor.job = job;
 
   if (profilepicture) {
-    fileHelper.deleteFile(mentor.profilepicture)
-    mentor.profilepicture = req.files['profilepicture'][0].path.replace(
-      '\\',
-      '/'
-    )
+    fileHelper.deleteFile(mentor.profilepicture);
+    mentor.profilepicture = req.files["profilepicture"][0].path.replace(
+      "\\",
+      "/"
+    );
   }
 
   if (coverpicture) {
     // fileHelper.deleteFile(mentor.coverpicture);
-    mentor.coverpicture = req.files['coverpicture'][0].path.replace('\\', '/')
+    mentor.coverpicture = req.files["coverpicture"][0].path.replace("\\", "/");
   }
 
-  mentor.phone = phone
-  mentor.twitter = twitter
-  mentor.github = github
-  mentor.linkedin = linkedin
-  mentor.experience = experience
-  mentor.portofolio = portofolio
-  mentor.cv = cv
-  mentor.bio = bio
-  mentor.desc = desc
-  mentor.skill = skill
-  mentor.bankcode = bankcode
-  mentor.bankaccountnumber = bankaccountnumber
-  mentor.bankaccountusername = bankaccountusername
+  mentor.phone = phone;
+  mentor.twitter = twitter;
+  mentor.github = github;
+  mentor.linkedin = linkedin;
+  mentor.experience = experience;
+  mentor.portofolio = portofolio;
+  mentor.cv = cv;
+  mentor.bio = bio;
+  mentor.desc = desc;
+  mentor.skill = skill;
+  mentor.bankcode = bankcode;
+  mentor.bankaccountnumber = bankaccountnumber;
+  mentor.bankaccountusername = bankaccountusername;
 
-  const result = await mentor.save()
+  const result = await mentor.save();
 
-  console.log(chalk.yellow.inverse(result))
-  res.redirect('/mentor/profile')
-})
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/profile");
+});
 
 exports.getExam = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const admin = await Admin.findOne({ level: 'admin' })
+  const session = req.session.mentor;
+  const admin = await Admin.findOne({ level: "admin" });
   // ! Bug - Handle eror , kalau category exam belum di set admin
   // console.log(admin.category[0].name);
   if (!admin) {
-    console.log('Admin not found')
-    return res.render('layouts/500')
+    console.log("Admin not found");
+    return res.render("layouts/500");
   }
-  const mentor = await Mentor.findById(session._id)
-  res.render('back/mentor/exam', {
+  const mentor = await Mentor.findById(session._id);
+  res.render("back/mentor/exam", {
     mentor: mentor,
     admin: admin,
-    session: session
-  })
-})
+    session: session,
+  });
+});
 
 exports.postExam = asyncHandler(async (req, res, next) => {
-  const expertise = req.body.expertise
-  const id = req.session.mentor._id
-  const mentor = await Mentor.findById(id)
-  mentor.expertise = expertise
-  const result = await mentor.save()
-  console.log(chalk.yellow.inverse(result))
-  res.redirect('/mentor/exam/begin')
-})
+  const expertise = req.body.expertise;
+  const id = req.session.mentor._id;
+  const mentor = await Mentor.findById(id);
+  mentor.expertise = expertise;
+  const result = await mentor.save();
+  console.log(chalk.yellow.inverse(result));
+  res.redirect("/mentor/exam/begin");
+});
 
 exports.postBeginExam = asyncHandler(async (req, res, next) => {
-  const examstatus = req.body.examstatus
-  const mentor = await Mentor.findById(req.session.mentor._id)
-  mentor.examstatus = examstatus
-  await mentor.save()
-  return longpoll.publish('/polladmin', {
-    message: 'Incoming New Mentor Exam',
-    data: true
-  })
-})
+  const examstatus = req.body.examstatus;
+  const mentor = await Mentor.findById(req.session.mentor._id);
+  mentor.examstatus = examstatus;
+  await mentor.save();
+  return longpoll.publish("/polladmin", {
+    message: "Incoming New Mentor Exam",
+    data: true,
+  });
+});
 
 exports.getBeginExam = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const admin = await Admin.findOne({ level: 'admin' })
+  const session = req.session.mentor;
+  const admin = await Admin.findOne({ level: "admin" });
 
   if (!admin) {
-    console.log('Admin not found')
-    return res.render('layouts/500')
+    console.log("Admin not found");
+    return res.render("layouts/500");
   }
-  const mentor = await Mentor.findById(session._id)
+  const mentor = await Mentor.findById(session._id);
   if (!mentor.expertise) {
-    console.log('Not Auhtorize')
-    return res.render('layouts/404')
-  } else if (mentor.examstatus == 'true') {
-    console.log('Exam Finished')
-    res.redirect('/mentor/dashboard')
+    console.log("Not Auhtorize");
+    return res.render("layouts/404");
+  } else if (mentor.examstatus == "true") {
+    console.log("Exam Finished");
+    res.redirect("/mentor/dashboard");
   } else {
-    let testlink
+    let testlink;
     if (mentor.expertise == admin.category[0].name) {
-      testlink = admin.category[0].testlink
+      testlink = admin.category[0].testlink;
     } else if (mentor.expertise == admin.category[1].name) {
-      testlink = admin.category[1].testlink
+      testlink = admin.category[1].testlink;
     } else if (mentor.expertise == admin.category[2].name) {
-      testlink = admin.category[2].testlink
+      testlink = admin.category[2].testlink;
     } else if (mentor.expertise == admin.category[3].name) {
-      testlink = admin.category[3].testlink
+      testlink = admin.category[3].testlink;
     }
-    res.render('back/mentor/begin', {
+    res.render("back/mentor/begin", {
       mentor: mentor,
       admin: admin,
       testlink: testlink,
-      session: session
-    })
+      session: session,
+    });
   }
-})
+});
 
 exports.getSchedule = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
+  const session = req.session.mentor;
   const schedule = await Schedule.find({ mentor: session._id })
-    .populate({ path: 'user', select: ['username', 'email'] })
-    .sort({ _id: -1 })
-  const mentor = await Mentor.findById(session._id)
+    .populate({ path: "user", select: ["username", "email"] })
+    .sort({ _id: -1 });
+  const mentor = await Mentor.findById(session._id);
 
-  res.render('back/mentor/schedule', {
+  res.render("back/mentor/schedule", {
     mentor: mentor,
     schedule: schedule,
     moment: moment,
     session: session,
-    voca: voca
-  })
-})
+    voca: voca,
+  });
+});
 
 exports.postUpdateSchedule = asyncHandler(async (req, res, next) => {
-  const id = req.body.id
-  const approve = req.body.approve
+  const id = req.body.id;
+  const approve = req.body.approve;
 
   const schedule = await Schedule.findById(id)
-    .populate('user', 'email')
-    .populate('mentor', 'email')
-  schedule.approve = approve
+    .populate("user", "email")
+    .populate("mentor", "email");
+  schedule.approve = approve;
 
   // ? buat apa const status dibawah ?
-  const status = schedule.approve
-  const datetime = schedule.datetime
+  const status = schedule.approve;
+  const datetime = schedule.datetime;
 
   // ** Waktu di jadwal , Dengan format normal (ISO time)
-  const calendarTime = moment(datetime).format('LLLL')
+  const calendarTime = moment(datetime).format("LLLL");
   // ** Waktu di jadwal , dikurangi 1 Jam dan dirubah ke format UNIX time
-  const unixTime = moment(datetime)
-    .subtract(2, 'minutes')
-    .unix()
-  console.log(chalk.green.inverse(unixTime))
+  const unixTime = moment(datetime).subtract(2, "minutes").unix();
+  console.log(chalk.green.inverse(unixTime));
 
-  const userEmail = schedule.user.email
-  const mentorEmail = schedule.mentor.email
+  const userEmail = schedule.user.email;
+  const mentorEmail = schedule.mentor.email;
 
-  const result = await schedule.save()
-  console.log(chalk.yellow.inverse(result))
+  const result = await schedule.save();
+  console.log(chalk.yellow.inverse(result));
 
   // ** Polling
-  const userId = result.user._id
+  const userId = result.user._id;
 
-  res.redirect('/mentor/schedule')
+  res.redirect("/mentor/schedule");
 
   // ** Send Email Before Mentoring Come
-  if (status == 'true') {
+  if (status == "true") {
     const msg = {
       to: [userEmail, mentorEmail],
       send_each_at: [unixTime, unixTime],
-      from: 'expertassist@example.com',
-      subject: '⏲ Incoming Mentoring Notification',
-      text: 'Dont Forget to attend to your mentoring session',
-      html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`
-    }
-    console.log(chalk.greenBright.inverse('Sendgrid Schedule Email Set'))
-    return sgMail.send(msg)
+      from: "expertassist@example.com",
+      subject: "⏲ Incoming Mentoring Notification",
+      text: "Dont Forget to attend to your mentoring session",
+      html: `<strong>Your mentoring session will begin at ${calendarTime}. Please come on time for making best mentoring experience. See you there.</strong>`,
+    };
+    console.log(chalk.greenBright.inverse("Sendgrid Schedule Email Set"));
+    return sgMail.send(msg);
   }
 
-  return longpoll.publish('/polluser', {
+  return longpoll.publish("/polluser", {
     id: userId,
-    message: 'Schedule Approve Notification',
-    data: true
-  })
-})
+    message: "Schedule Approve Notification",
+    data: true,
+  });
+});
 
 exports.getMentoring = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const dateTimeNow = new Date()
+  const session = req.session.mentor;
+  const dateTimeNow = new Date();
   const schedule = await Schedule.findOne({
-    $and: [{ mentor: session._id }, { approve: 'true' }, { status: false }]
+    $and: [{ mentor: session._id }, { approve: "true" }, { status: false }],
   })
-    .populate('user', 'username')
-    .sort({ datetime: 1 })
+    .populate("user", "username")
+    .sort({ datetime: 1 });
 
-  let dateTimeSchedule = ''
+  let dateTimeSchedule = "";
   if (schedule) {
-    console.log(chalk.red.inverse('Array Schedule Ada Isinya'))
-    dateTimeSchedule = schedule.datetime
+    console.log(chalk.red.inverse("Array Schedule Ada Isinya"));
+    dateTimeSchedule = schedule.datetime;
+    console.log(chalk.greenBright.inverse(dateTimeSchedule));
   } else {
-    console.log(chalk.redBright.inverse('Array Schedule Kosong'))
+    console.log(chalk.redBright.inverse("Array Schedule Kosong"));
   }
-  console.log(chalk.blueBright.inverse(schedule))
-  res.render('back/mentor/mentoring', {
+  // console.log(chalk.blueBright.inverse(schedule))
+  res.render("back/mentor/mentoring", {
     schedule: schedule,
     mentor: req.session.mentor._id,
     dateTimeSchedule: dateTimeSchedule,
     dateTimeNow: dateTimeNow,
     moment: moment,
-    session: session
-  })
-})
+    session: session,
+  });
+});
 
 exports.getLive = asyncHandler(async (req, res, next) => {
-  const id = req.session.mentor._id
+  const id = req.session.mentor._id;
   const schedule = await Schedule.findOne({ mentor: id })
     .sort({ _id: -1 })
-    .populate('user', 'username')
-    .populate('mentor', 'videocallroom')
-  console.log(chalk.blue.inverse('live mentor:' + schedule))
-  const endTime = schedule.endtime
-  if (schedule.approve == 'false' || schedule.approve == 'reject') {
-    console.log('Not Auhtorize')
-    return res.render('layouts/404')
+    .populate("user", "username")
+    .populate("mentor", "videocallroom");
+  console.log(chalk.blue.inverse("live mentor:" + schedule));
+  const endTime = schedule.endtime;
+  if (schedule.approve == "false" || schedule.approve == "reject") {
+    console.log("Not Auhtorize");
+    return res.render("layouts/404");
   }
-  let momentStartTime = moment(schedule.datetime).format('LTS')
-  let momentEndTime = moment(schedule.endtime).format('LTS')
-  res.render('back/mentor/live', {
+  let momentStartTime = moment(schedule.datetime).format("LTS");
+  let momentEndTime = moment(schedule.endtime).format("LTS");
+  res.render("back/mentor/live", {
     schedule: schedule,
     mentor: req.session.mentor._id,
     endTime: endTime,
     momentStartTime: momentStartTime,
     momentEndTime: momentEndTime,
-    voca: voca
-  })
-})
+    voca: voca,
+  });
+});
 
 exports.postFinishMentoring = asyncHandler(async (req, res, next) => {
-  const id = req.body.id
-  const status = req.body.status
-  const schedule = await Schedule.findById(id)
-  schedule.status = status
-  await schedule.save()
-  res.redirect('/mentor/schedule')
-})
+  const id = req.body.id;
+  const status = req.body.status;
+  const schedule = await Schedule.findById(id);
+  schedule.status = status;
+  await schedule.save();
+  res.redirect("/mentor/schedule");
+});
 
 exports.getReview = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
+  const session = req.session.mentor;
   const review = await Review.find({ mentor: session._id })
     .sort({ _id: -1 })
-    .populate('user', 'username')
-    .exec()
+    .populate("user", "username")
+    .exec();
   const schedule = await Schedule.findOne({
-    $and: [{ mentor: session._id }, { approve: true }]
-  })
-  const mentor = await Mentor.findById(session._id)
+    $and: [{ mentor: session._id }, { approve: true }],
+  });
+  const mentor = await Mentor.findById(session._id);
 
-  res.render('back/mentor/review', {
+  res.render("back/mentor/review", {
     mentor: mentor,
     review: review,
     moment: moment,
     voca: voca,
     schedule: schedule,
-    session: session
-  })
-})
+    session: session,
+  });
+});
 
 exports.getWithdraw = asyncHandler(async (req, res, next) => {
-  const session = req.session.mentor
-  const mentor = await Mentor.findById(session._id)
+  const session = req.session.mentor;
+  const mentor = await Mentor.findById(session._id);
   if (!mentor) {
-    console.log('No Mentor')
-    return res.render('layouts/500')
+    console.log("No Mentor");
+    return res.render("layouts/500");
   }
-  const payment = await Payment.findOne({ mentor: session._id })
-  console.log(chalk.blue(payment))
+  const payment = await Payment.findOne({ mentor: session._id });
+  console.log(chalk.blue(payment));
   const withdraw = await Withdraw.find({ mentor: session._id }).sort({
-    _id: -1
-  })
+    _id: -1,
+  });
 
-  let lastWithdrawId = ''
-  let lastDatetime = ''
+  let lastWithdrawId = "";
+  let lastDatetime = "";
 
   if (withdraw.length > 0) {
-    console.log(chalk.redBright.inverse('Ada isinya'))
-    lastWithdrawId = withdraw[0]._id
-    lastDatetime = withdraw[0].datetime
-    console.log(chalk.redBright.inverse(lastWithdrawId))
+    console.log(chalk.redBright.inverse("Ada isinya"));
+    lastWithdrawId = withdraw[0]._id;
+    lastDatetime = withdraw[0].datetime;
+    console.log(chalk.redBright.inverse(lastWithdrawId));
   } else {
-    console.log(chalk.red.inverse('Withdraw Array Kosong'))
+    console.log(chalk.red.inverse("Withdraw Array Kosong"));
   }
 
-  res.render('back/mentor/withdraw', {
+  res.render("back/mentor/withdraw", {
     moment: moment,
     voca: voca,
     mentor: mentor,
@@ -542,20 +541,20 @@ exports.getWithdraw = asyncHandler(async (req, res, next) => {
     currency: currency,
     session: session,
     lastWithdrawId: lastWithdrawId,
-    lastDatetime: lastDatetime
-  })
-})
+    lastDatetime: lastDatetime,
+  });
+});
 
 exports.postWithdraw = asyncHandler(async (req, res, next) => {
-  const mentor = req.body.mentor
-  const amount = req.body.amount
-  const note = req.body.note
-  const initialincome = req.body.initialincome
+  const mentor = req.body.mentor;
+  const amount = req.body.amount;
+  const note = req.body.note;
+  const initialincome = req.body.initialincome;
 
-  const tax = 0.05
+  const tax = 0.05;
 
-  const adminIncome = amount * tax
-  const total = amount - adminIncome
+  const adminIncome = amount * tax;
+  const total = amount - adminIncome;
 
   const withdraw = new Withdraw({
     initialincome: initialincome,
@@ -563,54 +562,54 @@ exports.postWithdraw = asyncHandler(async (req, res, next) => {
     amount: amount,
     total: total,
     note: note,
-    adminincome: adminIncome
-  })
+    adminincome: adminIncome,
+  });
 
-  const result = await withdraw.save()
-  console.log(chalk.yellow.inverse(result))
+  const result = await withdraw.save();
+  console.log(chalk.yellow.inverse(result));
 
-  res.redirect('/mentor/withdraw')
-  return longpoll.publish('/polladmin', {
-    message: 'New Withdraw Request Notification',
-    data: true
-  })
-})
+  res.redirect("/mentor/withdraw");
+  return longpoll.publish("/polladmin", {
+    message: "New Withdraw Request Notification",
+    data: true,
+  });
+});
 
 exports.deleteWithdraw = asyncHandler(async (req, res, next) => {
-  const id = req.body.id
-  const withdraw = await Withdraw.findByIdAndDelete(id)
-  console.log(chalk.yellow.inverse(withdraw))
-  res.redirect('/mentor/withdraw')
-})
+  const id = req.body.id;
+  const withdraw = await Withdraw.findByIdAndDelete(id);
+  console.log(chalk.yellow.inverse(withdraw));
+  res.redirect("/mentor/withdraw");
+});
 
 exports.postChangePassword = asyncHandler(async (req, res, next) => {
-  const id = req.body.id
-  const password = req.body.password
-  const newPassword = req.body.newPassword
+  const id = req.body.id;
+  const password = req.body.password;
+  const newPassword = req.body.newPassword;
 
-  let errors = validationResult(req)
+  let errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).jsonp(errors.array())
+    return res.status(422).jsonp(errors.array());
   } else {
-    console.log(chalk.green.inverse('lulus uji express-validator'))
+    console.log(chalk.green.inverse("lulus uji express-validator"));
   }
 
-  const mentor = await Mentor.findById(id)
+  const mentor = await Mentor.findById(id);
 
-  const oldPassword = mentor.password
-  const doMatch = await bcrypt.compare(password, oldPassword)
+  const oldPassword = mentor.password;
+  const doMatch = await bcrypt.compare(password, oldPassword);
 
   if (doMatch) {
-    const hashedPassword = await bcrypt.hash(newPassword, 12)
-    const mentors = await Mentor.findById(id)
-    mentors.password = hashedPassword
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const mentors = await Mentor.findById(id);
+    mentors.password = hashedPassword;
 
-    const result = await mentors.save()
-    console.log(chalk.yellowBright(result))
-    res.status(201).json(result)
+    const result = await mentors.save();
+    console.log(chalk.yellowBright(result));
+    res.status(201).json(result);
   } else {
-    console.log(chalk.redBright('password not match'))
-    res.status(422).json({ error: 'password not match' })
+    console.log(chalk.redBright("password not match"));
+    res.status(422).json({ error: "password not match" });
   }
-})
+});

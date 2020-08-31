@@ -4,7 +4,7 @@ const router = express.Router();
 const frontController = require("../controllers/front");
 const routeCache = require("route-cache");
 
-router.get("/", routeCache.cacheSeconds(400), frontController.getIndex);
+router.get("/", frontController.getIndex);
 router.get("/q", frontController.getSearch);
 
 router.get("/blog", routeCache.cacheSeconds(400), frontController.getAllBlog);
@@ -16,11 +16,11 @@ router.get(
 
 router.get(
   "/mdetail/:id",
-  routeCache.cacheSeconds(1),
+
   frontController.getDetailMentor
 );
 
-router.get("/mlist", routeCache.cacheSeconds(1), frontController.getMentorList);
+router.get("/mlist", frontController.getMentorList);
 router.get("/api/mlists", frontController.getMentorListJson);
 router.get("/filter", frontController.getFilter);
 router.get("/sort", frontController.getSort);
