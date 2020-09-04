@@ -88,6 +88,14 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
   } else {
     totalIncome = totalIncomeData[0].income;
   }
+  console.log(
+    chalk.yellow(
+      "total income:" +
+        totalIncome +
+        "- incomedata:" +
+        JSON.stringify(totalIncomeData)
+    )
+  );
 
   const waitingWithdraw = await Withdraw.find({
     status: false,
