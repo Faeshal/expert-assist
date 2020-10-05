@@ -7,18 +7,10 @@ const routeCache = require("route-cache");
 router.get("/", frontController.getIndex);
 router.get("/q", frontController.getSearch);
 
-router.get("/blog", routeCache.cacheSeconds(400), frontController.getAllBlog);
-router.get(
-  "/blog/:id",
-  routeCache.cacheSeconds(400),
-  frontController.getDetailBlog
-);
+router.get("/blog", frontController.getAllBlog);
+router.get("/blog/:id", frontController.getDetailBlog);
 
-router.get(
-  "/mdetail/:id",
-
-  frontController.getDetailMentor
-);
+router.get("/mdetail/:id", frontController.getDetailMentor);
 
 router.get("/mlist", frontController.getMentorList);
 router.get("/api/mlists", frontController.getMentorListJson);

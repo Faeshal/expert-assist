@@ -9,6 +9,9 @@ Expert Asisst is Web Application **for connecting user and competent mentor in v
 Build using Node.JS, Express Framework & MongoDB Atlas as a cloud database and using Docker for containerization the app. We'are using docker compose too for managing multi container. For container management we'are using portainer, for Load Balancer handle by HaProxy and much more.
 ![https://i.postimg.cc/rpCs19yf/Screenshot-5.png](https://i.postimg.cc/rpCs19yf/Screenshot-5.png)
 
+## **Architecture :**
+![arch](https://i.postimg.cc/85G5KbPS/arsitektur.png)
+
 ## **List Of Feature** 🔥
 ![https://i.postimg.cc/QMrVKzDB/Screenshot-6.png](https://i.postimg.cc/QMrVKzDB/Screenshot-6.png)
 

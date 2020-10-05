@@ -1,5 +1,6 @@
 require("pretty-error").start();
 const asyncHandler = require("express-async-handler");
+const async = require("async");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Review = require("../models/Review");
@@ -13,54 +14,74 @@ const routeCache = require("route-cache");
 
 exports.getIndex = asyncHandler(async (req, res, next) => {
   const session = req.session;
-  const newMentor = await Mentor.find({
-    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-  })
-    .select({
-      username: 1,
-      city: 1,
-      price: 1,
-      expertise: 1,
-      experience: 1,
-      profilepicture: 1,
-      job: 1,
-    })
-    .limit(7)
-    .sort({ _id: -1 });
-  const bestMentor = await Mentor.find({ mentorstatus: "true" })
-    .select({
-      username: 1,
-      city: 1,
-      price: 1,
-      expertise: 1,
-      experience: 1,
-      profilepicture: 1,
-      job: 1,
-    })
-    .limit(7)
-    .sort({ rating: -1 });
-  const cheapestMentor = await Mentor.find({
-    $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
-  })
-    .select({
-      username: 1,
-      city: 1,
-      price: 1,
-      expertise: 1,
-      experience: 1,
-      profilepicture: 1,
-      job: 1,
-    })
-    .limit(7)
-    .sort({ price: 1 });
-
-  res.render("front/index", {
-    session: session,
-    newMentor: newMentor,
-    bestMentor: bestMentor,
-    cheapestMentor: cheapestMentor,
-    currency: currency,
-  });
+  async.parallel(
+    {
+      newMentor: function (cb) {
+        Mentor.find({
+          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+        })
+          .select({
+            username: 1,
+            city: 1,
+            price: 1,
+            expertise: 1,
+            experience: 1,
+            profilepicture: 1,
+            job: 1,
+          })
+          .limit(7)
+          .sort({ _id: -1 })
+          .lean()
+          .exec(cb);
+      },
+      bestMentor: function (cb) {
+        Mentor.find({ mentorstatus: "true" })
+          .select({
+            username: 1,
+            city: 1,
+            price: 1,
+            expertise: 1,
+            experience: 1,
+            profilepicture: 1,
+            job: 1,
+          })
+          .limit(7)
+          .sort({ rating: -1 })
+          .lean()
+          .exec(cb);
+      },
+      cheapestMentor: function (cb) {
+        Mentor.find({
+          $or: [{ mentorstatus: "true" }, { mentorstatus: "new" }],
+        })
+          .select({
+            username: 1,
+            city: 1,
+            price: 1,
+            expertise: 1,
+            experience: 1,
+            profilepicture: 1,
+            job: 1,
+          })
+          .limit(7)
+          .sort({ price: 1 })
+          .lean()
+          .exec(cb);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        next(err);
+      }
+      res.render("front/index", {
+        session: session,
+        newMentor: results.newMentor,
+        bestMentor: results.bestMentor,
+        cheapestMentor: results.cheapestMentor,
+        currency: currency,
+      });
+    }
+  );
 });
 
 exports.getAllBlog = (req, res, next) => {
@@ -120,24 +141,32 @@ exports.getFaq = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getDetailBlog = (req, res, next) => {
+exports.getDetailBlog = asyncHandler(async (req, res, next) => {
   id = req.params.id;
-  Admin.findOne({ "blog._id": id }, { "blog.$": 1 })
-    .then((admins) => {
-      let blog = admins.blog[0];
-      Admin.find({ status: true })
-        .then((admins2) => {
-          let allBlog = admins2[0].blog;
-          res.render("front/blogDetail", {
-            blog: blog,
-            allBlog: allBlog,
-            moment: moment,
-          });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+
+  const admins = await Admin.findOne(
+    { "blog._id": id },
+    { "blog.$": 1 }
+  ).lean();
+  let blog = admins.blog[0];
+
+  let allBlog = [];
+  const admins2 = await Admin.find({ "blog.status": true });
+
+  admins2.map((adminData) => {
+    let blogLoop = adminData.blog;
+    console.log(chalk.red(blogLoop.length));
+    allBlog.push(blogLoop);
+  });
+
+  console.log(chalk.blue(allBlog.length));
+
+  res.render("front/blogDetail", {
+    blog: blog,
+    allBlog: allBlog,
+    moment: moment,
+  });
+});
 
 exports.getDetailMentor = (req, res, next) => {
   const id = req.params.id;
